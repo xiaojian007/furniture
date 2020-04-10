@@ -18,17 +18,36 @@
 			@submit.native.prevent
 			label-width="95px"
 		>
-			<el-form-item label="SKU名称：" size="small" prop="roleName">
-				<el-input v-model="form.roleName" placeholder="请输入SKU名称"></el-input>
+			<el-form-item label="SKU名称:" size="small" prop="name">
+				<el-input v-model="form.name" placeholder="请输入SKU名称"></el-input>
 			</el-form-item>
-			<el-form-item label="SKU描述：" size="small" prop="remark">
-				<el-input type="textarea" v-model="form.remark" placeholder="" :autosize="autosize"></el-input>
+			<el-form-item label="类型名称:" size="small" prop="skuName">
+				<div class="type-item" v-for="(item, index) in form.typeList" :key="index">
+					<el-form-item
+						label-width="0"
+						size="small"
+						:prop="'typeList.' + index + '.skuName'"
+						:rules="rules.skuName"
+					>
+						<el-input
+							v-model="item.skuName"
+							placeholder="请输入SKU名称"
+							maxlength="10"
+						></el-input>
+						<span
+							class="delete el-icon-delete"
+							@click="deleteType(index)"
+							v-if="form.typeList.length > 1"
+						></span>
+					</el-form-item>
+				</div>
+				<el-button class="add" @click="addType" size="small" type="primary">新增</el-button>
 			</el-form-item>
 		</el-form>
 		<div slot="footer">
 			<el-button size="small" @click="close">关闭</el-button>
 			<el-button type="primary" size="small" @click="submit" :loading="submitting">
-				提交333
+				提交
 			</el-button>
 		</div>
 	</el-dialog>
@@ -41,25 +60,26 @@
 		mixins: [formMixin],
 		data() {
 			return {
-                autosize: { minRows: 4, maxRows: 8 },
 				form: {
-					roleId: "", //角色id
-					roleName: "", //角色名称
-					resourceIdList: [], //权限id
-					remark: "" //角色描述
+					id: "", //类型id
+					typeList: [
+						{
+							skuName: ""
+						}
+					]
 				},
 				params: {
-					roleId: ""
+					id: ""
 				},
 				rules: {
-					roleName: [
+					name: [
 						{
 							required: true,
 							message: "不能为空",
 							trigger: "blur"
 						}
 					],
-					remark: [
+					skuName: [
 						{
 							required: true,
 							message: "不能为空",
@@ -70,8 +90,24 @@
 			};
 		},
 		methods: {
+			// 删除
+			deleteType(item) {
+				this.form.typeList.splice(item, 1);
+			},
+			// 添加
+			addType() {
+				let list = this.form.typeList;
+				if (list[list.length - 1].skuName === "") {
+					this.$message.warning("请填写后再添加", this);
+					return;
+				}
+				this.form.typeList.push({
+					skuName: ""
+				});
+			},
 			close() {
 				this.reset();
+				this.form.typeList = [{ skuName: "" }];
 				this.visible = false;
 				this.submitting = false;
 			},
@@ -101,3 +137,26 @@
 		}
 	};
 </script>
+
+<style lang="less" scoped>
+	.type-item {
+		position: relative;
+		width: 49%;
+		float: left;
+		&:nth-child(2n-1) {
+			margin-right: 2%;
+		}
+		span {
+			position: absolute;
+			right: 10px;
+			top: 5px;
+			font-size: 22px;
+			color: #f00;
+			cursor: pointer;
+		}
+	}
+
+	.add {
+		vertical-align: top;
+	}
+</style>

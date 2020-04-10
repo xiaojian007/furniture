@@ -15,6 +15,9 @@
 						>
 							新增
 						</li>
+						<li v-if="props.data.id">
+							{{ props.data.sss === 1 ? "置顶" : "取消置顶" }}
+						</li>
 						<li
 							@click="handleRenameTree(props.data, props.node)"
 							v-if="props.data.id !== 0"
