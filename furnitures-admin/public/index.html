@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="renderer" content="webkit|ie-stand" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta http-equiv="Cache-Control" content="no-cache,must-revalidate" />
+		<meta http-equiv="pragma" content="no-cache" />
+		<meta name="format-detection" content="telephone=no, email=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+		<meta name="robots" content="none" />
+		<meta name="keywords" content="云印,云印微供,纸业数据平台" />
+		<meta name="description" content="纸业数据平台,数据分析，实时监控" />
+		<meta name="author" content="ininin.com" />
+		<meta name="copyright" content="Copyright © 2020 ininin.com. All rights reserved." />
+		<link rel="dns-prefetch" href="//api.pdp.ininin.com" />
+		<link rel="icon" href="<%= BASE_URL %>favicon.ico" />
+		<title>纸业销售统计</title>
+		<link rel="dns-prefetch" href="//wq.ininin.com" />
+		<style type="text/css">
+			.spinner {
+				width: 60px;
+				height: 60px;
+				position: fixed;
+				top: 50%;
+				left: 50%;
+				margin: -40px 0 0 -40px;
+			}
+
+			.double-bounce1,
+			.double-bounce2 {
+				width: 100%;
+				height: 100%;
+				border-radius: 50%;
+				background-color: #5981fa;
+				opacity: 0.6;
+				position: absolute;
+				top: 0;
+				left: 0;
+
+				-webkit-animation: bounce 2s infinite ease-in-out;
+				animation: bounce 2s infinite ease-in-out;
+			}
+
+			.double-bounce2 {
+				-webkit-animation-delay: -1s;
+				animation-delay: -1s;
+			}
+
+			@-webkit-keyframes bounce {
+				0%,
+				100% {
+					-webkit-transform: scale(0);
+				}
+
+				50% {
+					-webkit-transform: scale(1);
+				}
+			}
+
+			@keyframes bounce {
+				0%,
+				100% {
+					transform: scale(0);
+					-webkit-transform: scale(0);
+				}
+
+				50% {
+					transform: scale(1);
+					-webkit-transform: scale(1);
+				}
+			}
+
+			.nonsupport {
+				width: 100%;
+				min-height: 480px;
+				overflow: hidden;
+				text-align: center;
+			}
+
+			.nonsupport a {
+				text-decoration: none;
+			}
+
+			.nonsupport h3 {
+				height: 80px;
+				line-height: 80px;
+				text-align: center;
+				font-weight: 700;
+				font-size: 15px;
+				margin: 15px 0;
+				color: #000;
+			}
+
+			.nonsupport .p {
+				font-size: 13px;
+				padding-bottom: 30px;
+				text-align: center;
+				margin: 13px 0;
+			}
+
+			.nonsupport .browser {
+				width: 1000px;
+				margin: 0 auto;
+				padding: 0;
+				list-style: none;
+			}
+
+			.nonsupport .download-browser {
+				vertical-align: top;
+				float: left;
+				margin: 0;
+				padding: 0;
+				width: 25%;
+				text-align: center;
+			}
+
+			.nonsupport ul {
+				list-style: none;
+			}
+
+			.nonsupport li {
+				font-size: 20px;
+				line-height: 26px;
+				text-align: center;
+				color: #333;
+				padding-top: 20px;
+			}
+
+			.nonsupport img {
+				border: none;
+			}
+
+			.nonsupport .help-text {
+				color: #666;
+				font-size: 14px;
+			}
+
+			.nonsupport .app {
+				display: none;
+			}
+		</style>
+	</head>
+	<body class="app">
+		<div id="app">
+			<div class="spinner">
+				<div class="double-bounce1"></div>
+				<div class="double-bounce2"></div>
+			</div>
+		</div>
+
+		<div id="nonsupport" style="display: none;">
+			<div class="nonsupport">
+				<h3>
+					您使用的浏览器版本过低，可能导致部分页面展示效果不佳，建议您使用以下浏览器进行访问。
+				</h3>
+				<p class="p">点击以下链接，升级浏览器</p>
+				<ul class="browser">
+					<li class="download-browser">
+						<a
+							href="https://www.microsoft.com/zh-cn/download/internet-explorer.aspx"
+							target="_blank"
+						>
+							<div><img src="./assets/browser/ie.png" /></div>
+							<div>
+								Internet Explorer 10+
+								<p class="help-text">(10.0及以上)</p>
+							</div>
+						</a>
+					</li>
+					<li class="download-browser">
+						<a
+							href="http://www.google.cn/chrome/browser/desktop/index.html"
+							target="_blank"
+						>
+							<div><img src="./assets/browser/chrome.png" /></div>
+							<div>
+								Chrome 40+
+								<p class="help-text">(40.0及以上)</p>
+							</div>
+						</a>
+					</li>
+					<li class="download-browser">
+						<a href="https://www.mozilla.org/zh-CN/firefox/new/" target="_blank">
+							<div><img src="./assets/browser/firefox.png" /></div>
+							<div>
+								Firefox 40+
+								<p class="help-text">(40.0及以上)</p>
+							</div>
+						</a>
+					</li>
+					<li class="download-browser">
+						<a href="https://www.apple.com/safari/" target="_blank">
+							<div><img src="./assets/browser/safari.png" /></div>
+							<div>
+								Safari 5+
+								<p class="help-text">(5.0及以上)</p>
+							</div>
+						</a>
+					</li>
+				</ul>
+				<div style="clear: both"></div>
+			</div>
+		</div>
+		<script>
+			(function(window, document, getBrowserInfo, undefined) {
+				var browserInfo = getBrowserInfo(window.navigator.userAgent),
+					ver = parseInt(browserInfo["version"], 10) || 0,
+					fillBody = null;
+				if (
+					(browserInfo["msie"] && ver < 10) ||
+					(browserInfo["edge"] && ver < 10) ||
+					(browserInfo["chrome"] && ver < 40) ||
+					(browserInfo["firefox"] && ver < 40) ||
+					(browserInfo["safari"] && ver < 5)
+				) {
+					//fillBody = function () {
+					document.body.innerHTML = document.getElementById("nonsupport").innerHTML;
+					//};
+					/*if (document.addEventListener) {
+                    document.addEventListener("DOMContentLoaded", fillBody, false);
+                } else {
+                    document.attachEvent("onreadystatechange", fillBody);
+                }*/
+				}
+			})(window, document, function(userAgent) {
+				var browser = {},
+					matched = (function(ua) {
+						var match =
+							/(edge)[\/]([\w.]+)/.exec(ua) ||
+							/(chrome)[ \/]([\w.]+)/.exec(ua) ||
+							///(webkit)[ \/]([\w.]+)/.exec( ua ) ||
+							///version[\/][\d.]+.*(safari)[ \/]([\w.]+)/.exec(ua) ||
+							/version[\/]([\d.]+).*(safari)[ \/][\w.]+/.exec(ua) ||
+							/(msie) ([\w.]+)/.exec(ua) ||
+							/(firefox)[\/]([\w.]+)/.exec(ua) ||
+							/(opera)(?:.*version|)[ \/]([\w.]+)/.exec(ua) ||
+							(ua.indexOf("compatible") < 0 &&
+								/(mozilla)(?:.*? rv:([\w.]+)|)/.exec(ua)) ||
+							[];
+						if (match[2] === "safari") {
+							return {
+								browser: match[2] || "",
+								version: match[1] || "0"
+							};
+						}
+						return {
+							browser: match[1] || "",
+							version: match[2] || "0"
+						};
+					})(userAgent.toLowerCase());
+				if (matched.browser) {
+					browser[matched.browser] = true;
+					browser.version = matched.version;
+				}
+				return browser;
+			});
+		</script>
+		<script src="/static/tinymce4.7.5/tinymce.min.js" defer></script>
+	</body>
+</html>

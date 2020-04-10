@@ -1,0 +1,57 @@
+/**
+ * 打印样式
+ * @author shlijian@ininin.com
+ * @since 2020-02-21
+ * @version 1.0.0
+ * @description 打印样式
+ * @copyright ininin.com
+ */
+
+.print {
+    display: none;
+}
+
+@media print {
+    body {
+        color: #000;
+        font-size: 7.5pt;
+        background: #fff;
+
+        > * {
+            display: none !important;
+        }
+    }
+
+    a {
+        font-weight: bolder;
+        text-decoration: none;
+    }
+
+    a[href^=http]:after {
+        content: "<" attr(href) ">"
+    }
+
+    .print {
+        display: block !important;
+    }
+
+    .page-next {
+        page-break-before: always;
+    }
+
+    .d-page-next {
+        page-break-before: auto;
+    }
+
+    @page {
+        margin: 12mm 11mm;
+        /*size: A4 portrait;*/
+        /*size: A4 landscape;*/
+        counter-increment: page 1;
+        @bottom-center {
+            border-top: .25pt solid #666;
+            content: '第' counter(page) '页';
+            font-size: 7.5pt;
+        }
+    }
+}

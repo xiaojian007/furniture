@@ -1,0 +1,184 @@
+.app {
+	// 时间换行处理
+	.el-table {
+		color: #333;
+		.t-date {
+			padding: 5px 0;
+
+			.cell {
+				line-height: 18px;
+			}
+		}
+
+		.table-operation-col {
+			padding: 0 !important;
+
+			.el-button {
+				margin: 0 0 0 6px;
+				font-family: "pingfang";
+				&:first-child {
+					margin: 0;
+				}
+			}
+		}
+		.el-button--text {
+			color: #007aff;
+        }
+
+        /*格子表格样式*/
+
+        &.el-table--border {
+            border-top: 1px solid #999;
+            border-left: 0;
+            border-right: 0;
+
+            &::before {
+                border-bottom: 1px solid #999;
+            }
+
+            &::after {
+                display: none;
+            }
+
+            .el-table__header-wrapper {
+                border-bottom: 1px solid #eee;
+
+                .gutter {
+                    border: 0;
+                    display: block !important;
+                }
+            }
+
+            .el-table__footer-wrapper {
+                .gutter {
+                    border: 0;
+                    display: block !important;
+                }
+            }
+
+            tr {
+                &.hover-row, &.current-row, &:hover {
+                    background: none;
+
+                    th, td {
+                        background: none;
+                    }
+                }
+
+                &:last-child {
+                    th {
+                        border-bottom: 0 !important;
+                    }
+                }
+
+                th, td {
+                    background: none;
+                    border-top: 1px solid transparent;
+                    border-right: 1px solid transparent;
+                    border-left: 1px solid #eee;
+                    border-bottom: 1px solid #eee;
+
+                    &:first-child {
+                        border-left: 1px solid transparent;
+                    }
+
+                    &:last-child {
+                        &::after {
+                            display: table-cell;
+                            content: '';
+                        }
+                    }
+                }
+
+                td:last-child {
+                    padding-right: 5px;
+                }
+            }
+        }
+	}
+	//
+	.list-search {
+		.el-form-item__content {
+			line-height: 30px;
+		}
+
+		.el-form-item {
+			margin: 0 15px 0 0;
+		}
+	}
+	.custom-confirm {
+		padding-bottom: 24px;
+
+		.el-message-box__header {
+			padding: 20px 32px 0;
+		}
+
+		.el-message-box__title {
+			font-size: 16px;
+			padding: 0 0 0 40px;
+			line-height: 40px;
+			background: url(../img/ok.png) 0 center no-repeat;
+			background-size: 22px;
+		}
+
+		.el-message-box__content {
+			font-size: 14px;
+			padding: 10px 32px 10px 70px;
+		}
+
+		.el-message-box__btns {
+			padding: 30px 32px 0;
+		}
+	}
+
+	.custom-confirm-danger {
+		.el-message-box__title {
+			background: url(../img/chose.png) 0 center no-repeat;
+		}
+	}
+
+	.custom-confirm-edition {
+		.el-message-box__title {
+			background: url(../img/edition-icon.png) 0 center no-repeat;
+		}
+	}
+
+	// 红色对号-提示
+	.custom-confirm-red-success {
+		.el-message-box__title {
+			background: url(../img/red-success-icon.png) 0 center no-repeat;
+		}
+	}
+
+	//正文
+	.font-small {
+		font-size: 14px;
+		color: #606266;
+	}
+
+	//正文（小）
+	.font-extra-small {
+		font-size: 13px;
+		color: #606266;
+	}
+
+	.color-main {
+		color: #409eff;
+	}
+
+	.color-success {
+		color: #67c23a;
+	}
+
+	.color-warning {
+		color: #e6a23c;
+	}
+
+	.color-danger {
+		color: #f56c6c;
+	}
+
+	.color-info {
+		color: #909399;
+	}
+}
