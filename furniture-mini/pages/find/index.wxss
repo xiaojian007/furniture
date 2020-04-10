@@ -1,0 +1,124 @@
+/* pages/news/index.wxss */
+
+.weui-panel {
+  margin: 0;
+  padding-bottom: 2.8vw;
+  background: #f8f8fa;
+}
+
+.weui-panel::before {
+  display: none;
+}
+
+.weui-media-box__hd {
+  width: 29.33vw;
+  height: 19.2vw;
+  margin-right: 2.4vw;
+  border: 1px solid #eee;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.weui-media-box__bd {
+  min-height: 19.2vw;
+  flex: 1;
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+}
+
+/* .weui-media-box__bd.single-line .weui-media-box__title {
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+} */
+
+.weui-media-box__bd .weui-media-box__desc {
+  margin-top: 3.2vw;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+.news-item {
+  padding: 2.8vw;
+  padding-bottom: 2vw;
+  margin-top: 2.8vw;
+  background: #fff;
+}
+
+.news-item .news-img {
+  /* width: 29.33vw; *//* height: 19.2vw; */
+  width: 100%;
+  height: 100%;
+}
+
+.news-item .weui-flex {
+  margin-top: 2vw;
+  color: #999;
+  line-height: 1.5;
+  font-size: 3vw;
+}
+
+.news-item .news-tag {
+  height: 3.2vw;
+  font-size: 2.4vw;
+  padding: 0 1vw;
+  border-radius: 0.8vw;
+  margin-left: 1vw;
+}
+
+.news-item .news-hot, .news-item .news-new {
+  color: #ff623b;
+  border: 1px solid #ff623b;
+}
+
+.news-item .news-source {
+  align-items: center;
+}
+
+.news-item .news-source>span {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.news-item .news-date {
+  text-align: right;
+}
+
+.weui-media-box {
+  margin: 0;
+  padding: 0;
+}
+
+.weui-media-box:before {
+  display: none;
+}
+
+.weui-media-box__title {
+  margin: 0;
+  color: #343434;
+  font-size: 4.27vw;
+  line-height: 1.4;
+  white-space: normal;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  box-orient: vertical;
+}
+
+.weui-media-box__desc {
+  margin-top: 2.4vw;
+  line-height: 1.4;
+  font-size: 3.2vw;
+  color: #737373;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+.weui-media-box__hd+.weui-media-box__bd:not(.single-line) .weui-media-box__desc {
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+}
+
+.news-source {
+  display: flex;
+}

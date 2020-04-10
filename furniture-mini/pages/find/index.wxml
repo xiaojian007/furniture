@@ -1,0 +1,38 @@
+<!-- <web-view src="{{H5_URL}}page=news"></web-view> -->
+<import src="/templates/loading.wxml" />
+<view>
+  <view class="weui-panel weui-panel_access">
+    <view class="weui-panel__bd">
+      <view wx:for="{{list}}" wx:key="index" class="news-item" bindtap="openDetail" data-news-id="{{item.foundId}}">
+        <view class="weui-media-box weui-media-box_appmsg">
+          <view wx:if="{{item.picKey}}" class="weui-media-box__hd">
+            <view class="news-img">
+              <image class="weui-media-box__thumb" src="{{QINIU_DOWNLOAD+item.picKey+thumbnail}}" />
+            </view>
+          </view>
+          <view class="weui-media-box__bd">
+            <view class="weui-media-box__title line-clamp">{{item.title}}</view>
+            <view class="weui-media-box__desc line-clamp">{{item.foundType===0 ? item.content : item.info}}
+            </view>
+          </view>
+        </view>
+        <view class="weui-flex">
+          <view class="news-source">
+            <view>{{item.sources}}</view>
+            <view wx:if="{{item.isTop===1}}" class="news-tag news-hot">HOT</view>
+            <view wx:for="{{item.tags}}" wx:for-index="idx" wx:for-item="tag" wx:key="idx">
+              <view class="news-tag" style="background: {{tag.tagColor}}; color:{{tag.wordColor}}">{{tag.tagName}}</view>
+            </view>
+            <view wx:if="{{item.isNew===1}}" class="news-tag news-new">NEW</view>
+          </view>
+          <view class="weui-flex__item">
+            <view class="news-date">{{item.recordTime}}</view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="weui-panel__ft">
+      <template is="loading" data="{{list: list, total: total, text: '资讯'}}" />
+    </view>
+  </view>
+</view>
