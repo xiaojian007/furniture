@@ -35,10 +35,10 @@
 							placeholder="请输入商品简称"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="商品类型:" size="small" prop="type">
+					<el-form-item label="商品类型:" size="small" prop="typeId">
 						<el-cascader
 							:options="commodityTypeList"
-							v-model="form.type"
+							v-model="form.typeId"
 							placeholder="请选择商品类型"
 							:props="{ value: 'id', expandTrigger: 'hover' }"
 						>
@@ -135,9 +135,10 @@
 					</el-form-item>
 					<el-form-item label="规格(SKU):" size="small">
 						<div class="specification-list">
+                            <template v-if="selectCheckedType.length>0">
 							<div
 								class="specification-item"
-								v-for="(item, index) in checkedSku"
+								v-for="(item, index) in selectCheckedType"
 								:key="index"
 							>
 								<h5>{{ item.name }}</h5>
@@ -155,12 +156,16 @@
 									</el-checkbox-group>
 								</div>
 							</div>
+                            </template>
+                            <template v-else>
+                                <div class="no-data">请选择属性类型</div>
+                            </template>
 						</div>
 					</el-form-item>
 				</el-col>
 				<el-col :span="10">
 					<div class="all-sku-list">
-						<el-table :data="calcSkuList" border style="width: 100%" height="100%">
+						<el-table :data="calcSkuList" border style="width: 100%" height="100%" empty-text="请选择规格(SKU)">
 							<el-table-column label="规格" align="center" :resizable="false">
 								<template slot-scope="scope">
 									{{ scope.row.attributeNameList }}
@@ -223,6 +228,14 @@
 	export default {
 		mixins: [formMixin],
 		components: { Tinymce },
+		props: {
+			treeList: {
+				type: Array,
+				default: () => {
+					return [];
+				}
+			}
+		},
 		data() {
 			return {
 				enumCommodityPublishStatus,
@@ -231,7 +244,7 @@
 					productId: "", //id
 					name: "", //商品名称
 					shortName: "", // 商品简称
-					typeId: [35, 55], // 商品类型
+					typeId: [], // 商品类型
 					typeName: "", // 类别名称
 					smallImage: "", // 缩略图
 					uploadImage: "", // 商品图片 轮播
@@ -243,10 +256,201 @@
 					selectSkuParentIdList: [], // 选择的sku属性类型 id数组
 					checkBoxSkuAttr: [], // 选中的商品规格（sku）数组
 					remark: "" //类别描述
-				},
+                },
+				commodityTypeList: [], // 商品类别
 				calcSkuList: [], // 选中后生成的sku
-				checkedSku: [], // 选择的sku属性类型 id
-				skuTypeList: [
+                selectCheckedType: [], // 选择的sku属性类型 id
+                skuTypeList: [], // 商品sku list
+				checkedSkuList: [], // 选中的id集合进行 不分层
+				rules: {
+					name: [{ required: true, message: "商品标题不能为空", trigger: "blur" }],
+					shortName: [{ required: true, message: "商品简称不能为空", trigger: "blur" }],
+					// isPerfect: [{ required: true, message: "请选择商品类别", trigger: "change" }],
+					// publishStatus: [{ required: true, message: "请选择商品类别", trigger: "change" }],
+					typeId: [{ required: true, message: "请选择商品类别", trigger: "change" }],
+					smallImage: [{ required: true, message: "缩略图不能为空", trigger: "blur" }],
+					remark: [{ required: true, message: "商品详细不能为空", trigger: "blur" }],
+					uploadImage: [
+						{ required: true, message: "商品详情图片不能为空", trigger: "blur" }
+					],
+					price: [
+						{
+							required: true,
+							validator: positiveRealNumber({
+								field: "商品价格",
+								decimals: 4
+							}),
+							trigger: "blur"
+						}
+					],
+					originalPrice: [
+						{
+							required: true,
+							validator: positiveRealNumber({
+								field: "商品价格",
+								decimals: 4
+							}),
+							trigger: "blur"
+						}
+					]
+				}
+			};
+		},
+		methods: {
+			// 选择sku
+			changeCheckedSku(item) {
+				let checkedSkuList = []; // 选中的数组集合
+				this.skuTypeList.forEach(skuTypeItem => {
+					skuTypeItem.child.forEach(skuItem => {
+						let hasSku = item.some(checkedId => {
+							return checkedId === skuItem.id;
+						});
+						if (hasSku) {
+							checkedSkuList.push({
+								id: skuItem.id,
+								name: skuItem.name,
+								parentId: skuTypeItem.id,
+								parentName: skuTypeItem.name
+							});
+						}
+					});
+				});
+				this.checkedSkuList = checkedSkuList;
+				// 选中的数据进行类型分类
+				let dest = this.sortParentList(checkedSkuList);
+				let skuList = [];
+				dest.forEach(destItem => {
+					let skuItem = [];
+					destItem.child.forEach(sku => {
+						skuItem.push(sku.id);
+					});
+					skuList.push(skuItem);
+				});
+				let calcList = this.calcDescartes(skuList); // 笛卡尔积算法，可用于商品SKU计算
+				let calcSkuList = [];
+				calcList.forEach(cale => {
+					let nameList = [];
+					if (Array.isArray(cale)) {
+						checkedSkuList.forEach(listItem => {
+							let isName = cale.some(caleItem => {
+								return caleItem === listItem.id;
+							});
+							if (isName) {
+								nameList.push(listItem.name);
+							}
+						});
+					} else {
+						checkedSkuList.forEach(listItem => {
+							if (cale === listItem.id) {
+								nameList.push(listItem.name);
+							}
+						});
+					}
+					calcSkuList.push({
+						attributeNameList: nameList.toString().replace(/,/g, "&"), // 名称
+						attributeIds: cale.toString(), // id
+						attributePrice: "", //价格
+						attributeStock: "" // 库存
+					});
+				});
+				this.calcSkuList = calcSkuList;
+				console.log("calcSkuList", calcSkuList);
+			},
+			// 选中数组进行父子组合
+			sortParentList(array) {
+				let map = {},
+					dest = [];
+				for (let i = 0; i < array.length; i++) {
+					let ai = array[i];
+					if (!map[ai.parentId]) {
+						dest.push({
+							parentId: ai.parentId,
+							name: ai.parentName,
+							child: [ai]
+						});
+						map[ai.parentId] = ai;
+					} else {
+						for (let j = 0; j < dest.length; j++) {
+							let dj = dest[j];
+							if (dj.parentId == ai.parentId) {
+								dj.child.push(ai);
+								break;
+							}
+						}
+					}
+				}
+				return dest;
+			},
+			//JavaScript 笛卡尔积算法，可用于商品 SKU 计算
+			calcDescartes(array) {
+				if (array.length < 2) {
+					return array[0] || [];
+				}
+				return [].reduce.call(array, (col, set) => {
+					var res = [];
+					col.forEach(c => {
+						set.forEach(s => {
+							var t = [].concat(Array.isArray(c) ? c : [c]);
+							t.push(s);
+							res.push(t);
+						});
+					});
+					return res;
+				});
+			},
+			//属性类型 选中
+			changeSkuType(typeIdList) {
+				let selectCheckedType = [];
+				typeIdList.forEach(typeId => {
+					this.skuTypeList.forEach(item => {
+						if (typeId === item.id) {
+							selectCheckedType.push(item);
+						}
+					});
+				});
+				this.selectCheckedType = selectCheckedType;
+			},
+			// 图片预览
+			imagePreview(url, list) {
+				if (url) {
+					url = url.split(";");
+					this.$refs.image.preview(url || "", list);
+				}
+			},
+			close() {
+				this.reset();
+				this.visible = false;
+				this.submitting = false;
+			},
+			reset() {
+				let that = this;
+				that.$refs.form.resetFields();
+				that.form.typeId = [];
+			},
+			add(id = 0) {
+				if (id > 0) {
+					this.title = "修改商品";
+				} else {
+					this.title = "新增商品";
+				}
+				this.query(); // 获取类别信息
+				this.visible = true;
+			},
+			submit() {
+				let that = this;
+				console.log(this.form);
+				that.$refs.form.validate(valid => {
+					if (valid) {
+						that.visible = false;
+						that.$message.success("提交成功", that);
+						that.$emit("success");
+					} else {
+						console.log("Failure of form validation!!");
+					}
+				});
+			},
+			query() {
+				this.skuTypeList = [
 					{
 						id: 5,
 						name: "颜色",
@@ -301,43 +505,8 @@
 							}
 						]
 					}
-				], // 商品sku list
-				params: {
-					productId: ""
-				},
-				rules: {
-					name: [{ required: true, message: "商品标题不能为空", trigger: "blur" }],
-					shortName: [{ required: true, message: "商品简称不能为空", trigger: "blur" }],
-					// isPerfect: [{ required: true, message: "请选择商品类别", trigger: "change" }],
-					// publishStatus: [{ required: true, message: "请选择商品类别", trigger: "change" }],
-					type: [{ required: true, message: "请选择商品类别", trigger: "change" }],
-					smallImage: [{ required: true, message: "缩略图不能为空", trigger: "blur" }],
-					remark: [{ required: true, message: "商品详细不能为空", trigger: "blur" }],
-					uploadImage: [
-						{ required: true, message: "商品详情图片不能为空", trigger: "blur" }
-					],
-					price: [
-						{
-							required: true,
-							validator: positiveRealNumber({
-								field: "商品价格",
-								decimals: 4
-							}),
-							trigger: "blur"
-						}
-					],
-					originalPrice: [
-						{
-							required: true,
-							validator: positiveRealNumber({
-								field: "商品价格",
-								decimals: 4
-							}),
-							trigger: "blur"
-						}
-					]
-				},
-				commodityTypeList: [
+				];
+				this.commodityTypeList = [
 					{
 						id: 1,
 						label: "指南",
@@ -400,162 +569,8 @@
 							}
 						]
 					}
-				] // 商品类别
-			};
-		},
-		methods: {
-			// 选择sku
-			changeCheckedSku(item) {
-				let list = []; // 选中的数组
-				this.skuTypeList.forEach(skuTypeItem => {
-					skuTypeItem.child.forEach(skuItem => {
-						let hasSku = item.some(checkedId => {
-							return checkedId === skuItem.id;
-						});
-						if (hasSku) {
-							list.push({
-								id: skuItem.id,
-								name: skuItem.name,
-								parentId: skuTypeItem.id,
-								parentName: skuTypeItem.name
-							});
-						}
-					});
-				});
-				// 选中的数据进行类型分类
-				let dest = this.sortParentList(list);
-				let skuList = [];
-				dest.forEach(destItem => {
-					let skuItem = [];
-					destItem.child.forEach(sku => {
-						skuItem.push(sku.id);
-					});
-					skuList.push(skuItem);
-				});
-				let calcList = this.calcDescartes(skuList); // 笛卡尔积算法，可用于商品SKU计算
-				let calcSkuList = [];
-				calcList.forEach(cale => {
-					let nameList = [];
-					if (Array.isArray(cale)) {
-						list.forEach(listItem => {
-							let isName = cale.some(caleItem => {
-								return caleItem === listItem.id;
-							});
-							if (isName) {
-								nameList.push(listItem.name);
-							}
-						});
-					} else {
-						list.forEach(listItem => {
-							if (cale === listItem.id) {
-								nameList.push(listItem.name);
-							}
-						});
-					}
-					calcSkuList.push({
-						attributeNameList: nameList.toString().replace(/,/g, "&"), // 名称
-						attributeIds: cale.toString(), // id
-						attributePrice: "", //价格
-						attributeStock: "" // 库存
-					});
-				});
-				this.calcSkuList = calcSkuList;
-				console.log("calcSkuList", calcSkuList);
-            },
-            // 选中数组进行父子组合
-			sortParentList(array) {
-				let map = {},
-					dest = [];
-				for (let i = 0; i < array.length; i++) {
-					let ai = array[i];
-					if (!map[ai.parentId]) {
-						dest.push({
-							parentId: ai.parentId,
-							name: ai.parentName,
-							child: [ai]
-						});
-						map[ai.parentId] = ai;
-					} else {
-						for (let j = 0; j < dest.length; j++) {
-							let dj = dest[j];
-							if (dj.parentId == ai.parentId) {
-								dj.child.push(ai);
-								break;
-							}
-						}
-					}
-				}
-				return dest;
+				];
 			},
-			//JavaScript 笛卡尔积算法，可用于商品 SKU 计算
-			calcDescartes(array) {
-				if (array.length < 2) {
-					return array[0] || [];
-				}
-				return [].reduce.call(array, (col, set) => {
-					var res = [];
-					col.forEach(c => {
-						set.forEach(s => {
-							var t = [].concat(Array.isArray(c) ? c : [c]);
-							t.push(s);
-							res.push(t);
-						});
-					});
-					return res;
-				});
-			},
-			//属性类型 选中
-			changeSkuType(typeIdList) {
-				let checkedSku = [];
-				typeIdList.forEach(typeId => {
-					this.skuTypeList.forEach(item => {
-						if (typeId === item.id) {
-							checkedSku.push(item);
-						}
-					});
-				});
-				this.checkedSku = checkedSku;
-			},
-			// 图片预览
-			imagePreview(url, list) {
-				if (url) {
-					url = url.split(";");
-					this.$refs.image.preview(url || "", list);
-				}
-			},
-			close() {
-				this.reset();
-				this.visible = false;
-				this.submitting = false;
-			},
-			reset() {
-				let that = this;
-				that.$refs.form.resetFields();
-				that.form.typeId = [];
-			},
-			add(id = 0) {
-				if (id > 0) {
-					this.title = "修改商品";
-					this.query(); // 获取类别信息
-				} else {
-					this.title = "新增商品";
-				}
-				this.visible = true;
-			},
-			submit() {
-				let that = this;
-				console.log(this.form);
-				that.$refs.form.validate(valid => {
-					if (valid) {
-						that.visible = false;
-						that.$message.success("提交成功", that);
-						that.$emit("success");
-					} else {
-						console.log("Failure of form validation!!");
-					}
-				});
-			},
-			query() {},
 			uploadBefore() {
 				console.log("上传之前");
 				this.submitting = true;
@@ -589,7 +604,12 @@
 			color: #333;
 			font-size: 16px;
 			margin-bottom: 10px;
-		}
+        }
+        .no-data{
+            text-align: center;
+            margin: 150px 0;
+            color: #909399;
+        }
 	}
 	.sku-list {
 		position: relative;

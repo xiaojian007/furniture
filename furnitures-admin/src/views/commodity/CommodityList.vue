@@ -177,7 +177,11 @@
 			</div>
 		</div>
 		<EditCommodityType ref="editCommdityType" @success="queryCommodityTree"></EditCommodityType>
-		<EditCommodity ref="editCommdity" @success="queryCommodityList"></EditCommodity>
+		<EditCommodity
+			ref="editCommdity"
+			:treeList="productTreeList"
+			@success="queryCommodityList"
+		></EditCommodity>
 	</div>
 </template>
 

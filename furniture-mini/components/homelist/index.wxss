@@ -1,0 +1,80 @@
+/* components/homelist/index.wxss */
+@import "/utils/common.wxss";
+.scoll-h {
+  height: calc(100vh - 180rpx);
+}
+.category-list{
+  overflow: hidden;
+  padding: 20rpx;
+}
+
+.category-list .list {
+  box-sizing: border-box;
+  width: 50%;
+  float: left;
+}
+
+.category-list .list:nth-child(2n) {
+  border-left: 2px solid #f7f7f7;
+  border-bottom: 4px solid #f7f7f7;
+}
+
+.category-list .list:nth-child(2n-1) {
+  border-right: 2px solid #f7f7f7;
+  border-bottom: 4px solid #f7f7f7;
+}
+
+.category-list .list .left, .category-list .right {
+  width: 100%;
+}
+
+.category-list .list .left .img image {
+  width: 100%;
+  height: 375rpx;
+  display: block;
+}
+
+.category-list .right .cont {
+  padding: 0 12rpx;
+}
+
+.category-list .right .cont .title {
+  height: 40rpx;
+  line-height: 1.3;
+}
+
+.category-list.arrange .list {
+  overflow: hidden;
+  padding: 15rpx;
+  border-bottom: 1rpx solid #f7f7f7;
+  width: 100%;
+}
+
+.category-list.arrange .list .left {
+  width: 35%;
+  float: left;
+}
+
+.category-list.arrange .list .right {
+  width: 65%;
+  float: left;
+}
+
+.category-list.arrange .list .left .img image {
+  width: 220rpx;
+  height: 220rpx;
+}
+.category-type{
+  width: 100%;
+}
+
+.type-list {
+  width: 100%;
+  white-space: nowrap;
+}
+
+.scroll-view-item_H {
+  width: 200px;
+  height: 100rpx;
+  display: inline-block;
+}

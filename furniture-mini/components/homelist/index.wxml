@@ -1,0 +1,27 @@
+<view>
+  <scroll-view scroll-y class="scoll-h" bindscrolltolower="scrollTolower">
+    <view class="category-type" catchtouchmove="doNothing">
+      <scroll-view class="type-list" scroll-x style="width: 100%">
+        <view id="green" class="scroll-view-item_H bc_green">3</view>
+        <view id="red" class="scroll-view-item_H bc_red">3</view>
+        <view id="yellow" class="scroll-view-item_H bc_yellow">4</view>
+        <view id="blue" class="scroll-view-item_H bc_blue">5</view>
+      </scroll-view>
+    </view>
+    <view class="category-list">
+      <navigator class="list b-f" hover-class="none" url="../goods/index?goods_id={{item.goods_id}}" wx:for="{{list}}" wx:key="this">
+        <view class="left">
+          <view class="img">
+            <image class="goodsImg" mode="scaleToFill" src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1586600782721&di=98630207a9dd72bf14dd816c5d526888&imgtype=0&src=http%3A%2F%2Fm.tuniucdn.com%2Ffb2%2Ft1%2FG2%2FM00%2FAF%2F3F%2FCii-T1gA04iIcXfZABp5vaXUmGYAADY2wOtpLIAGnnV994_w500_h280_c1_t0.png"></image>
+          </view>
+        </view>
+        <view class="right">
+          <view class="cont">
+            <text class="f-30 title twolist-hidden m-top10">你好反反复复你好反反复复你好反反复复你好反反复复你好反反复复</text>
+            <text class="price f-34 col-m f-w">￥333.33</text>
+          </view>
+        </view>
+      </navigator>
+    </view>
+  </scroll-view>
+</view>

@@ -9,7 +9,9 @@
     "pages/address/detail",
     "pages/address/create",
     "pages/order/index",
-    "pages/order/detail"
+    "pages/order/detail",
+    "pages/category/index",
+    "pages/category/list"
   ],
   "window": {
     "navigationBarBackgroundColor": "#ffffff",
@@ -17,13 +19,14 @@
     "navigationBarTextStyle": "black"
   },
   "usingComponents": {
-    "cu-custom": "/colorui/components/cu-custom"
+    "shortcut": "/components/shortcut/shortcut"
   },
   "tabBar": {
     "color": "#6e6d6b",
     "selectedColor": "#ff9966",
     "borderStyle": "white",
-    "list": [{
+    "list": [
+      {
         "iconPath": "images/tabBar/home.png",
         "selectedIconPath": "images/tabBar/home_on.png",
         "pagePath": "pages/home/index",
