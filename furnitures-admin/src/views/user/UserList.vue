@@ -106,7 +106,7 @@
 				background
 				@size-change="changePageSize"
 				@current-change="changeCurrentPage"
-				:current-page="page.currentPage"
+				:current-page="page.pageNum"
 				:page-sizes="PAGE_SIZES"
 				:page-size="page.pageSize"
 				layout="total, sizes, prev, pager, next"

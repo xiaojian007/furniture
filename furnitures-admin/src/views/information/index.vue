@@ -85,7 +85,7 @@
 				background
 				@size-change="changePageSize"
 				@current-change="changeCurrentPage"
-				:current-page="page.currentPage"
+				:current-page="page.pageNum"
 				:page-sizes="PAGE_SIZES"
 				:page-size="page.pageSize"
 				layout="total, sizes, prev, pager, next"
@@ -176,7 +176,7 @@
 			changeDateRangeOperate(dateRanges) {
 				dateRanges = dateRanges || [];
 				if (dateRanges instanceof Array) {
-					this.params.currentPage = 1;
+					this.params.pageNum = 1;
 					this.params.startTime = dateRanges[0];
 					this.params.endTime = dateRanges[1];
 				}

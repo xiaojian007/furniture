@@ -86,7 +86,7 @@
 				background
 				@size-change="changePageSize"
 				@current-change="changeCurrentPage"
-				:current-page="page.currentPage"
+				:current-page="page.pageNum"
 				:page-sizes="PAGE_SIZES"
 				:page-size="page.pageSize"
 				layout="total, sizes, prev, pager, next"
@@ -165,7 +165,7 @@
 		methods: {
 			//回车搜索
 			enterSearch() {
-				this.params.currentPage = 1;
+				this.params.pageNum = 1;
 				this.query();
 			},
 			query() {

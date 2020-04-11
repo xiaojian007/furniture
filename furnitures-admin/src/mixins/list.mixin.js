@@ -27,7 +27,7 @@ export default {
 			primaryKey: "id", //主键：ID
 			downloadUrl: "", //导出URL
 			params: {
-				currentPage: 1,
+				pageNum: 1,
 				pageSize: PAGE_SIZES[0]
 			}
 		};
@@ -51,7 +51,7 @@ export default {
 		 * 搜索，重置当前页为第一页
 		 */
 		search() {
-			this.params.currentPage = 1;
+			this.params.pageNum = 1;
 			this.query();
 		},
 		/**
@@ -98,7 +98,7 @@ export default {
 		 */
 		changePageSize(val) {
 			this.params.pageSize = val;
-			this.params.currentPage = 1;
+			this.params.pageNum = 1;
 			this.query();
 		},
 		/**
@@ -106,7 +106,7 @@ export default {
 		 * @param {Number} val 页码
 		 */
 		changeCurrentPage(val) {
-			this.params.currentPage = val;
+			this.params.pageNum = val;
 			this.query();
 		},
 		/**

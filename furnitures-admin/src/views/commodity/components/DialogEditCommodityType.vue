@@ -18,8 +18,8 @@
 			@submit.native.prevent
 			label-width="95px"
 		>
-			<el-form-item label="类别名称：" size="small" prop="roleName">
-				<el-input v-model="form.roleName" placeholder="请输入类别名称"></el-input>
+			<el-form-item label="类别名称：" size="small" prop="typeName">
+				<el-input v-model="form.typeName" placeholder="请输入类别名称"></el-input>
 			</el-form-item>
 			<el-form-item label="类别图片：" size="small">
 				<ComUploadSinglePicture
@@ -53,31 +53,25 @@
 
 <script>
 	import formMixin from "@mixins/form.mixin";
-
+	import { addAndUpdateProductType, getProductType } from "@api/commodity/product";
 	export default {
 		mixins: [formMixin],
 		data() {
 			return {
 				isNoCarouselPic: true, // 是否需要添加轮播图
 				form: {
-					roleId: "", //类别id
-					roleName: "", //类别名称
-					resourceIdList: [], //权限id
-					remark: "" //类别描述
+					typeId: "", //类别id
+					parentId: "", // 父级
+					typeLevel: 0, // 分类级别
+					typeName: "", //类别名称
+					resourceIdList: [] //权限id
 				},
 				params: {
 					roleId: ""
 				},
 				defaultKeys: [],
 				rules: {
-					roleName: [
-						{
-							required: true,
-							message: "不能为空",
-							trigger: "blur"
-						}
-					],
-					remark: [
+					typeName: [
 						{
 							required: true,
 							message: "不能为空",
@@ -100,30 +94,83 @@
 				this.visible = false;
 				this.submitting = false;
 			},
-			add(id = 0, node) {
-                console.log(node)
-				this.visible = true;
+			add(id = 0, data) {
 				if (id > 0) {
 					this.title = "修改类型";
+					this.form.parentId = data.data.parentId;
+					this.form.typeId = data.data.id;
+					this.form.typeLevel = data.data.typeLevel;
 					this.query(); // 获取类别信息
 				} else {
 					this.title = "新增类型";
+					this.form.parentId = data.data.id;
+					this.form.typeLevel = data.data.typeLevel + 1;
+					this.visible = true;
 				}
+				console.log(this.form);
 			},
 			submit() {
 				let that = this;
 				that.$refs.form.validate(valid => {
 					if (valid) {
-						console.log(valid);
-						that.visible = false;
-						that.$message.success("提交成功", that);
-						that.$emit("success");
+						let formData = {
+							bannerImage:
+								"//n.sinaimg.cn/news/1_img/upload/cf3881ab/67/w1000h667/20200408/66a8-iryninw4454635.jpg,//n.sinaimg.cn/news/1_img/upload/cf3881ab/67/w1000h667/20200408/66a8-iryninw4454635.jpg",
+							parentId: that.form.parentId,
+							showHome: 0, // 首页是否展示 0:否 1:是
+							typeImage:
+								"//n.sinaimg.cn/news/1_img/upload/cf3881ab/67/w1000h667/20200408/66a8-iryninw4454635.jpg", // 分类图片
+							typeLevel: that.form.typeLevel,
+							typeName: that.form.typeName
+						};
+						if (that.form.typeId) {
+							formData["typeId"] = that.form.typeId;
+						}
+						that.submitting = true;
+						addAndUpdateProductType(formData)
+							.then(data => {
+								if (data.succeed) {
+									console.log(data);
+									that.visible = false;
+									that.$message.success("添加成功", that);
+									that.$emit("success");
+								} else {
+									that.$message.warning(
+										data.message || "添加失败，请稍后重试！",
+										that
+									);
+								}
+							})
+							.catch(() => {
+								that.$message.warning("添加失败，请稍后重试！", that);
+							})
+							.finally(() => {
+								that.submitting = false;
+							});
 					} else {
 						console.log("Failure of form validation!!");
 					}
 				});
 			},
-			query() {},
+			query() {
+				let that = this;
+				that.submitting = true;
+				getProductType({ typeId: this.form.typeId })
+					.then(data => {
+						if (data.succeed) {
+							this.visible = true;
+						} else {
+							that.$message.warning(
+								data.message || "获取类别失败，请稍后重试！",
+								that
+							);
+						}
+					})
+					.catch(() => {})
+					.finally(() => {
+						that.submitting = true;
+					});
+			},
 			uploadBefore() {
 				console.log("上传之前");
 				this.submitting = true;

@@ -30,10 +30,10 @@ Object.assign(instance.defaults.headers.common, headers);
 // 添加request拦截器
 instance.interceptors.request.use(
 	config => {
-        const token = store.state.auth.token;
+		const token = store.state.auth.token;
 		if (token) {
-            config.headers.common["X-Auth-Token"] = token;
-        }
+			config.headers.common["X-Auth-Token"] = token;
+		}
 		config.params = filterParams(config.params, config.method.toUpperCase() === "GET");
 		return config;
 	},
@@ -45,16 +45,17 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
 	response => {
         let data = response.data || {};
-		if (data.resultCode === 200) {
+		if (data.code === '200') {
 			response.succeed = true;
-            response = data.resultData || {};
-		} else if (data.resultCode === 401) {
+			response.body = data.body || {};
+		} else if (data.code === 401) {
 			// 没有登录或登录超时，请重新登录
 			store.dispatch("setInfo", {});
 			router.replace("/login");
 		} else {
-			response = data.resultData;
-        }
+			response.body = data;
+		}
+		console.log(response);
 		return response || {};
 	},
 	error => {

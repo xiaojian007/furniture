@@ -6,7 +6,7 @@
 		:action="QINIU_UP"
 		name="file"
 		:disabled="disabled"
-		:data="{ token: '', key: '' }"
+		:data="{}"
 		:auto-upload="false"
 		:show-file-list="false"
 		:on-change="uploadChange"
@@ -16,7 +16,7 @@
 		:on-preview="picturePreview"
 	>
 		<img
-			v-if="url.replace(QINIU_DOWNLOAD, '').replace(thumbnail, '')"
+			v-if="url"
 			:src="url"
 			@click="imagePreview(url)"
 			class="single-img"
@@ -30,8 +30,6 @@
 	</el-upload>
 </template>
 <script>
-	import { queryUploadToken } from "@api/common";
-
 	export default {
 		// 声明 props
 		props: {
@@ -70,10 +68,10 @@
 			setUrl(url) {
 				let that = this;
 				url = url
-					.replace(that.QINIU_DOWNLOAD, "")
 					.replace(/\?.*$/, "")
 					.replace(/^.+\//, "");
-				that.url = that.QINIU_DOWNLOAD + url + that.thumbnail;
+				that.url = url;
+				// that.url = that.QINIU_DOWNLOAD + url + that.thumbnail;
 				that.$emit("change", that.getKey(), that.getKey(true), "SET_URL");
 			},
 			getKey(hasDomain) {
@@ -83,28 +81,28 @@
 					key = that.url.replace(/\?.*$/, "");
 				} else {
 					key = that.url
-						.replace(that.QINIU_DOWNLOAD, "")
 						.replace(/\?.*$/, "")
 						.replace(/^.+\//, "");
 				}
 				return key;
 			},
 			setFormData(data, file) {
-				if (data && data.qiniuUpToken) {
-					this.$refs.upload.data.token = data.qiniuUpToken;
+				if (data) {
 					let upKey = this.md5([new Date().getTime(), Math.random()].join(""));
-					this.$refs.upload.data.key = upKey;
 					if (file) {
 						file.UP_KEY = upKey;
 					}
 				}
 			},
 			uploadChange(file, fileList) {
+                let that = this
 				let bool = fileList.find(o => {
 					return o.raw && o.uid === file.uid;
 				});
 				if (bool && !file.UP_KEY) {
-					this.getUploadToken(file);
+					setTimeout(function() {
+						that.$refs.upload.submit();
+					}, 100);
 				}
 			},
 			uploadError() {
@@ -113,7 +111,7 @@
 			uploadSuccess(res) {
 				let that = this;
 				if (res) {
-					that.url = that.QINIU_DOWNLOAD + res.key + that.thumbnail;
+					that.url = res.body;
 					that.$emit("change", that.getKey(), that.getKey(true), "UPLOAD");
 				}
 			},
@@ -136,19 +134,6 @@
 			},
 			imagePreview(url) {
 				this.$emit("imagePreview", url);
-			},
-			getUploadToken(file) {
-				let that = this;
-				queryUploadToken(that.params)
-					.then(function(res) {
-						that.setFormData(res.body, file);
-						setTimeout(function() {
-							that.$refs.upload.submit();
-						}, 100);
-					})
-					.catch(function(err) {
-						console.log(err);
-					});
 			}
 		}
 	};
@@ -163,9 +148,9 @@
 
 	.single-uploader-box {
 		// width: 100%;
-        // height: 200px;
-        width: 90px;
-        height: 90px;
+		// height: 200px;
+		width: 90px;
+		height: 90px;
 		display: table;
 		table-layout: fixed;
 

@@ -21,7 +21,7 @@
 				<i class="icon-file"></i>
 				<span
 					>{{ data.label }}
-					<span class="tree-use-count" v-if="isCount">（{{ data.number }}）</span>
+					<!-- <span class="tree-use-count" v-if="isCount">（{{ data.number }}）</span> -->
 				</span>
 				<div class="tree-operation">
 					<el-popover

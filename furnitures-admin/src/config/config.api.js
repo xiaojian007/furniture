@@ -9,8 +9,8 @@
 
 /* eslint-disable no-undef */
 const baseURL = {
-    // dev: "http://192.168.1.100:8080/", //测试环境
-	dev: "//alpha.api.pdp.ininin.com/", //测试环境
+    dev: "http://192.168.1.102:8080//", //测试环境
+	// dev: "//alpha.api.pdp.ininin.com/", //测试环境
 	formal: "//api.pdp.ininin.com/" //正式环境
 }[process.env.VUE_APP_API_MODE];
 

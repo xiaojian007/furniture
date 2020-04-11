@@ -5,9 +5,9 @@ console.log('config.RID', config.RID)
  * 注册常量
  */
 //七牛下载URL
+import baseURL from "@config/config.api";
 const QINIU_DOWNLOAD = "//cloud.pdp.ininin.com/";
 const downloadUrl = '//wg.cloud.ininin.com/'
-const uploadUrl = window.document.location.protocol.indexOf('https') === 0 ? 'https://up-z1.qbox.me/' : 'http://upload-z2.qiniu.com/'
 
 /**
  * 常量
@@ -24,7 +24,7 @@ const constants = {
     //确认弹窗是否可以通过按下 ESC 关闭 Dialog
     CONFIRM_ESC_CLOSE: false,
     //七牛上传URL
-    QINIU_UP: uploadUrl,
+    QINIU_UP: baseURL + 'upload/image',
     QINIU_DOWNLOAD: QINIU_DOWNLOAD,
     //供应商导入模板
     EXCEL_IMPORT_SUPPLIER: downloadUrl + '9ad6024d4c81c9db93234aa8e2708dd6.xlsx',

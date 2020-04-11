@@ -165,7 +165,7 @@
 					background
 					@size-change="changePageSize"
 					@current-change="changeCurrentPage"
-					:current-page="page.currentPage"
+					:current-page="page.pageNum"
 					:page-sizes="PAGE_SIZES"
 					:page-size="page.pageSize"
 					layout="total, sizes, prev, pager, next"
@@ -190,6 +190,11 @@
 	import CommodityTypeTree from "./components/CommodityTypeTree";
 	import EditCommodityType from "./components/DialogEditCommodityType";
 	import EditCommodity from "./components/DialogEditCommodity";
+	import {
+		getProductAndProductType,
+		getProductTypeList,
+		getProductList
+	} from "@api/commodity/product";
 	import { enumCommodityPublishStatus, enumCommodityPerfectStatus } from "@common/enums/index";
 
 	export default {
@@ -335,13 +340,13 @@
 				} else {
 					this.params.parentCategoryId = data.data.id;
 				}
-				this.params.currentPage = 1;
+				this.params.pageNum = 1;
 				// this.queryProductList()
 			},
 			// 添加产品类别
 			handleAddTree(data, node) {
+				console.log(data.id);
 				this.$refs.editCommdityType.add("0", node);
-				console.log(data, node);
 			},
 			// 修改产品类别
 			handleRenameTree(data, node) {
@@ -349,8 +354,8 @@
 					this.$message.warning("根目录无法修改！");
 					return;
 				}
+				console.log(data.id);
 				this.$refs.editCommdityType.add("1", node);
-				console.log(data, node);
 			},
 			// 删除产品类别
 			handleDelTree(nodeData, node) {
@@ -426,6 +431,30 @@
 				let that = this;
 				that.querying = true;
 				that.loading = true;
+				getProductAndProductType(this.params)
+					.then(res => {
+						if (res[0].succeed) {
+							let list = res[0].body || [];
+							that.getTreeList(list);
+						} else {
+							that.$message.warning(res[0].message || that.MSG_UNKNOWN, that);
+							console.log("err", getProductAndProductType);
+							return;
+						}
+						if (res[1].succeed) {
+							console.log(1);
+						} else {
+							that.$message.warning(res[0].message || that.MSG_UNKNOWN, that);
+							console.log("err", getProductAndProductType);
+						}
+					})
+					.catch(err => {
+						that.$message.warning(err[0].message || that.MSG_UNKNOWN, that);
+					})
+					.finally(() => {
+						that.querying = false;
+						that.loading = false;
+					});
 				setTimeout(() => {
 					let list = [
 						{
@@ -461,78 +490,82 @@
 							reportPriceStr: null
 						}
 					];
-					let productTreeLists = [
-						{
-							id: 344,
-							parentId: 341,
-							label: "类别1",
-							number: 3,
-							children: [
-								{
-									id: 348,
-									parentId: 344,
-									label: "类别1-1",
-									number: 7
-								},
-								{
-									id: 349,
-									parentId: 344,
-									label: "类别1-2",
-									number: 7
-								},
-								{
-									id: 350,
-									parentId: 344,
-									label: "类别1-3",
-									number: 7
-								}
-							]
-						},
-						{
-							id: 34,
-							parentId: 31,
-							label: "类别2",
-							number: 3,
-							children: [
-								{
-									id: 38,
-									parentId: 34,
-									label: "类别2-1",
-									number: 7
-								},
-								{
-									id: 39,
-									parentId: 34,
-									label: "类别2-2",
-									number: 7
-								},
-								{
-									id: 40,
-									parentId: 34,
-									label: "类别2-3",
-									number: 7
-								}
-							]
-						}
-					];
-					that.productTreeList = [
-						{
-							id: 0,
-							label: "全部类别",
-							number: 99,
-							children: productTreeLists,
-							parentId: null
-						}
-					];
 					this.list = list;
 					that.querying = false;
 					that.loading = false;
 				}, 1000);
 			},
+			// 产品类型数据重组
+			getTreeList(array) {
+				let that = this;
+				let productTreeList = [];
+				array.forEach(item => {
+					let productTreeItem = {
+						parentId: 0,
+						typeLevel: 1,
+						id: item.typeId,
+						label: item.typeName
+					};
+					let productTreeChild = [];
+					item.typeVoList.forEach(itemChild => {
+						productTreeChild.push({
+							parentId: item.typeId,
+							id: itemChild.typeId,
+							typeLevel: 2,
+							label: itemChild.typeName
+						});
+					});
+					productTreeItem["children"] = productTreeChild;
+					productTreeList.push(productTreeItem);
+				});
+
+				that.productTreeList = [
+					{
+						id: 0,
+						label: "全部类别",
+						children: productTreeList,
+						typeLevel: 0,
+						parentId: 0
+					}
+				];
+			},
 			// 获取产品tree
-			queryCommodityTree() {},
+			queryCommodityTree() {
+				let that = this;
+				that.queryingTree = true;
+
+				getProductTypeList({})
+					.then(data => {
+						if (data.succeed) {
+							let list = data.body || [];
+							that.getTreeList(list);
+						}
+					})
+					.catch(err => {
+						that.$message.warning(err.message || that.MSG_UNKNOWN, that);
+					})
+					.finally(() => {
+						that.queryingTree = false;
+					});
+			},
 			// 获取产品列表
-			queryCommodityList() {}
+			queryCommodityList() {
+				let that = this;
+				that.queryingTree = true;
+				that.loading = true;
+
+				getProductList({})
+					.then(data => {
+						console.log(data);
+					})
+					.catch(err => {
+						that.$message.warning(err.message || that.MSG_UNKNOWN, that);
+					})
+					.finally(() => {
+						that.loading = false;
+						that.queryingTree = false;
+					});
+			}
 		}
 	};
 </script>
