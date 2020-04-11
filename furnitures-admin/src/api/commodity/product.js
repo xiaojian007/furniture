@@ -38,7 +38,7 @@ export const getProductAndProductType = params => {
  */
 export const addAndUpdateProductType = params => {
     let url = "/producttype/save";
-	if (params.id > 0) {
+	if (params.typeId > 0) {
 		url = "/producttype/update";
 	}
 	return post(url, params);
