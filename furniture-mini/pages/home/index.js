@@ -10,6 +10,8 @@ Page({
    * 页面的初始数据
    */
   data: {
+    floorShow: false, // 返回顶部是否显示
+    isShow: false, // 轮播切换是否已经从第一条切换
     winHeight: "", //窗口高度
     currentTab: 0, //预设当前项的值
     scrollLeft: 0, //tab标题的滚动条位置
@@ -20,30 +22,36 @@ Page({
       answer: 134,
       listen: 2234
     }],
+    params: {
+      currentPage: 1,
+      pageSize: 10
+    },
     scrollLeft: 0,
     swiperAutoplay: false,
-    swiperIndicatorDots: false,
     currentTab: 0,
     tabList: [{
       id: 0,
       name: '精选'
     }, {
       id: 1,
-      name: '情感'
+      name: '情感情感情感情感'
     }, {
       id: 2,
-      name: '情感'
+      name: '情感情感情感情感情感'
     }, {
       id: 3,
       name: '情感'
     }, {
       id: 4,
-      name: '情感'
+      name: '情感情感情感情感情感'
     }, {
       id: 5,
       name: '情感'
     }, {
       id: 6,
+      name: '情感'
+    }, {
+      id: 7,
       name: '情感'
     }]
   },
@@ -51,11 +59,11 @@ Page({
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function(options) {
+  onLoad: function (options) {
     var that = this;
     //  高度自适应
     wx.getSystemInfo({
-      success: function(res) {
+      success: function (res) {
         var clientHeight = res.windowHeight,
           clientWidth = res.windowWidth,
           rpxR = 750 / clientWidth;
@@ -71,50 +79,76 @@ Page({
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
-  onReady: function() {
+  onReady: function () {
 
   },
 
   /**
    * 生命周期函数--监听页面显示
    */
-  onShow: function() {
-    app.loginCheck(this, () => {})
+  onShow: function () {
+    app.loginCheck(this, () => {
+      this.query()
+    }, false)
   },
 
   /**
    * 生命周期函数--监听页面隐藏
    */
-  onHide: function() {
+  onHide: function () {
 
   },
 
   /**
    * 生命周期函数--监听页面卸载
    */
-  onUnload: function() {
+  onUnload: function () {
 
   },
 
   /**
    * 页面相关事件处理函数--监听用户下拉动作
    */
-  onPullDownRefresh: function() {
+  onPullDownRefresh: function () {
 
   },
 
   /**
    * 页面上拉触底事件的处理函数
    */
-  onReachBottom: function() {
+  onReachBottom: function () {
 
   },
 
   /**
    * 用户点击右上角分享
    */
-  onShareAppMessage: function() {
+  onShareAppMessage: function () {
 
+  },
+  // 获取滚动条当前位置
+  scrollToupper(e) {
+    let scrollTop = e.detail.detail.scrollTop
+    if (scrollTop > 100) {
+      this.setData({
+        floorShow: true
+      });
+    } else {
+      this.setData({
+        floorShow: false
+      });
+    }
+  },
+  //回到顶部
+  goTop(e) {  // 一键回到顶部
+    let currentTab = this.data.currentTab
+    this.selectComponent("#homeList" + currentTab).toTop()
+  },
+  // 预约
+  goReservation() {
+    wx.navigateTo({
+      url: '/pages/shopping-cart/index',
+    })
   },
   /**
    * 搜索
@@ -122,16 +156,26 @@ Page({
   search() {
     console.log(2222)
   },
+  query() {
+    this.selectComponent("#homeList0").query()
+  },
   // 滚动切换标签样式
   switchTab(e) {
     this.setData({
       currentTab: e.detail.current
     });
     this.checkCor();
+
+    // if (this.data.currentTab === 0) {
+    //   this.setData({
+    //     isShow: true
+    //   })
+    // }
+    // if (this.data.isShow) {
+    //   return
+    // }
     // 触发子级调用数据
-    if (e.detail.current > 0) {
-      this.selectComponent("#homeList" + e.detail.current).query()
-    }
+    this.selectComponent("#homeList" + e.detail.current).query()
   },
   //判断当前滚动超过一屏时，设置tab标题滚动条。
   checkCor() {

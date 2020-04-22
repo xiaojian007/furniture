@@ -1,7 +1,7 @@
 <template name="loading">
   <block wx:if="{{isRegister}}">
     <view class="vague">
-      <image class="vague-img" mode="aspectFill" src="/images/vague.jpg"></image>
+      <image class="vague-img" mode="aspectFill" src="/image/vague.jpg"></image>
     </view>
   </block>
   <block wx:else>
@@ -9,7 +9,7 @@
       <view class="weui-loadmore">
         <view wx:if="{{list.length!=total}}" class="weui-loading"></view>
         <view wx:if="{{list.length===0 && !loading}}" class="page-empty">
-          <image class="page-empty-img" src="/images/placeholder.png"></image>
+          <image class="page-empty-img" src="/image/placeholder.png"></image>
           <view class="info-text m15">暂时没有更多{{text}}~</view>
         </view>
         <view class="weui-loadmore__tips loadmore-tips info-text" wx:elif="{{list.length==total}}">没有更多{{text}}</view>

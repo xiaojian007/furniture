@@ -133,19 +133,32 @@
 										</el-button>
 										<el-button
 											type="text"
-											@click="$refs.editCommdity.add(scope.row.id)"
+											@click="$refs.editCommdity.add(scope.row.productId)"
 										>
 											修改
 										</el-button>
-										<el-button type="text">
+										<el-button type="text"
+                                            @click="deleteProductItem(scope.row.productId)"
+                                        >
 											删除
 										</el-button>
 									</template>
-									<template v-else-if="field.prop === 'extendedState'">
+									<template v-else-if="field.prop === 'isPerfect'">
 										<el-switch
-											:value="scope.row.extendedState === 3"
+											:value="scope.row.isPerfect === 1"
 											@change="
-												(val, id) => changePutShelves(val, scope.row.id)
+												(val, id) =>
+													changePutShelves(val, scope.row.productId)
+											"
+										>
+										</el-switch>
+									</template>
+									<template v-else-if="field.prop === 'publishStatus'">
+										<el-switch
+											:value="scope.row.publishStatus === 1"
+											@change="
+												(val, id) =>
+													changePutShelves(val, scope.row.productId)
 											"
 										>
 										</el-switch>
@@ -193,7 +206,9 @@
 	import {
 		getProductAndProductType,
 		getProductTypeList,
-		getProductList
+		getProductList,
+        deleteProductType,
+        deteleProduct
 	} from "@api/commodity/product";
 	import { enumCommodityPublishStatus, enumCommodityPerfectStatus } from "@common/enums/index";
 
@@ -221,7 +236,7 @@
 				fields: [
 					{
 						show: true,
-						prop: "supplierId",
+						prop: "productId",
 						align: "center",
 						label: "编号",
 						className: "t-date",
@@ -229,37 +244,52 @@
 					},
 					{
 						show: true,
-						prop: "commentPurpose",
+						prop: "name",
 						align: "center",
 						label: "商品名称",
 						width: 130
 					},
 					{
 						show: true,
-						prop: "creator",
+						prop: "originalPrice",
 						align: "center",
-						label: "价格",
+						label: "市场价格",
 						width: 80
 					},
 					{
 						show: true,
-						prop: "extendedState",
+						prop: "price",
+						align: "center",
+						label: "商品价格",
+						width: 80
+					},
+					{
+						show: true,
+						prop: "sale",
+						align: "center",
+						label: "销量",
+						width: 100
+					},
+					{
+						show: true,
+						prop: "stock",
+						align: "center",
+						label: "库存",
+						width: 100
+					},
+					{
+						show: true,
+						prop: "publishStatus",
 						align: "center",
 						label: "是否上架",
 						width: 100
 					},
 					{
 						show: true,
-						prop: "reportPrice",
+						prop: "isPerfect",
 						align: "center",
-						label: "置顶",
+						label: "是否精选",
 						width: 80
-					},
-					{
-						show: true,
-						prop: "creatorId",
-						align: "center",
-						label: "销量"
 					},
 					{
 						show: true,
@@ -332,6 +362,45 @@
 					// 	}
 					// );
 				});
+            },
+            /**
+			 * 删除产品
+			 * @method changePutShelves
+			 * @param {Number} id 商品id
+			 *
+			 */
+			deleteProductItem(id) {
+				let that = this;
+				that.$confirm(
+					"确认删除改商品？",
+					"提示",
+					{
+						confirmButtonText: "确认",
+						cancelButtonText: "取消",
+						customClass: "custom-confirm custom-confirm-danger", // 图标样式
+						confirmButtonClass: "el-button--primary", // 确认按钮样式
+						closeOnClickModal: that.CONFIRM_MODAL_CLOSE, // 是否可以点击空白关闭
+						closeOnPressEscape: that.CONFIRM_ESC_CLOSE, // 是否可以esc关闭
+						showClose: false // 是否显示关闭按钮
+					}
+				).then(() => {
+					that.querying = true;
+					deteleProduct({ productId: id })
+						.then(data => {
+							if (data.succeed) {
+								that.$message.success("删除成功", that);
+								that.query();
+							} else {
+								that.$message.warning(data.body.message || that.MSG_UNKNOWN, that);
+							}
+						})
+						.catch(err => {
+							that.$message.warning(err.body.message || that.MSG_UNKNOWN, that);
+						})
+						.finally(() => {
+							that.querying = false;
+						});
+				});
 			},
 			// 点击产品类别 获取列表
 			handleNodeClick(data) {
@@ -360,8 +429,8 @@
 			// 删除产品类别
 			handleDelTree(nodeData, node) {
 				let that = this;
-				console.log(nodeData, node);
-				if (nodeData.number > 0) {
+				console.log(node);
+				if (nodeData.children.length > 0) {
 					that.$message.warning("需要先删除本产品下的类型，再删除该类型！");
 					return false;
 				} else {
@@ -376,34 +445,21 @@
 					})
 						.then(() => {
 							that.querying = true;
-							// deleteProductType(
-							//     { id: nodeData.id },
-							//     () => {
-							//         that.message.success(that, "删除成功");
-							//         that.querying = false;
-							//         that.queryProductTreeList();
-							//     },
-							//     (data) => {
-							//         that.querying = false;
-							//         that.$alert(
-							//             data.resultMsg || that.MSG_UNKNOWN,
-							//             "温馨提示",
-							//             {
-							//                 confirmButtonText: "知道了",
-							//             }
-							//         );
-							//     },
-							//     (data) => {
-							//         that.querying = false;
-							//         that.$alert(
-							//             data.resultMsg || that.MSG_UNKNOWN,
-							//             "温馨提示",
-							//             {
-							//                 confirmButtonText: "知道了",
-							//             }
-							//         );
-							//     }
-							// );
+							deleteProductType({ typeId: nodeData.id })
+								.then(data => {
+									if (data.succeed) {
+										that.$message.success("删除成功！", that);
+										that.queryCommodityTree();
+									} else {
+										that.$message.warning(data.body.message || "删除失败！", that);
+									}
+								})
+								.catch(err => {
+									that.$message.warning(err.body.message || "删除失败！", that);
+								})
+								.finally(() => {
+									that.querying = false;
+								});
 						})
 						.catch(() => {});
 					return false;
@@ -433,20 +489,23 @@
 				that.loading = true;
 				getProductAndProductType(this.params)
 					.then(res => {
-						if (res[0].succeed) {
-							let list = res[0].body || [];
-							that.getTreeList(list);
+						if (res[0].succeed && res[1].succeed) {
+							let treeList = res[0].body || [];
+							that.getTreeList(treeList);
+							that.list = res[1].body.list || [];
+							that.page.totalCount = res[1].body.total;
 						} else {
-							that.$message.warning(res[0].message || that.MSG_UNKNOWN, that);
+							let message = "";
+							if (res[0].succeed) {
+								message = res[1].message;
+							} else {
+								message = res[0].message;
+							}
+							that.$message.warning(message || that.MSG_UNKNOWN, that);
 							console.log("err", getProductAndProductType);
-							return;
 						}
-						if (res[1].succeed) {
-							console.log(1);
-						} else {
-							that.$message.warning(res[0].message || that.MSG_UNKNOWN, that);
-							console.log("err", getProductAndProductType);
-						}
+						that.querying = false;
+						that.loading = false;
 					})
 					.catch(err => {
 						that.$message.warning(err[0].message || that.MSG_UNKNOWN, that);
@@ -455,45 +514,6 @@
 						that.querying = false;
 						that.loading = false;
 					});
-				setTimeout(() => {
-					let list = [
-						{
-							id: 270,
-							supplierId: 60,
-							extendedState: 3,
-							reportPrice: 3,
-							commentPurpose: "测试",
-							comments: "测",
-							creatorId: 2061,
-							creator: "黄庆鸿",
-							deleted: 0,
-							updateTime: null,
-							createTime: "2020-03-10 11:26:07",
-							companyName: "上海乐盈纸业",
-							extendedStateStr: null,
-							reportPriceStr: null
-						},
-						{
-							id: 268,
-							supplierId: 1124,
-							extendedState: 5,
-							reportPrice: 3,
-							commentPurpose: "同时咯啦咯",
-							comments: "统计咯聚咯某家了",
-							creatorId: 2061,
-							creator: "黄庆鸿",
-							deleted: 0,
-							updateTime: null,
-							createTime: "2020-03-09 14:17:57",
-							companyName: "岳阳立华包装材料科技",
-							extendedStateStr: null,
-							reportPriceStr: null
-						}
-					];
-					this.list = list;
-					that.querying = false;
-					that.loading = false;
-				}, 1000);
 			},
 			// 产品类型数据重组
 			getTreeList(array) {
@@ -539,10 +559,12 @@
 						if (data.succeed) {
 							let list = data.body || [];
 							that.getTreeList(list);
+						} else {
+							that.$message.warning(data.body.message || that.MSG_UNKNOWN, that);
 						}
 					})
 					.catch(err => {
-						that.$message.warning(err.message || that.MSG_UNKNOWN, that);
+						that.$message.warning(err.body.message || that.MSG_UNKNOWN, that);
 					})
 					.finally(() => {
 						that.queryingTree = false;
@@ -556,10 +578,15 @@
 
 				getProductList({})
 					.then(data => {
-						console.log(data);
+						if (data.succeed) {
+							that.list = data.body.list || [];
+							that.page.totalCount = data.body.total;
+						} else {
+							that.$message.warning(data.body.message || that.MSG_UNKNOWN, that);
+						}
 					})
 					.catch(err => {
-						that.$message.warning(err.message || that.MSG_UNKNOWN, that);
+						that.$message.warning(err.body.message || that.MSG_UNKNOWN, that);
 					})
 					.finally(() => {
 						that.loading = false;
@@ -609,9 +636,9 @@
 		.list-search {
 			.el-select {
 				width: 80px;
-			}
+            }
 		}
-	}
+    }
 </style>
 
 <style lang="less" scope>

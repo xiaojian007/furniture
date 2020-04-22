@@ -21,8 +21,8 @@
 			<el-form-item label="角色名称：" size="small" prop="roleName">
 				<el-input v-model="form.roleName" placeholder="请输入角色名称"></el-input>
 			</el-form-item>
-			<el-form-item label="角色描述：" size="small" prop="remark">
-				<el-input v-model="form.remark" placeholder="请输入角色描述"></el-input>
+			<el-form-item label="角色描述：" size="small" prop="roleCode">
+				<el-input v-model="form.roleCode" placeholder="请输入角色描述"></el-input>
 			</el-form-item>
 			<el-form-item label="可用权限：" size="small">
 				<el-tree
@@ -49,6 +49,7 @@
 
 <script>
 	import formMixin from "@mixins/form.mixin";
+	import { addAndUpdateRole } from "@api/users/role";
 
 	export default {
 		mixins: [formMixin],
@@ -57,16 +58,13 @@
 				form: {
 					roleId: "", //角色id
 					roleName: "", //角色名称
-					resourceIdList: [], //权限id
-					remark: "" //角色描述
+					roleDesc: [], //权限id
+					roleCode: "" //角色描述
 				},
 				defaultProps: {
 					//资源树节点
 					children: "children",
 					label: "label"
-				},
-				params: {
-					roleId: ""
 				},
 				treeData: [
 					{
@@ -113,14 +111,14 @@
 							trigger: "blur"
 						}
 					],
-					remark: [
+					roleCode: [
 						{
 							required: true,
 							message: "不能为空",
 							trigger: "blur"
 						}
 					],
-					resourceIdList: [
+					roleDesc: [
 						{
 							required: true,
 							message: "不能为空",
@@ -149,10 +147,38 @@
 				let that = this;
 				that.$refs.form.validate(valid => {
 					if (valid) {
-						console.log(valid);
-						that.visible = false;
-						that.$message.success("提交成功", that);
-						that.$emit("success");
+						that.submitting = true;
+						let formData = {
+							roleName: that.form.roleName, //角色名称
+							roleCode: that.form.roleCode, //角色描述
+							roleDesc: '0'
+						};
+						if (that.form.roleId > 0) {
+							formData["roleId"] = that.form.roleId;
+						}
+						addAndUpdateRole(formData)
+							.then(data => {
+								if (data.succeed) {
+									that.visible = false;
+									that.$message.success("添加成功", that);
+									that.$emit("success");
+									that.visible = false;
+								} else {
+									that.$message.warning(
+										data.body.message || that.MSG_UNKNOWN,
+										that
+									);
+								}
+							})
+							.catch(err => {
+								that.$message.warning(
+									err.body.message || that.MSG_UNKNOWN,
+									that
+								);
+							})
+							.finally(() => {
+								that.submitting = false;
+							});
 					} else {
 						console.log("Failure of form validation!!");
 					}

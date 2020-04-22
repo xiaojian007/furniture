@@ -1699,8 +1699,8 @@ button.icon.lg {
 .cu-bar .search-form input {
 	flex: 1;
 	padding-right: 30rpx;
-	height: 64rpx;
-	line-height: 64rpx;
+	height: 68rpx;
+	line-height: 68rpx;
 	font-size: 26rpx;
 	background-color: transparent;
 }

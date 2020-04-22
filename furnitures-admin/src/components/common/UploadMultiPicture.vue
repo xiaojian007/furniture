@@ -9,7 +9,7 @@
 		list-type="picture-card"
 		:disabled="disabled"
 		name="file"
-		:data="{ token: '', key: '' }"
+		:data="{ title: '' }"
 		:multiple="multiple"
 		:file-list="list"
 		:auto-upload="false"
@@ -25,7 +25,8 @@
 	</el-upload>
 </template>
 <script>
-	import { queryUploadToken } from "@api/common";
+	import { getPicBaseUrl } from "@utils/index";
+	import { md5 } from "@utils/crypto";
 
 	export default {
 		// 声明 props
@@ -58,21 +59,20 @@
 		data() {
 			return {
 				data: null,
-				list: [],
-				picThumbnail: `?imageMogr2/thumbnail/!${this.thumbnailSize}r/auto-orient/gravity/Center/crop/${this.thumbnailSize}`
+				list: []
 			};
 		},
 		watch: {
-			data: function() {
+			data: () => {
 				let that = this;
 				let data = that.data || [];
 				that.list = [];
 				if (Array.isArray(data)) {
-					data.forEach(function(key) {
+					data.forEach(key => {
 						if (key) {
 							that.list.push({
 								name: "",
-								url: that.getPicBaseUrl(key, true) + that.picThumbnail
+								url: getPicBaseUrl(key)
 							});
 						}
 					});
@@ -85,24 +85,21 @@
 				let that = this;
 				let parts = [];
 				if (hasDomain) {
-					that.list.forEach(function(item) {
-						parts.push(item.url.replace(/\?.*$/, ""));
+					that.list.forEach(item => {
+						parts.push(getPicBaseUrl(item.url));
 					});
 				} else {
-					that.list.forEach(function(item) {
-						parts.push(that.getPicBaseUrl(item.url, false));
+					that.list.forEach(item => {
+						parts.push(item.name);
 					});
 				}
 				return parts;
 			},
-			setFormData(data, file) {
-				if (data && data.qiniuUpToken) {
-					this.$refs.upload.data.token = data.qiniuUpToken;
-					let upKey = this.md5([new Date().getTime(), Math.random()].join(""));
-					this.$refs.upload.data.key = upKey;
-					if (file) {
-						file.UP_KEY = upKey;
-					}
+			setFormData(file) {
+				let upKey = md5([new Date().getTime(), Math.random()].join(""));
+				this.$refs.upload.data.title = file.name;
+				if (file) {
+					file.UP_KEY = upKey;
 				}
 			},
 			uploadChange(file, fileList) {
@@ -110,7 +107,10 @@
 					return o.raw && o.uid === file.uid;
 				});
 				if (bool && !file.UP_KEY) {
-					this.getUploadToken(file);
+					this.setFormData(file);
+					setTimeout(() => {
+						this.$refs.upload.submit();
+					}, 100);
 				}
 			},
 			uploadError() {
@@ -118,15 +118,10 @@
 				this.$message.error("上传出错，请重新上传！");
 			},
 			uploadSuccess(res, file, fileList) {
-				console.log(fileList);
 				let that = this;
 				if (res) {
-					// that.list.push({
-					//     name: file.name || '',
-					//     url: that.getPicBaseUrl(res.key, true) + that.picThumbnail
-					// })
 					file.base = file.raw;
-					file.url = that.getPicBaseUrl(res.key, true) + that.picThumbnail;
+					file.url = getPicBaseUrl(res.body);
 					/*  因为绑定了file-lis 所以 fileList被修改为this.list
                     如果不把fileList赋值回去, 多图上传的第二次成功回调不会进来 */
 					that.list = fileList;
@@ -172,28 +167,6 @@
 					}
 				});
 				that.$emit("change", that.getKeys(), that.getKeys(true), that.list);
-			},
-			getUploadToken(file) {
-				let that = this;
-				queryUploadToken(
-					that.params,
-					data => {
-						that.setFormData(data, file);
-						setTimeout(function() {
-							that.$refs.upload.submit();
-						}, 100);
-					},
-					data => {
-						that.$alert(data.resultMsg, "温馨提示", {
-							confirmButtonText: "知道了"
-						});
-					},
-					data => {
-						that.$alert(data.resultMsg || "网络繁忙，111请稍后再试！", "温馨提示", {
-							confirmButtonText: "知道了"
-						});
-					}
-				);
 			}
 		}
 	};

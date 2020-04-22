@@ -1,0 +1,6 @@
+<template name="networkErr">
+  <view class="page-empty">
+    <image src="/images/network_err.png" />
+    <view>网络繁忙，请稍后再试～</view>
+  </view>
+</template>

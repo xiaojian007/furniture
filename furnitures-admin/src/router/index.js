@@ -10,6 +10,7 @@
 import Vue from "vue";
 import Router from "vue-router";
 import store from "@store/";
+import { setURLPath } from "@/utils/browser";
 // 路由进度条
 import NProgress from "nprogress"; // progress bar
 import "nprogress/nprogress.css"; // progress bar style
@@ -32,11 +33,14 @@ const router = new Router({
  * 检查新版本：有新版本则刷新页面
  */
 router.beforeResolve(function(to, from, next) {
-	const latestVersion = store.state.app.latestVersion;
+    const app = store.state.app;
+	// 检查新版本：有新版本则刷新页面
+	console.log("LATEST_VERSION=>", app.latestVersion);
+	const latestVersion = app.latestVersion;
 	if (latestVersion) {
-		const path = to.path || "/";
-		const domain = [window.location.protocol, window.location.host].join("//");
-		window.location.href = [domain, `?v=${latestVersion}`, `#${path}`].join("");
+		//有新版
+		store.dispatch("setLatestVersion", "");
+		setURLPath({ v: latestVersion }, to.path || "/");
 	}
 	next();
 });

@@ -9,8 +9,8 @@
 import Calculator from "@utils/calculator";
 export default {
 	install(Vue, { store }) {
-        console.log(store)
-        Vue.prototype.Calculator = Calculator;
+		console.log(store);
+		Vue.prototype.Calculator = Calculator;
 
 		/**
 		 * 获取百分比值

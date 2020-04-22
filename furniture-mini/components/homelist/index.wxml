@@ -1,27 +1,191 @@
-<view>
-  <scroll-view scroll-y class="scoll-h" bindscrolltolower="scrollTolower">
-    <view class="category-type" catchtouchmove="doNothing">
-      <scroll-view class="type-list" scroll-x style="width: 100%">
-        <view id="green" class="scroll-view-item_H bc_green">3</view>
-        <view id="red" class="scroll-view-item_H bc_red">3</view>
-        <view id="yellow" class="scroll-view-item_H bc_yellow">4</view>
-        <view id="blue" class="scroll-view-item_H bc_blue">5</view>
-      </scroll-view>
-    </view>
-    <view class="category-list">
-      <navigator class="list b-f" hover-class="none" url="../goods/index?goods_id={{item.goods_id}}" wx:for="{{list}}" wx:key="this">
-        <view class="left">
-          <view class="img">
-            <image class="goodsImg" mode="scaleToFill" src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1586600782721&di=98630207a9dd72bf14dd816c5d526888&imgtype=0&src=http%3A%2F%2Fm.tuniucdn.com%2Ffb2%2Ft1%2FG2%2FM00%2FAF%2F3F%2FCii-T1gA04iIcXfZABp5vaXUmGYAADY2wOtpLIAGnnV994_w500_h280_c1_t0.png"></image>
-          </view>
-        </view>
-        <view class="right">
-          <view class="cont">
-            <text class="f-30 title twolist-hidden m-top10">你好反反复复你好反反复复你好反反复复你好反反复复你好反反复复</text>
-            <text class="price f-34 col-m f-w">￥333.33</text>
-          </view>
-        </view>
-      </navigator>
-    </view>
-  </scroll-view>
-</view>
+<import src="/templates/loading.wxml" />
+
+<!-- 首页 -->
+<block wx:if="{{isHome}}">
+	<block wx:if="{{!loading}}">
+		<view class="featured">
+			<scroll-view scroll-y scroll-top='{{topNumber}}' scroll-with-animation="true" class="scoll-h" bindscrolltolower="scrollTolower" bindscroll="pageScroll">
+				<!-- 轮播图 -->
+				<view class="home-swiper-contain">
+					<swiper class="home-list-swiper" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" circular='true' bindchange="homeSwiperChange">
+						<block wx:for="{{homeImgUrls}}" wx:key="index">
+							<swiper-item>
+								<image src="{{item}}" class="slide-image" lazy-load='true' mode="widthFix" style='width:100%' />
+							</swiper-item>
+						</block>
+					</swiper>
+					<view class="dots">
+						<block wx:for="{{homeImgUrls}}" wx:key="index">
+							<view class="dot{{index == current ? ' active' : ''}}"></view>
+						</block>
+					</view>
+				</view>
+				<!-- 授权后显示 -->
+				<view class="weui-flex home-person">
+					<navigator url="/pages/vi/index" class="weui-flex__item vi vi1" hover-class="none">
+						<text class="type-text">VI全景</text>
+					</navigator>
+					<navigator class="weui-flex__item vi vi2" hover-class="none">
+						<text class="type-text">我的订单</text>
+					</navigator>
+					<navigator class="weui-flex__item vi vi3" hover-class="none">
+						<text class="type-text"t>分享赚钱</text>
+					</navigator>
+					<navigator class="weui-flex__item vi vi4" hover-class="none">
+						<text class="type-text">会员邀请</text>
+					</navigator>
+				</view>
+				<!-- 专题推荐 -->
+				<view class="recommend">
+					<view class="recommend-title home-title">专题推荐</view>
+					<navigator hover-class="none" class="recommend-0">
+						<image src="../../image/recommend_0.png" mode="widthFix"></image>
+					</navigator>
+					<view class="recommend-img weui-flex">
+						<navigator hover-class="none" class="recommend-1 weui-flex__item">
+							<image src="../../image/recommend_1.png" mode="widthFix"></image>
+						</navigator>
+						<navigator hover-class="none" class="recommend-2 weui-flex__item">
+							<image src="../../image/recommend_2.png" mode="widthFix"></image>
+						</navigator>
+						<navigator hover-class="none" class="recommend-1 weui-flex__item">
+							<image src="../../image/recommend_3.png" mode="widthFix"></image>
+						</navigator>
+					</view>
+				</view>
+
+				<!-- 悦物 -->
+				<view class="yuewu">
+					<view class="home-title">悦物</view>
+					<navigator class="yuewu-item {{index===0?'yuewu-item-0':''}}" hover-class="none" wx:for="{{productYuewu}}" wx:key="index">
+						<image class="yuewu-img" mode="widthFix" src="{{index===0?'../../image/home_p1.png':'../../image/home_p2.png'}}"></image>
+						<view class="yuewu-0" wx:if="{{index===0}}">
+							产品才是需要标准，幸福却是生活的自我定义
+						</view>
+						<view class="yuewu-name">{{item.name}}</view>
+						<view class="yuewu-line"></view>
+						<view class="yuewu-see">查看更多》</view>
+					</navigator>
+				</view>
+				<view class=" home-title">热销产品</view>
+				<!-- 商品列表 -->
+				<view class="category-list">
+					<navigator class="list b-f" hover-class="none" url="../goods/index?goods_id={{item.goods_id}}" wx:for="{{list}}" wx:key="index">
+						<view class="left">
+							<view class="img">
+								<image class="goodsImg" mode="aspectFill" src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1586600782721&di=98630207a9dd72bf14dd816c5d526888&imgtype=0&src=http%3A%2F%2Fm.tuniucdn.com%2Ffb2%2Ft1%2FG2%2FM00%2FAF%2F3F%2FCii-T1gA04iIcXfZABp5vaXUmGYAADY2wOtpLIAGnnV994_w500_h280_c1_t0.png"></image>
+							</view>
+						</view>
+						<view class="right">
+							<view class="cont">
+								<view class="f-24 title twolist-hidden m-top10">你好反反复复你好反反复复你好反反复复你好反反复复你好反反复复</view>
+								<view class="type f-20 col-9">美式实木套房</view>
+								<view class="price f-24 col-m f-w">￥333.33</view>
+								<view class="sold f-20 col-9">已售29</view>
+							</view>
+						</view>
+					</navigator>
+				</view>
+				<view class="weui-footer footer-home">
+					<text class="weui-footer__text">我也是有底线的～</text>
+				</view>
+			</scroll-view>
+		</view>
+	</block>
+	<!-- loading -->
+	<block wx:else>
+		<view class="loader-inner">
+			<view class="loader-line-wrap">
+				<view class="loader-line"></view>
+			</view>
+			<view class="loader-line-wrap">
+				<view class="loader-line"></view>
+			</view>
+			<view class="loader-line-wrap">
+				<view class="loader-line"></view>
+			</view>
+			<view class="loader-line-wrap">
+				<view class="loader-line"></view>
+			</view>
+			<view class="loader-line-wrap">
+				<view class="loader-line"></view>
+			</view>
+		</view>
+	</block>
+</block>
+
+<!-- 类型页面 -->
+<block wx:else>
+	<block wx:if="{{!loading}}">
+		<view class="product-type">
+			<scroll-view scroll-y scroll-top='{{topNumber}}' scroll-with-animation="true" class="scoll-h" bindscrolltolower="scrollTolower" bindscroll="pageScroll">
+				<!-- 轮播图 -->
+				<view class="home-swiper-contain">
+					<swiper class="home-list-swiper" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" circular='true' bindchange="homeSwiperChange">
+						<block wx:for="{{imgUrls}}" wx:key="index">
+							<swiper-item>
+								<image src="{{item}}" class="slide-image" lazy-load='true' mode="widthFix" style='width:100%' />
+							</swiper-item>
+						</block>
+					</swiper>
+					<view class="dots">
+						<block wx:for="{{imgUrls}}" wx:key="index">
+							<view class="dot{{index == current ? ' active' : ''}}"></view>
+						</block>
+					</view>
+				</view>
+				<!-- 子类别 -->
+				<view class="category-type" catchtouchmove="doNothing">
+					<scroll-view class="type-list" scroll-x style="width: 100%">
+						<navigator wx:for="{{list}}" wx:key="index" hover-class="none" url="/pages/goods/index?goods_id={{item.goods_id}}" class="type-item">
+							<image class="type-img" src="//cloud.pdp.ininin.com/FkbnmXWHzzEhSwQrt6UTERWP_f5w"></image>
+							<text class="type-text">客厅系列</text>
+						</navigator>
+					</scroll-view>
+				</view>
+				<!-- 商品列表 -->
+				<view class=" home-title">新品热销</view>
+				<view class="category-list">
+					<navigator class="list b-f" hover-class="none" url="../goods/index?goods_id={{item.goods_id}}" wx:for="{{list}}" wx:key="index">
+						<view class="left">
+							<view class="img">
+								<image class="goodsImg" mode="aspectFill" src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1586600782721&di=98630207a9dd72bf14dd816c5d526888&imgtype=0&src=http%3A%2F%2Fm.tuniucdn.com%2Ffb2%2Ft1%2FG2%2FM00%2FAF%2F3F%2FCii-T1gA04iIcXfZABp5vaXUmGYAADY2wOtpLIAGnnV994_w500_h280_c1_t0.png"></image>
+							</view>
+						</view>
+						<view class="right">
+							<view class="cont">
+								<view class="f-24 title twolist-hidden m-top10">你好反反复复你好反反复复你好反反复复你好反反复复你好反反复复</view>
+								<view class="type f-20 col-9">美式实木套房</view>
+								<view class="price f-24 col-m f-w">￥333.33</view>
+								<view class="sold f-20 col-9">已售29</view>
+							</view>
+						</view>
+					</navigator>
+				</view>
+				<view class="weui-panel__ft">
+					<template is="loading" data="{{list: list, total: total, text: '资讯'}}" />
+				</view>
+			</scroll-view>
+		</view>
+	</block>
+	<!-- loading -->
+	<block wx:else>
+		<view class="loader-inner">
+			<view class="loader-line-wrap">
+				<view class="loader-line"></view>
+			</view>
+			<view class="loader-line-wrap">
+				<view class="loader-line"></view>
+			</view>
+			<view class="loader-line-wrap">
+				<view class="loader-line"></view>
+			</view>
+			<view class="loader-line-wrap">
+				<view class="loader-line"></view>
+			</view>
+			<view class="loader-line-wrap">
+				<view class="loader-line"></view>
+			</view>
+		</view>
+	</block>
+</block>

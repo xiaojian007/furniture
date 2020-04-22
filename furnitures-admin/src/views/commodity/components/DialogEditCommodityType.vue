@@ -91,6 +91,8 @@
 			},
 			close() {
 				this.reset();
+				this.$refs.commodityTypeMultPic.data = null;
+				this.$refs.commodityTypeSinglePic.data = null;
 				this.visible = false;
 				this.submitting = false;
 			},
@@ -132,17 +134,17 @@
 								if (data.succeed) {
 									console.log(data);
 									that.visible = false;
-									that.$message.success("添加成功", that);
-									that.$emit("success");
-								} else {
-									that.$message.warning(
-										data.message || "添加失败，请稍后重试！",
+									that.$message.success(
+										that.form.skutypeIdId > 0 ? "修改成功" : "添加成功",
 										that
 									);
+									that.$emit("success");
+								} else {
+									that.$message.warning(data.body.message || that.MSG_UNKNOWN, that);
 								}
 							})
-							.catch(() => {
-								that.$message.warning("添加失败，请稍后重试！", that);
+							.catch(err => {
+								that.$message.warning(err.body.message || that.MSG_UNKNOWN, that);
 							})
 							.finally(() => {
 								that.submitting = false;
@@ -158,7 +160,18 @@
 				getProductType({ typeId: this.form.typeId })
 					.then(data => {
 						if (data.succeed) {
+							that.form.typeName = data.body.typeName;
 							this.visible = true;
+							that.$nextTick(() => {
+								if (that.$refs.commodityTypeMultPic && data.body.bannerImage) {
+									that.$refs.commodityTypeMultPic.data =
+										data.body.bannerImage.split(",") || null;
+								}
+								if (that.$refs.commodityTypeSinglePic && data.body.bannerImage) {
+									that.$refs.commodityTypeSinglePic.data =
+										data.body.typeImage || null;
+								}
+							});
 						} else {
 							that.$message.warning(
 								data.message || "获取类别失败，请稍后重试！",
@@ -166,9 +179,11 @@
 							);
 						}
 					})
-					.catch(() => {})
+					.catch(err => {
+						that.$message.warning(err.body.message || "获取类别失败，请稍后重试！", that);
+					})
 					.finally(() => {
-						that.submitting = true;
+						that.submitting = false;
 					});
 			},
 			uploadBefore() {
@@ -180,9 +195,15 @@
 				this.submitting = false;
 			},
 			changeMultiPicture(key, value, list) {
+				let bannerImage = [];
+				list.forEach(item => {
+					bannerImage.push(item.url);
+				});
+				this.form.bannerImage = bannerImage;
 				console.log(key, value, list);
 			},
 			changeSinglePicture(key, value) {
+				this.form.typeImage = value;
 				console.log(key, value);
 			}
 		}

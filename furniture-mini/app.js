@@ -20,7 +20,7 @@ App({
   loginChecking: false, //登录检查完毕
   isShowNewPage: false, //是否是弹出页面
   onLaunch: function(options) {
-    this.clearAuth() // 清除缓存
+    // this.clearAuth() // 清除缓存
     console.log('app.onLaunch', options)
   },
   /**
@@ -189,10 +189,12 @@ App({
               isDetail: 0
             },
             success: ((res) => {
+              debugger
               data.userInfo = res
               setUserInfo()
             }),
             fail: ((err) => {
+              debugger
               console.log('获取用户信息报错原因', err)
             })
           })
@@ -207,6 +209,28 @@ App({
           callback()
           that.openRecord('loginCheck')
         })
+      }
+    })
+  },
+
+
+  /**
+   * 授权检查
+   */
+  authSettingCheck(callback) {
+    let that = this
+    wx.getSetting({
+      success(res) {
+        console.log('authSetting 授权检查' + res.authSetting['scope.userInfo'])
+        if (res.authSetting && res.authSetting['scope.userInfo']) {
+          callback(true)
+        } else {
+          callback(false)
+        }
+      },
+      fail(err) {
+        console.log('authSetting 授权检查失败' + err)
+        callback(false)
       }
     })
   },
@@ -251,28 +275,6 @@ App({
         console.log(err)
         this.loginFail(err)
         callback({})
-      }
-    })
-  },
-
-
-  /**
-   * 授权检查
-   */
-  authSettingCheck() {
-    let that = this
-    wx.getSetting({
-      success(res) {
-        console.log('authSetting 授权检查' + res.authSetting['scope.userInfo'])
-        if (res.authSetting && res.authSetting['scope.userInfo']) {
-          return true
-        } else {
-          return false
-        }
-      },
-      fail(err) {
-        console.log('authSetting 授权检查失败' + err)
-        return false
       }
     })
   },
@@ -343,16 +345,6 @@ App({
     this.globalData.token = data.token || ''
     this.globalData.userInfo = data.userInfo || {}
     this.setStorage(this.globalData.STORAGE_KEY_TOKEN, data)
-  },
-
-  /**
-   * 清除登录信息
-   */
-  clearAuth() {
-    this.setStorage(this.globalData.STORAGE_KEY_TOKEN, {}, () => {
-      this.globalData.token = ''
-    })
-    this.globalData.token = ''
   },
 
   /**

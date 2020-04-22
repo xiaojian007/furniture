@@ -16,7 +16,7 @@
   <view class="weui-flex">
     <view wx:if="{{hasInvitCode}}" class="weui-flex bottom-fixed">
       <view class="tohome" bindtap="handleToHome">
-        <image class="icon" src="/images/tohome.png"></image>
+        <image class="icon" src="/image/tohome.png"></image>
         <text class="f12">首页</text>
       </view>
     </view>

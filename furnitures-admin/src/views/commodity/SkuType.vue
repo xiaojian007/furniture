@@ -54,20 +54,21 @@
 							:min-width="field.width || 100"
 						>
 							<template slot-scope="scope">
-								<template v-if="field.prop === 'extendedState'">
-									{{ enumExpandState.obj[scope.row[field.prop]] | nullValue }}
-								</template>
-								<template v-else-if="field.prop === 'reportPrice'">
-									{{ enumOfferType.obj[scope.row[field.prop]] | nullValue }}
-								</template>
-								<template v-else-if="field.prop === 'createTime'">
-									<div v-html="formatDateOutput(scope.row[field.prop])"></div>
+								<template v-if="field.prop === 'attributeDtoList'">
+									<router-link
+										:to="{
+											path: '/commodity/sku-list',
+											query: { skuId: scope.row.skuId }
+										}"
+									>
+										{{ scope.row.attributeDtoList.length }}
+									</router-link>
 								</template>
 								<template v-else-if="field.prop === 'operation'">
-									<el-button type="text" @click="$refs.edit.add(scope.row.id)">
+									<el-button type="text" @click="edit(scope.row)">
 										修改
 									</el-button>
-									<el-button type="text" @click="deleteRole(scope.row.id)">
+									<el-button type="text" @click="deleteSkuType(scope.row)">
 										删除
 									</el-button>
 								</template>
@@ -96,17 +97,18 @@
 			>
 			</el-pagination>
 		</div>
-		<EditProductType ref="edit" @success="query"></EditProductType>
+		<EditSkuType ref="edit" @success="query"></EditSkuType>
 	</div>
 </template>
 
 <script>
 	import listMixin from "@mixins/list.mixin";
-	import EditProductType from "./components/DialogEditProductType";
+	import EditSkuType from "./components/DialogEditSkuType";
+	import { getSkuTypeList, deleteSkuType } from "@api/commodity/sku";
 
 	export default {
 		mixins: [listMixin],
-		components: { EditProductType },
+		components: { EditSkuType },
 		data() {
 			return {
 				searchKey: "", //回车值是否变化
@@ -118,21 +120,21 @@
 				fields: [
 					{
 						show: true,
-						prop: "supplierId",
+						prop: "skuId",
 						align: "center",
 						label: "编号",
 						width: 80
 					},
 					{
 						show: true,
-						prop: "creator",
+						prop: "skuName",
 						align: "center",
 						label: "类型名称",
 						width: 130
 					},
 					{
 						show: true,
-						prop: "companyName",
+						prop: "attributeDtoList",
 						align: "center",
 						label: "属性数量",
 						width: 80
@@ -172,45 +174,37 @@
 				let that = this;
 				that.querying = true;
 				that.loading = true;
-				setTimeout(() => {
-					let list = [
-						{
-							id: 270,
-							supplierId: 60,
-							extendedState: 3,
-							reportPrice: 3,
-							comments: "测",
-							creatorId: 2061,
-							creator: "尺寸",
-							deleted: 0,
-							updateTime: "2020-01-10 19:28:41",
-							createTime: "2020-03-10 11:26:07",
-							companyName: "180,170,160,150",
-							extendedStateStr: null,
-							reportPriceStr: null
-						},
-						{
-							id: 249,
-							supplierId: 60,
-							extendedState: 4,
-							reportPrice: 3,
-							commentPurpose: "15464",
-							creatorId: 43,
-							creator: "颜色",
-							updateTime: "2020-01-10 19:28:41",
-							createTime: "2020-01-10 17:43:13",
-							companyName: "黄色,蓝色,白色,黑色",
-							extendedStateStr: null,
-							reportPriceStr: null
+				getSkuTypeList(that.params)
+					.then(data => {
+						if (data.succeed) {
+							that.list = data.body.list || [];
+							that.page.totalCount = data.body.total;
+						} else {
+							that.$message.warning(data.body.message || that.MSG_UNKNOWN, that);
 						}
-					];
-					this.list = list;
-					that.querying = false;
-					that.loading = false;
-				}, 1000);
+					})
+					.catch(err => {
+						that.$message.warning(err.body.message || that.MSG_UNKNOWN, that);
+					})
+					.finally(() => {
+						that.querying = false;
+						that.loading = false;
+					});
 			},
-			deleteRole(id) {
+			edit(row) {
 				let that = this;
+				if (row.attributeDtoList && row.attributeDtoList.length > 0) {
+					that.$message.warning("该类型下有数据下不能删除", that);
+					return;
+				}
+				that.$refs.edit.add(row.skuId);
+			},
+			deleteSkuType(row) {
+				let that = this;
+				if (row.attributeDtoList && row.attributeDtoList.length > 0) {
+					that.$message.warning("该类型下有数据下不能删除", that);
+					return;
+				}
 				that.$confirm(
 					"删除该角色后，该角色下的用户将全部被删除，确认删除改角色？",
 					"提示",
@@ -224,27 +218,22 @@
 						showClose: false // 是否显示关闭按钮
 					}
 				).then(() => {
-					that.loading = true;
 					that.querying = true;
-					console.log(id);
-					// orderReview({id: id}, () => {
-					//     that.$message.success('已接单', that)
-					//     that.query()
-					//     that.loading = false
-					//     that.querying = false
-					// }, (data) => {
-					//     that.loading = false
-					//     that.querying = false
-					//     that.$alert(data.resultMsg, '温馨提示', {
-					//         confirmButtonText: '知道了'
-					//     })
-					// }, (data) => {
-					//     that.loading = false
-					//     that.querying = false
-					//     that.$alert(data.resultMsg, '温馨提示', {
-					//         confirmButtonText: '知道了'
-					//     })
-					// })
+					deleteSkuType({ skuId: row.skuId })
+						.then(data => {
+							if (data.succeed) {
+								that.$message.success("删除成功！", that);
+								that.query();
+							} else {
+								that.$message.warning(data.message || that.MSG_UNKNOWN, that);
+							}
+						})
+						.catch(err => {
+							that.$message.warning(err.body.message || that.MSG_UNKNOWN, that);
+						})
+						.finally(() => {
+							that.querying = false;
+						});
 				});
 			}
 		}

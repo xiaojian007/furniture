@@ -11,10 +11,15 @@
     "pages/order/index",
     "pages/order/detail",
     "pages/category/index",
-    "pages/category/list"
+    "pages/category/list",
+    "pages/vi/detail",
+    "pages/vi/index",
+    "pages/shopping-cart/shopping"
   ],
   "window": {
     "navigationBarBackgroundColor": "#ffffff",
+    "backgroundColorTop": "#ffffff",
+    "backgroundColorBottom": "#ffffff",
     "navigationBarTitleText": "首页",
     "navigationBarTextStyle": "black"
   },
@@ -22,31 +27,31 @@
     "shortcut": "/components/shortcut/shortcut"
   },
   "tabBar": {
-    "color": "#6e6d6b",
-    "selectedColor": "#ff9966",
+    "color": "#666666",
+    "selectedColor": "#4197FA",
     "borderStyle": "white",
     "list": [
       {
-        "iconPath": "images/tabBar/home.png",
-        "selectedIconPath": "images/tabBar/home_on.png",
+        "iconPath": "image/tabbar/home.png",
+        "selectedIconPath": "image/tabbar/home_on.png",
         "pagePath": "pages/home/index",
         "text": "首页"
       },
       {
-        "iconPath": "images/tabBar/cate.png",
-        "selectedIconPath": "images/tabBar/cate_on.png",
+        "iconPath": "image/tabbar/cate.png",
+        "selectedIconPath": "image/tabbar/cate_on.png",
         "pagePath": "pages/find/index",
         "text": "发现"
       },
       {
-        "iconPath": "images/tabBar/cart.png",
-        "selectedIconPath": "images/tabBar/cart_on.png",
-        "pagePath": "pages/shopping-cart/index",
+        "iconPath": "image/tabbar/cart.png",
+        "selectedIconPath": "image/tabbar/cart_on.png",
+        "pagePath": "pages/shopping-cart/shopping",
         "text": "购物车"
       },
       {
-        "iconPath": "images/tabBar/user.png",
-        "selectedIconPath": "images/tabBar/user_on.png",
+        "iconPath": "image/tabbar/user.png",
+        "selectedIconPath": "image/tabbar/user_on.png",
         "pagePath": "pages/my/index",
         "text": "我的"
       }

@@ -167,51 +167,51 @@
 				fields: [
 					{
 						show: true,
-						prop: "createTime",
+						prop: "id",
 						align: "center",
-						label: "拜访时间",
+						label: "编号",
 						className: "t-date",
 						width: 80
 					},
 					{
 						show: true,
-						prop: "companyName",
+						prop: "creator",
 						align: "center",
-						label: "公司名称",
+						label: "订单编号",
 						width: 130
 					},
 					{
 						show: true,
-						prop: "creator",
+						prop: "createTime",
 						align: "center",
-						label: "拜访人",
-						width: 80
+						label: "提交时间",
+						width: 100
 					},
 					{
 						show: true,
-						prop: "extendedState",
+						prop: "creatorId",
 						align: "center",
-						label: "拓展状态",
+						label: "订单金额",
 						width: 80
 					},
 					{
 						show: true,
 						prop: "reportPrice",
 						align: "center",
-						label: "报价状态",
+						label: "支付方式",
 						width: 80
 					},
 					{
 						show: true,
 						prop: "commentPurpose",
 						align: "center",
-						label: "拜访目的"
+						label: "订单来源"
 					},
 					{
 						show: true,
 						prop: "comments",
 						align: "center",
-						label: "拜访结果",
+						label: "订单状态",
 						width: 180
 					},
 					{

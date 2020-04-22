@@ -1,29 +1,29 @@
 <!--pages/home/index.wxml-->
 <view class="home">
-  <view class="cu-bar search">
-    <navigator url='/pages/category/index' class="action">
-      <text class="cuIcon-sort"></text>
-    </navigator>
-    <view class="search-form radius">
-      <text class="cuIcon-search"></text>
-      <input type="text" placeholder="搜索" confirm-type="search"></input>
-    </view>
-  </view>
-  <view>
-    <scroll-view scroll-x="true" class="tab-h" scroll-left="{{scrollLeft}}">
-      <view wx:for="{{tabList}}" wx:key="index" bindtap="swichNav" data-current="{{index}}" class="tab-item {{currentTab===index?'active':''}}">
-        {{item.name}}
-      </view>
-    </scroll-view>
-    <swiper class="tab-content" current="{{currentTab}}" duration="500" bindchange="switchTab" style="height:{{winHeight}}rpx">
-      <swiper-item wx:for="{{tabList}}" wx:key="index">
-        <block wx:if="{{currentTab===0}}">
-          <view>434444444444555432</view>
-        </block>
-        <block wx:else>
-          <homelist type-id="{{index}}" id="homeList{{index}}"></homelist>
-        </block>
-      </swiper-item>
-    </swiper>
-  </view>
+	<view class="cu-bar search">
+		<navigator url='/pages/category/index' class="action" hover-class="none">
+			<text class="cuIcon-sort" hover-class="none">分类</text>
+		</navigator>
+		<view class="search-form radius">
+			<text class="cuIcon-search"></text>
+			<input type="text" placeholder="搜索" confirm-type="search"></input>
+		</view>
+	</view>
+	<view class="home-content">
+		<scroll-view scroll-x="true" class="tab-h" scroll-left="{{scrollLeft}}">
+			<view wx:for="{{tabList}}" wx:key="index" bindtap="swichNav" data-current="{{index}}" class="tab-item {{currentTab===index?'active':''}}">
+				{{item.name}}
+			</view>
+		</scroll-view>
+		<swiper class="tab-content" current="{{currentTab}}" duration="500" bindchange="switchTab" style="height:{{winHeight}}rpx">
+			<swiper-item wx:for="{{tabList}}" wx:key="index">
+				<!-- 公共轮播 -->
+				<homelist bind:scrollToupper="scrollToupper" is-home="{{index===0}}" type-id="{{index}}" id="homeList{{index}}"></homelist>
+			</swiper-item>
+		</swiper>
+	</view>
+
+	<!-- 悬浮 -->
+	<image src='../../image/to-top.png' class='go-top' hidden='{{!floorShow}}' bindtap="goTop"></image>
+	<image src='../../image/reservation.png' class='reservation' bindtap="goReservation"></image>
 </view>

@@ -8,7 +8,7 @@
 		<div class="header-right">
 			<div class="user-img">
 				<template v-if="user.headImage">
-					<img :src="getPicBaseUrl(user.headImage, true) + THUMBNAIL_CROP" />
+					<img :src="user.headImage" />
 				</template>
 				<template v-else>
 					<img

@@ -41,7 +41,7 @@
 
 .shortcut_click_show {
   margin-bottom: 0;
-  background: #ff5454;
+  background: #3B7CF0;
 }
 
 /* 显示动画 */

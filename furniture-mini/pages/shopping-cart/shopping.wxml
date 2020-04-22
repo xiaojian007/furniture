@@ -1,0 +1,101 @@
+<!-- 最外层视图pages -->
+<view class="pages">
+
+	<block wx:if="{{hasList}}">
+		<!-- 列表 -->
+		<block wx:for="{{list}}" wx:key="index">
+			<view class="shop-item {{item.isTouchMove ? 'touch-move-active' : ''}}" data-index="{{index}}" bindtouchstart="touchstart" bindtouchmove="touchmove">
+				<view class="list align-items space-between">
+					<view class="shop-radio">
+						<!-- radio选择IOCN -->
+						<icon wx:if="{{item.selected}}" type="success" color="#3B7CF0" data-index="{{index}}" size='18' class="radio_chek" bindtap="selectList" />
+						<icon wx:else type="circle" class="radio_chek" data-index="{{index}}" size='18' bindtap="selectList" />
+					</view>
+					<view class="shop-img">
+						<!-- 列表商品图片 -->
+						<image class="list_img" src="{{item.image}}"></image>
+					</view>
+					<view class="shop-goods">
+						<!-- 列表标题 -->
+						<navigator hover-class="none" url="../goods/index?goods_id={{item.goods_id}}">
+							<view class="goods-name">
+								<text class="twolist-hidden f-30 col-3">{{item.title}}</text>
+							</view>
+						</navigator>
+						<!-- 规格 -->
+						<view class="goods-attr">
+							<text class="col-7 f-24">规格：{{item.pro_name}}</text>
+						</view>
+						<view class="weui-flex space-between align-items">
+							<!-- 价格 -->
+							<view class="wx-goods_price">
+								<text class="dish-item-money">￥{{item.price}} </text>
+							</view>
+							<!-- 商品数量加减  style='display:{{show_edit}}'-->
+							<view class="selectNumber">
+								<!--减按钮  -->
+								<button class="default" bindtap="btn_minus" data-obj="{{obj}}" data-index="{{index}}">-</button>
+								<input class="view_text_center" bindinput='input_num' data-index="{{index}}" disabled="{{true}}" type="number" value="{{item.num}}" />
+								<!-- 加按钮-->
+								<button class="default" bindtap="btn_add" data-index="{{index}}">+</button>
+							</view>
+						</view>
+					</view>
+				</view>
+				<view class="remove" data-id="{{item.id}}" data-goods-id="{{item.goods_id}}" data-sku-id="{{item.goods_sku_id}}" bindtap='deletes'>{{remove}}删除</view>
+			</view>
+		</block>
+
+	</block>
+
+	<block wx:else>
+		<view class="yoshop-notcont">
+			<text class="iconfont no-shop"></text>
+			<text class="cont">购物车被打劫了，快去选购商品吧！</text>
+			<view bindtap="goShopping" class="flow-btn-min">进入商城逛逛</view>
+		</view>
+		<view class="product-list">
+			<!-- 商品列表 -->
+			<view class=" home-title">你可能喜欢</view>
+			<view class="category-list">
+				<navigator class="list b-f" hover-class="none" url="../goods/index?goods_id={{item.goods_id}}" wx:for="{{[0,1,2,3,4,5,6,7,6,6,5,4]}}" wx:key="index">
+					<view class="left">
+						<view class="img">
+							<image class="goodsImg" mode="aspectFill" src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1586600782721&di=98630207a9dd72bf14dd816c5d526888&imgtype=0&src=http%3A%2F%2Fm.tuniucdn.com%2Ffb2%2Ft1%2FG2%2FM00%2FAF%2F3F%2FCii-T1gA04iIcXfZABp5vaXUmGYAADY2wOtpLIAGnnV994_w500_h280_c1_t0.png"></image>
+						</view>
+					</view>
+					<view class="right">
+						<view class="cont">
+							<view class="f-24 title twolist-hidden m-top10">你好反反复复你好反反复复你好反反复复你好反反复复你好反反复复</view>
+							<view class="type f-20 col-9">美式实木套房</view>
+							<view class="price f-24 col-m f-w">￥333.33</view>
+							<view class="sold f-20 col-9">已售29</view>
+						</view>
+					</view>
+				</navigator>
+			</view>
+		</view>
+	</block>
+
+</view>
+
+
+<!-- 固定底部 -->
+<view class="cont_bot" wx:if="{{hasList}}">
+	<!-- 全选ICON -->
+
+	<icon wx:if="{{selectAllStatus}}" type="success" color="#3B7CF0" size='20' class="total-select" bindtap="selectAll" />
+	<!-- else -->
+	<icon wx:else type="circle" color="#999" class="total-select" size='20' bindtap="selectAll" />
+	<!-- 全选标题 -->
+	<text class='sel_count_name'>全选</text>
+	<!-- 合计金额 -->
+	<lable class="count_price">
+		<view> <text>不含运费</text></view>
+		<view>
+			合计：<text>￥{{totalPrice}}</text>
+		</view>
+	</lable>
+	<!-- 提交订单 -->
+	<label class='submit' bindtap='btn_submit_order'>去结算</label>
+</view>

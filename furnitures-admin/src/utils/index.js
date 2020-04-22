@@ -33,15 +33,10 @@ export const getDataType = value =>
  * 兼容获取图片url
  * @method getPicBaseUrl
  * @param {String} url url数据
- * @param {String} domain
  * @returns {String} 图片url
  */
-export const getPicBaseUrl = (url, domain) => {
+export const getPicBaseUrl = (url) => {
 	const rules = [
-		{
-			rule: "//wg.cloud.ininin.com/",
-			reCharacter: ""
-		},
 		{
 			rule: /^http(s?):/,
 			reCharacter: ""
@@ -54,7 +49,7 @@ export const getPicBaseUrl = (url, domain) => {
 	url = rules.reduce((str, { rule, reCharacter }) => {
 		return str.replace(rule, reCharacter);
 	}, String(url || ""));
-	return `${domain || ""}${url}`;
+	return `${url}`;
 };
 
 /**

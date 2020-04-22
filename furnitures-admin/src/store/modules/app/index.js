@@ -10,7 +10,12 @@
 import { SET_LATEST_VERSION } from "./mutation-types";
 
 const stateObj = {
-	latestVersion: "" //最新版本，不为空则有最新版本，需要更新
+    fullViewHeight: 320, //无分页无头部页签高度
+    scrollViewHeight: 320, //无分页高度
+    scrollViewHeightPaging: 320, //有分页高度
+    dbTableHeight: 320, //无分页高度
+    fontSize: 10, //字体大小
+    latestVersion: '' //最新版本，不为空则有最新版本，需要更新
 };
 
 const mutations = {

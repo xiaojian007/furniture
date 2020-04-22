@@ -47,103 +47,103 @@ Page({
     let data = {
       list: [{
         category_id: 1,
-        name: '分类1',
+        name: '汀·西米娅',
         child: [{
           file_id: 21,
           image: {
-            file_path: 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2748829669,3023975841&fm=26&gp=0.jpg',
+            file_path: 'http://cloud.pdp.ininin.com/FkbnmXWHzzEhSwQrt6UTERWP_f5w',
           },
           name: '分类1-1'
         }]
       }, {
         category_id: 2,
-        name: '分类2',
+        name: '汀·西海岸',
         child: [{
           file_id: 22,
           image: {
-            file_path: 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2748829669,3023975841&fm=26&gp=0.jpg',
+            file_path: 'http://cloud.pdp.ininin.com/FkbnmXWHzzEhSwQrt6UTERWP_f5w',
+          },
+          name: '分类2-0'
+        }, {
+          file_id: 22,
+          image: {
+            file_path: 'http://cloud.pdp.ininin.com/FkbnmXWHzzEhSwQrt6UTERWP_f5w',
           },
           name: '分类2-1'
         }, {
           file_id: 22,
           image: {
-            file_path: 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2748829669,3023975841&fm=26&gp=0.jpg',
+            file_path: 'http://cloud.pdp.ininin.com/FkbnmXWHzzEhSwQrt6UTERWP_f5w',
           },
           name: '分类2-1'
         }, {
           file_id: 22,
           image: {
-            file_path: 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2748829669,3023975841&fm=26&gp=0.jpg',
+            file_path: 'http://cloud.pdp.ininin.com/FkbnmXWHzzEhSwQrt6UTERWP_f5w',
           },
           name: '分类2-1'
         }, {
           file_id: 22,
           image: {
-            file_path: 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2748829669,3023975841&fm=26&gp=0.jpg',
+            file_path: 'http://cloud.pdp.ininin.com/FkbnmXWHzzEhSwQrt6UTERWP_f5w',
           },
           name: '分类2-1'
         }, {
           file_id: 22,
           image: {
-            file_path: 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2748829669,3023975841&fm=26&gp=0.jpg',
+            file_path: 'http://cloud.pdp.ininin.com/FkbnmXWHzzEhSwQrt6UTERWP_f5w',
           },
           name: '分类2-1'
         }, {
           file_id: 22,
           image: {
-            file_path: 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2748829669,3023975841&fm=26&gp=0.jpg',
+            file_path: 'http://cloud.pdp.ininin.com/FkbnmXWHzzEhSwQrt6UTERWP_f5w',
           },
           name: '分类2-1'
         }, {
           file_id: 22,
           image: {
-            file_path: 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2748829669,3023975841&fm=26&gp=0.jpg',
+            file_path: 'http://cloud.pdp.ininin.com/FkbnmXWHzzEhSwQrt6UTERWP_f5w',
           },
           name: '分类2-1'
         }, {
           file_id: 22,
           image: {
-            file_path: 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2748829669,3023975841&fm=26&gp=0.jpg',
+            file_path: 'http://cloud.pdp.ininin.com/FkbnmXWHzzEhSwQrt6UTERWP_f5w',
           },
           name: '分类2-1'
         }, {
           file_id: 22,
           image: {
-            file_path: 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2748829669,3023975841&fm=26&gp=0.jpg',
+            file_path: 'http://cloud.pdp.ininin.com/FkbnmXWHzzEhSwQrt6UTERWP_f5w',
           },
           name: '分类2-1'
         }, {
           file_id: 22,
           image: {
-            file_path: 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2748829669,3023975841&fm=26&gp=0.jpg',
+            file_path: 'http://cloud.pdp.ininin.com/FkbnmXWHzzEhSwQrt6UTERWP_f5w',
           },
           name: '分类2-1'
         }, {
           file_id: 22,
           image: {
-            file_path: 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2748829669,3023975841&fm=26&gp=0.jpg',
+            file_path: 'http://cloud.pdp.ininin.com/FkbnmXWHzzEhSwQrt6UTERWP_f5w',
           },
           name: '分类2-1'
         }, {
           file_id: 22,
           image: {
-            file_path: 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2748829669,3023975841&fm=26&gp=0.jpg',
-          },
-          name: '分类2-1'
-        }, {
-          file_id: 22,
-          image: {
-            file_path: 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2748829669,3023975841&fm=26&gp=0.jpg',
+            file_path: 'http://cloud.pdp.ininin.com/FkbnmXWHzzEhSwQrt6UTERWP_f5w',
           },
           name: '分类2-1'
         }]
       }, {
         category_id: 3,
-        name: '分类3',
+        name: '君士坦丁',
         child: [{
           file_id: 24,
           image: {
-            file_path: 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2748829669,3023975841&fm=26&gp=0.jpg',
+            file_path: 'http://cloud.pdp.ininin.com/FkbnmXWHzzEhSwQrt6UTERWP_f5w',
           },
           name: '分类3-1'
         }]

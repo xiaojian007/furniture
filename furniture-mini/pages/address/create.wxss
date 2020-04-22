@@ -170,3 +170,31 @@ picker-view-column view {
 .m-top35 {
   margin-top: 35rpx;
 }
+
+.address-cont-title .address-x {
+  color: #F34949;
+  margin-right: 4rpx;
+}
+.addree-switch{
+  float: right;
+}
+/* /swtich整体大小及背景色/ */
+.addree-switch .wx-switch-input {
+  width: 100rpx !important;
+  height: 56rpx !important;
+  background: #50d2c2 !important;
+  border: #50d2c2 !important;
+  box-sizing: border-box;
+}
+
+/* /白色样式（false的样式）/ */
+.addree-switch .wx-switch-input::before {
+  width: 100rpx !important;
+  height: 56rpx !important;
+}
+
+/* /绿色样式（true的样式）/ */
+.addree-switch .wx-switch-input::after {
+  width: 65rpx !important;
+  height: 56rpx !important;
+}

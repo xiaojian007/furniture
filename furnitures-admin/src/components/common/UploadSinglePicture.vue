@@ -6,7 +6,7 @@
 		:action="QINIU_UP"
 		name="file"
 		:disabled="disabled"
-		:data="{}"
+		:data="{ title: '' }"
 		:auto-upload="false"
 		:show-file-list="false"
 		:on-change="uploadChange"
@@ -15,12 +15,7 @@
 		:before-upload="beforeUpload"
 		:on-preview="picturePreview"
 	>
-		<img
-			v-if="url"
-			:src="url"
-			@click="imagePreview(url)"
-			class="single-img"
-		/>
+		<img v-if="url" :src="url" @click="imagePreview(url)" class="single-img" />
 		<i v-if="!disabled" class="el-icon-plus single-uploader-icon"></i>
 		<i
 			v-if="url && !disabled"
@@ -30,6 +25,8 @@
 	</el-upload>
 </template>
 <script>
+	import { md5 } from "@utils/crypto";
+
 	export default {
 		// 声明 props
 		props: {
@@ -67,11 +64,8 @@
 			},
 			setUrl(url) {
 				let that = this;
-				url = url
-					.replace(/\?.*$/, "")
-					.replace(/^.+\//, "");
+				url = url.replace(/\?.*$/, "").replace(/^.+\//, "");
 				that.url = url;
-				// that.url = that.QINIU_DOWNLOAD + url + that.thumbnail;
 				that.$emit("change", that.getKey(), that.getKey(true), "SET_URL");
 			},
 			getKey(hasDomain) {
@@ -80,26 +74,25 @@
 				if (hasDomain) {
 					key = that.url.replace(/\?.*$/, "");
 				} else {
-					key = that.url
-						.replace(/\?.*$/, "")
-						.replace(/^.+\//, "");
+					key = that.url.replace(/\?.*$/, "").replace(/^.+\//, "");
 				}
 				return key;
 			},
-			setFormData(data, file) {
-				if (data) {
-					let upKey = this.md5([new Date().getTime(), Math.random()].join(""));
-					if (file) {
-						file.UP_KEY = upKey;
-					}
+			setFormData(file) {
+				let upKey = md5([new Date().getTime(), Math.random()].join(""));
+				this.$refs.upload.data.title = file.name;
+				if (file) {
+					file.UP_KEY = upKey;
 				}
 			},
 			uploadChange(file, fileList) {
-                let that = this
+				let that = this;
 				let bool = fileList.find(o => {
 					return o.raw && o.uid === file.uid;
 				});
 				if (bool && !file.UP_KEY) {
+					this.setFormData(file);
+
 					setTimeout(function() {
 						that.$refs.upload.submit();
 					}, 100);
@@ -207,10 +200,6 @@
 				line-height: 18px;
 				background: #5b7ff9;
 				border-radius: 10px;
-
-				&:before {
-					content: "\E60F";
-				}
 			}
 		}
 	}

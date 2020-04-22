@@ -20,15 +20,16 @@ export default {
 			loading: true, //页面是否加载完毕（首次）
 			querying: false, //查询是否结束
 			editable: false, //是否可编辑
-			fields: [],
+            fields: [],
+            // total: 0,
 			list: [], //数据集合
-			total: 0, //总条数
 			curRow: {}, //当前选中行,
 			primaryKey: "id", //主键：ID
 			downloadUrl: "", //导出URL
 			params: {
 				pageNum: 1,
-				pageSize: PAGE_SIZES[0]
+                pageSize: PAGE_SIZES[0],
+                totalCount: 0
 			}
 		};
 	},

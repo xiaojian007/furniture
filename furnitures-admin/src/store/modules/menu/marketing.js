@@ -20,10 +20,10 @@ export default [
 		}
 	},
 	{
-		path: "product-type",
-		name: "product-type",
+		path: "sku-type",
+		name: "sku-type",
 		component: () =>
-			import(/* webpackChunkName: "product-type" */ "@views/commodity/ProductType.vue"),
+			import(/* webpackChunkName: "sku-type" */ "@views/commodity/SkuType.vue"),
 		meta: {
 			label: "商品SKU",
 			icon: "role",

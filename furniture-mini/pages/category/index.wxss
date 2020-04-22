@@ -33,9 +33,8 @@ page {
   flex-direction: column;
   display: flex;
   width: 200rpx;
-  color: #444;
+  color: #000;
   height: 100%;
-  background: #f8f8f8;
 }
 
 .cate-right {
@@ -51,7 +50,7 @@ page {
   display: flex;
   flex-flow: row wrap;
   align-content: flex-start;
-  padding-top: 26rpx;
+  padding-top: 30rpx;
 }
 
 .type-nav {
@@ -61,16 +60,26 @@ page {
   text-align: center;
   z-index: 10;
   display: block;
-  font-size: 26rpx;
+  background: #fff;
+  transition: all .2s linear;
+  font-size: 22rpx;
 }
 
 .type-nav.selected {
-  background: #fff;
-  color: #ff495e;
-  border-right: none;
   font-size: 28rpx;
+  font-weight: bold;
 }
-
+.type-nav.selected::after{
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  height: 40rpx;
+  width: 8rpx;
+  margin-top: -20rpx;
+  font-weight: bold;
+  background-color:#3B7CF0;
+}
 .cate-cont-box {
   margin-bottom: 30rpx;
   padding-bottom: 10rpx;
@@ -83,8 +92,10 @@ page {
 }
 
 .cate-cont-box .cate-img image {
-  width: 100%;
-  height: 150rpx;
+  display: block;
+  margin: 0 auto;
+  width: 120rpx;
+  height: 100rpx;
 }
 
 .cate-cont-box text {

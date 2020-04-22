@@ -8,7 +8,8 @@ Page({
   data: {
     disabled: false,
     nav_select: false, // 快捷导航
-
+    defaultAddress: false, // 是否默认地址
+    switchColor: '#000',
     name: '',
     region: '',
     phone: '',
@@ -100,4 +101,9 @@ Page({
     })
   },
 
+  switchDefault(e) {
+    this.setData({
+      defaultAddress: e.detail.value
+    })
+  }
 })

@@ -9,7 +9,7 @@
   <view class="cate-content dis-flex" wx:if="{{ list.length > 0 }}">
     <!-- 左侧 一级分类 -->
     <scroll-view class="cate-left f-28" scroll-y="{{ true }}" style="height: {{ scrollHeight }}px; " enable-flex="true">
-      <text bindtap="selectNav" class="type-nav onelist-hidden {{curNav==item.category_id?'selected':''}}" data-id="{{ item.category_id }}" data-index="{{index}}" wx:for="{{list}}" wx:key="cateLeft">{{ item.name }}</text>
+      <view bindtap="selectNav" class="type-nav onelist-hidden {{curNav==item.category_id?'selected':''}}" data-id="{{ item.category_id }}" data-index="{{index}}" wx:for="{{list}}" wx:key="cateLeft">{{ item.name }}</view>
     </scroll-view>
 
     <!-- 右侧 二级分类 -->
@@ -21,7 +21,7 @@
               <view class="flex-three" data-list="{{index}}" wx:for="{{list[curIndex].child}}" wx:key="cit">
                 <navigator hover-class="none" url="../category/list?category_id={{item.category_id}}">
                   <view class="cate-img" id="{{item.file_id}}">
-                    <image src="{{item.image.file_path}}"></image>
+                    <image mode="aspectFill" src="{{item.image.file_path}}"></image>
                   </view>
                   <text class="onelist-hidden">{{item.name}}</text>
                 </navigator>

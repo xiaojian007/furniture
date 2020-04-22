@@ -6,15 +6,13 @@
 	</div>
 </template>
 <script>
-	import { queryVersionJson } from "@api/version";
-	import { version as currentVersion } from "@/../package.json";
-	import { mapActions, mapState } from "vuex";
+	import { mapState } from "vuex";
+	import version from "./version";
 
 	export default {
 		data() {
 			return {
 				sleep: 50000, // 轮询时间
-				currentVersion, // 当前版本
 				autoUpdateTimer: null // 自动更新轮询器
 			};
 		},
@@ -30,38 +28,10 @@
 			}
 		},
 		created() {
-			this.autoUpdateVersion();
+			version.autoUpdateVersion();
 		},
-		mounted() {
-		},
-		methods: {
-			...mapActions(["setLatestVersion"]),
-			/**
-			 * 自动更新
-			 * @method autoUpdateVersion
-			 */
-			autoUpdateVersion() {
-				if (this.autoUpdateTimer) {
-					clearTimeout(this.autoUpdateTimer);
-				}
-				queryVersionJson()
-					.then(res => {
-						if (
-							res &&
-							res.body &&
-							res.body.version &&
-							this.currentVersion !== res.body.version
-						) {
-							this.setLatestVersion(res.body.version);
-						}
-					})
-					.finally(() => {
-						this.autoUpdateTimer = setTimeout(() => {
-							this.autoUpdateVersion();
-						}, this.sleep);
-					});
-			}
-		}
+		mounted() {},
+		methods: {}
 	};
 </script>
 

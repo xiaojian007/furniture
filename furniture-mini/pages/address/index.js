@@ -5,6 +5,7 @@ Page({
     list: [{
       name: '李健',
       phone: '16622221111',
+      default: 1,
       fff: {
         city: '合肥市',
         region: '明行情',
@@ -14,6 +15,7 @@ Page({
       detail: '看到沙发上看的很疯狂世界的',
     }, {
       name: '李健',
+      default: 2,
       phone: '16622221111',
       fff: {
         city: '合肥市',
@@ -101,23 +103,6 @@ Page({
         });
       }
     });
-  },
-
-  /**
-   * 设置为默认地址
-   */
-  setDefault: function (e) {
-    let _this = this,
-      address_id = e.detail.value;
-    _this.setData({
-      default_id: parseInt(address_id)
-    });
-    app._post_form('address/setDefault', {
-      address_id
-    }, function (result) {
-      _this.data.options.from === 'flow' && wx.navigateBack();
-    });
-    return false;
-  },
+  }
 
 });

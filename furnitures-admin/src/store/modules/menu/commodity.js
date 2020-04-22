@@ -20,10 +20,21 @@ export default [
 		}
 	},
 	{
-		path: "product-type",
-		name: "product-type",
+		path: "sku-type-list",
+		name: "sku-type-list",
 		component: () =>
-			import(/* webpackChunkName: "product-type" */ "@views/commodity/ProductType.vue"),
+			import(/* webpackChunkName: "sku-type-list" */ "@views/commodity/SkuType.vue"),
+		meta: {
+			label: "SKU类型",
+			icon: "role",
+			auth: [permission.VALUE_CHAIN_LOOK]
+		}
+	},
+	{
+		path: "sku-list",
+        name: "sku-list",
+        hide: true,
+		component: () => import(/* webpackChunkName: "sku-list" */ "@views/commodity/SkuList.vue"),
 		meta: {
 			label: "商品SKU",
 			icon: "role",

@@ -14,7 +14,9 @@ Page({
     sortPrice: false,   // 价格从低到高
 
     option: {},
-    list: {},
+    list: {
+      data: [{}, {}]
+    },
 
     noList: true,
     no_more: false,
@@ -44,17 +46,17 @@ Page({
    */
   getGoodsList: function (is_super, page) {
     let that = this;
-    
+
   },
 
   /**
    * 设置商品列表高度
    */
   setListHeight: function () {
-    let _this = this;
+    let that = this;
     wx.getSystemInfo({
       success: function (res) {
-        _this.setData({
+        that.setData({
           scrollHeight: res.windowHeight - 90,
         });
       }
@@ -65,18 +67,18 @@ Page({
    * 切换排序方式
    */
   switchSortType: function (e) {
-    let _this = this
+    let that = this
       , newSortType = e.currentTarget.dataset.type
-      , newSortPrice = newSortType === 'price' ? !_this.data.sortPrice : true;
+      , newSortPrice = newSortType === 'price' ? !that.data.sortPrice : true;
 
-    _this.setData({
+    that.setData({
       list: {},
       page: 1,
       sortType: newSortType,
       sortPrice: newSortPrice
     }, function () {
       // 获取商品列表
-      _this.getGoodsList(true);
+      that.getGoodsList(true);
     });
   },
 
@@ -106,7 +108,9 @@ Page({
   bindDownLoad: function () {
     // 已经是最后一页
     if (this.data.page >= this.data.list.last_page) {
-      this.setData({ no_more: true });
+      this.setData({ 
+        no_more: true
+      });
       return false;
     }
     this.getGoodsList(false, ++this.data.page);

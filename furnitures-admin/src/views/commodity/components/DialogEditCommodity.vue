@@ -40,11 +40,15 @@
 							:options="commodityTypeList"
 							v-model="form.typeId"
 							placeholder="请选择商品类型"
-							:props="{ value: 'id', expandTrigger: 'hover' }"
+							:props="{
+								value: 'typeId',
+								expandTrigger: 'hover',
+								children: 'typeVoList',
+								label: 'typeName'
+							}"
 						>
 							<template slot-scope="{ node, data }">
-								<span>{{ data.label }}</span>
-								<span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
+								<span>{{ data.typeName }}</span>
 							</template>
 						</el-cascader>
 					</el-form-item>
@@ -75,7 +79,7 @@
 						</el-select>
 					</el-form-item>
 					<el-form-item label="商品状态:" size="small">
-						<el-select v-model="form.publishStatus" placeholder="默认上架">
+						<el-select v-model="form.publishStatus" placeholder="默认下架">
 							<el-option
 								v-for="item in enumCommodityPublishStatus.arr"
 								:key="item.value"
@@ -91,7 +95,8 @@
 			<!-- 图片 -->
 			<el-row>
 				<el-col :span="5">
-					<el-form-item label="缩略图:" size="small" prop="smallImage">
+					<el-form-item label="缩略图:" size="small">
+						<!-- <el-form-item label="缩略图:" size="small" prop="smallImage"> -->
 						<ComUploadSinglePicture
 							:styleBox="true"
 							ref="commodityTypeSinglePic"
@@ -100,7 +105,8 @@
 					</el-form-item>
 				</el-col>
 				<el-col :span="19">
-					<el-form-item label="商品图片:" size="small" prop="uploadImage">
+					<!-- <el-form-item label="商品图片:" size="small" prop="uploadImage"> -->
+					<el-form-item label="商品图片:" size="small">
 						<ComUploadMultiPicture
 							ref="commodityTypeMultPic"
 							@imagePreview="imagePreview"
@@ -135,37 +141,43 @@
 					</el-form-item>
 					<el-form-item label="规格(SKU):" size="small">
 						<div class="specification-list">
-                            <template v-if="selectCheckedType.length>0">
-							<div
-								class="specification-item"
-								v-for="(item, index) in selectCheckedType"
-								:key="index"
-							>
-								<h5>{{ item.name }}</h5>
-								<div class="specification-check">
-									<el-checkbox-group
-										v-model="form.checkBoxSkuAttr"
-										@change="changeCheckedSku"
-									>
-										<el-checkbox
-											v-for="(itemChild, itemIndex) in item.child"
-											:label="itemChild.id"
-											:key="itemIndex"
-											>{{ itemChild.name }}</el-checkbox
+							<template v-if="selectCheckedType.length > 0">
+								<div
+									class="specification-item"
+									v-for="(item, index) in selectCheckedType"
+									:key="index"
+								>
+									<h5>{{ item.name }}</h5>
+									<div class="specification-check">
+										<el-checkbox-group
+											v-model="form.checkBoxSkuAttr"
+											@change="changeCheckedSku"
 										>
-									</el-checkbox-group>
+											<el-checkbox
+												v-for="(itemChild, itemIndex) in item.child"
+												:label="itemChild.id"
+												:key="itemIndex"
+												>{{ itemChild.name }}</el-checkbox
+											>
+										</el-checkbox-group>
+									</div>
 								</div>
-							</div>
-                            </template>
-                            <template v-else>
-                                <div class="no-data">请选择属性类型</div>
-                            </template>
+							</template>
+							<template v-else>
+								<div class="no-data">请选择属性类型</div>
+							</template>
 						</div>
 					</el-form-item>
 				</el-col>
 				<el-col :span="10">
 					<div class="all-sku-list">
-						<el-table :data="calcSkuList" border style="width: 100%" height="100%" empty-text="请选择规格(SKU)">
+						<el-table
+							:data="calcSkuList"
+							border
+							style="width: 100%"
+							height="100%"
+							empty-text="请选择规格(SKU)"
+						>
 							<el-table-column label="规格" align="center" :resizable="false">
 								<template slot-scope="scope">
 									{{ scope.row.attributeNameList }}
@@ -206,7 +218,7 @@
 				</el-col>
 			</el-row>
 			<!-- 富文本 -->
-			<el-form-item label="商品内容:" size="small" prop="remark">
+			<el-form-item label="商品内容:" size="small" prop="detail">
 				<Tinymce v-model="form.detail" ref="detail"></Tinymce>
 			</el-form-item>
 		</el-form>
@@ -224,6 +236,7 @@
 	import Tinymce from "@com/tinymce";
 	import formMixin from "@mixins/form.mixin";
 	import { positiveRealNumber } from "@common/validator";
+	import { getALLProductQuery, addAndUpdateProduct } from "@api/commodity/product";
 	import { enumCommodityPublishStatus, enumCommodityPerfectStatus } from "@common/enums/index";
 	export default {
 		mixins: [formMixin],
@@ -254,13 +267,12 @@
 					originalPrice: "", //市场价格
 					detail: "", // 商品详情
 					selectSkuParentIdList: [], // 选择的sku属性类型 id数组
-					checkBoxSkuAttr: [], // 选中的商品规格（sku）数组
-					remark: "" //类别描述
-                },
+					checkBoxSkuAttr: [] // 选中的商品规格（sku）数组
+				},
 				commodityTypeList: [], // 商品类别
 				calcSkuList: [], // 选中后生成的sku
-                selectCheckedType: [], // 选择的sku属性类型 id
-                skuTypeList: [], // 商品sku list
+				selectCheckedType: [], // 选择的sku属性类型 id
+				skuTypeList: [], // 商品sku list
 				checkedSkuList: [], // 选中的id集合进行 不分层
 				rules: {
 					name: [{ required: true, message: "商品标题不能为空", trigger: "blur" }],
@@ -269,7 +281,7 @@
 					// publishStatus: [{ required: true, message: "请选择商品类别", trigger: "change" }],
 					typeId: [{ required: true, message: "请选择商品类别", trigger: "change" }],
 					smallImage: [{ required: true, message: "缩略图不能为空", trigger: "blur" }],
-					remark: [{ required: true, message: "商品详细不能为空", trigger: "blur" }],
+					detail: [{ required: true, message: "商品详细不能为空", trigger: "blur" }],
 					uploadImage: [
 						{ required: true, message: "商品详情图片不能为空", trigger: "blur" }
 					],
@@ -429,147 +441,148 @@
 			},
 			add(id = 0) {
 				if (id > 0) {
+					this.form.productId = id;
 					this.title = "修改商品";
 				} else {
 					this.title = "新增商品";
 				}
 				this.query(); // 获取类别信息
-				this.visible = true;
 			},
 			submit() {
 				let that = this;
 				console.log(this.form);
 				that.$refs.form.validate(valid => {
 					if (valid) {
-						that.visible = false;
-						that.$message.success("提交成功", that);
-						that.$emit("success");
+						let typeFirstId = that.form.typeId[0];
+						let typeSecondId = that.form.typeId[1];
+						let typeFirstName = "";
+						let typeSecondName = "";
+						that.commodityTypeList.forEach(item => {
+							item.typeVoList.forEach(itemChild => {
+								if (typeSecondId === itemChild.typeId) {
+									typeSecondName = itemChild.typeName;
+									typeFirstName = item.typeName;
+								}
+							});
+						});
+						let formData = {
+							typeFirstId: typeFirstId, // 一级类型id
+							typeFirstName: typeFirstName, // 一级名称
+							typeSecondId: typeSecondId, // 二级类型id
+							typeSecondName: typeSecondName, //二级名称
+							detail: that.form.detail, // 想想
+							isPerfect: that.form.isPerfect || 0,
+							name: that.form.name,
+							stock: 0, // 库存
+							originalPrice: that.form.originalPrice,
+							price: that.form.price,
+							productImage:
+								"//n.sinaimg.cn/news/1_img/upload/cf3881ab/67/w1000h667/20200408/66a8-iryninw4454635.jpg,//n.sinaimg.cn/news/1_img/upload/cf3881ab/67/w1000h667/20200408/66a8-iryninw4454635.jpg,//n.sinaimg.cn/news/1_img/upload/cf3881ab/67/w1000h667/20200408/66a8-iryninw4454635.jpg",
+							publishStatus: that.form.publishStatus || 0,
+							shortName: that.form.shortName,
+							smallImage:
+								"//n.sinaimg.cn/news/1_img/upload/cf3881ab/67/w1000h667/20200408/66a8-iryninw4454635.jpg"
+						};
+						let skuAttributeDtoList = [];
+						let stock = 0;
+						that.calcSkuList.forEach(item => {
+							let skuAttributeItem = {
+								attributeIds: item.attributeIds,
+								attributeNameList: item.attributeNameList,
+								attributePrice: item.attributePrice,
+								attributeStock: item.attributeStock
+							};
+							stock = stock + Number(item.attributeStock);
+							skuAttributeDtoList.push(skuAttributeItem);
+						});
+						formData.stock = stock;
+						formData["skuAttributeDtoList"] = skuAttributeDtoList;
+						formData["skuIds"] = that.form.checkBoxSkuAttr.join(",");
+						if (that.form.productId > 0) {
+							formData["productId"] = that.form.productId;
+						}
+						addAndUpdateProduct(formData)
+							.then(data => {
+								if (data.succeed) {
+									console.log(data);
+									that.visible = false;
+									that.$message.success(
+										that.form.productId > 0 ? "修改成功" : "添加成功",
+										that
+									);
+									that.$emit("success");
+								} else {
+									that.$message.warning(
+										data.body.message || that.MSG_UNKNOWN,
+										that
+									);
+								}
+							})
+							.catch(err => {
+								that.$message.warning(err.body.message || that.MSG_UNKNOWN, that);
+							})
+							.finally(() => {
+								that.submitting = false;
+							});
 					} else {
 						console.log("Failure of form validation!!");
 					}
 				});
 			},
 			query() {
-				this.skuTypeList = [
-					{
-						id: 5,
-						name: "颜色",
-						child: [
-							{
-								id: 22,
-								name: "白色"
-							},
-							{
-								id: 23,
-								name: "黑色"
-							},
-							{
-								id: 24,
-								name: "蓝色"
+				let that = this;
+				that.submitting = true;
+				getALLProductQuery(that.form)
+					.then(res => {
+						if (that.form.productId > 0) {
+							if (res[0].succeed && res[1].succeed && res[2].succeed) {
+								let skuTypeArr = res[1].body || [];
+								that.skuTypeList = that.setDetailData(skuTypeArr);
+								let commodityTypeList = res[0].body || [];
+								that.commodityTypeList = commodityTypeList;
+								that.visible = true;
+							} else {
+								that.$message.warning("获取商品详情失败，请联系管理员", that);
 							}
-						]
-					},
-					{
-						id: 2,
-						name: "尺寸",
-						child: [
-							{
-								id: 12,
-								name: "180"
-							},
-							{
-								id: 13,
-								name: "170"
-							},
-							{
-								id: 14,
-								name: "160"
+						} else {
+							if (res[0].succeed && res[1].succeed) {
+								let skuTypeArr = res[1].body || [];
+								that.skuTypeList = that.setDetailData(skuTypeArr);
+								let commodityTypeList = res[0].body || [];
+								that.commodityTypeList = commodityTypeList;
+								that.visible = true;
+							} else {
+								that.$message.warning("获取商品详情失败，请联系管理员", that);
 							}
-						]
-					},
-					{
-						id: 7,
-						name: "大小",
-						child: [
-							{
-								id: 32,
-								name: "S"
-							},
-							{
-								id: 33,
-								name: "M"
-							},
-							{
-								id: 34,
-								name: "L"
-							}
-						]
+						}
+					})
+					.catch(err => {
+						that.$message.warning(err.body.message || that.MSG_UNKNOWN, that);
+					})
+					.finally(() => {
+						that.submitting = false;
+					});
+			},
+			setDetailData(array) {
+				let skuTypeList = [];
+				array.forEach(skuType => {
+					let skuTypeItem = {
+						id: skuType.skuId,
+						name: skuType.skuName
+					};
+					if (skuType.attributeDtoList && skuType.attributeDtoList.length > 0) {
+						let child = [];
+						skuType.attributeDtoList.forEach(sku => {
+							child.push({
+								id: sku.skuId,
+								name: sku.skuName
+							});
+						});
+						skuTypeItem["child"] = child;
 					}
-				];
-				this.commodityTypeList = [
-					{
-						id: 1,
-						label: "指南",
-						children: [
-							{
-								id: 2,
-								label: "设计原则"
-							},
-							{
-								id: 3,
-								label: "导航"
-							}
-						]
-					},
-					{
-						id: 4,
-						label: "组件",
-						children: [
-							{
-								id: 5,
-								label: "Basic"
-							},
-							{
-								id: 6,
-								label: "Form"
-							},
-							{
-								id: 8,
-								label: "Data"
-							},
-							{
-								id: 7,
-								label: "Notice"
-							},
-							{
-								id: 31,
-								label: "Navigation"
-							},
-							{
-								id: 32,
-								label: "Others"
-							}
-						]
-					},
-					{
-						id: 35,
-						label: "资源",
-						children: [
-							{
-								id: 13,
-								label: "Axure Components"
-							},
-							{
-								id: 22,
-								label: "Sketch Templates"
-							},
-							{
-								id: 55,
-								label: "组件交互文档"
-							}
-						]
-					}
-				];
+					skuTypeList.push(skuTypeItem);
+				});
+				return skuTypeList;
 			},
 			uploadBefore() {
 				console.log("上传之前");
@@ -595,7 +608,8 @@
 		width: 100%;
 	}
 	.specification-list {
-		min-height: 370px;
+		height: 370px;
+		overflow: auto;
 		border: 1px solid #ccc;
 		border-radius: 6px;
 		padding: 15px;
@@ -604,12 +618,12 @@
 			color: #333;
 			font-size: 16px;
 			margin-bottom: 10px;
-        }
-        .no-data{
-            text-align: center;
-            margin: 150px 0;
-            color: #909399;
-        }
+		}
+		.no-data {
+			text-align: center;
+			margin: 150px 0;
+			color: #909399;
+		}
 	}
 	.sku-list {
 		position: relative;

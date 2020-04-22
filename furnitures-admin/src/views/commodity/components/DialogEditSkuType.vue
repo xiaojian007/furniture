@@ -18,30 +18,8 @@
 			@submit.native.prevent
 			label-width="95px"
 		>
-			<el-form-item label="SKU名称:" size="small" prop="name">
-				<el-input v-model="form.name" placeholder="请输入SKU名称"></el-input>
-			</el-form-item>
-			<el-form-item label="类型名称:" size="small" prop="skuName">
-				<div class="type-item" v-for="(item, index) in form.typeList" :key="index">
-					<el-form-item
-						label-width="0"
-						size="small"
-						:prop="'typeList.' + index + '.skuName'"
-						:rules="rules.skuName"
-					>
-						<el-input
-							v-model="item.skuName"
-							placeholder="请输入SKU名称"
-							maxlength="10"
-						></el-input>
-						<span
-							class="delete el-icon-delete"
-							@click="deleteType(index)"
-							v-if="form.typeList.length > 1"
-						></span>
-					</el-form-item>
-				</div>
-				<el-button class="add" @click="addType" size="small" type="primary">新增</el-button>
+			<el-form-item label="SKU名称:" size="small" prop="skuName">
+				<el-input v-model="form.skuName" placeholder="请输入SKU名称"></el-input>
 			</el-form-item>
 		</el-form>
 		<div slot="footer">
@@ -55,30 +33,17 @@
 
 <script>
 	import formMixin from "@mixins/form.mixin";
+	import { addAndUpdateSkuType, getSkuType } from "@api/commodity/sku";
 
 	export default {
 		mixins: [formMixin],
 		data() {
 			return {
 				form: {
-					id: "", //类型id
-					typeList: [
-						{
-							skuName: ""
-						}
-					]
-				},
-				params: {
-					id: ""
+					skuName: "",
+					skuId: "" //类型id
 				},
 				rules: {
-					name: [
-						{
-							required: true,
-							message: "不能为空",
-							trigger: "blur"
-						}
-					],
 					skuName: [
 						{
 							required: true,
@@ -90,24 +55,8 @@
 			};
 		},
 		methods: {
-			// 删除
-			deleteType(item) {
-				this.form.typeList.splice(item, 1);
-			},
-			// 添加
-			addType() {
-				let list = this.form.typeList;
-				if (list[list.length - 1].skuName === "") {
-					this.$message.warning("请填写后再添加", this);
-					return;
-				}
-				this.form.typeList.push({
-					skuName: ""
-				});
-			},
 			close() {
 				this.reset();
-				this.form.typeList = [{ skuName: "" }];
 				this.visible = false;
 				this.submitting = false;
 			},
@@ -115,6 +64,7 @@
 				this.visible = true;
 				if (id > 0) {
 					this.title = "修改SKU类型";
+					this.form.skuId = id;
 					this.query(); // 获取角色信息
 				} else {
 					this.title = "新增SKU类型";
@@ -124,16 +74,56 @@
 				let that = this;
 				that.$refs.form.validate(valid => {
 					if (valid) {
-						console.log(valid);
-						that.visible = false;
-						that.$message.success("提交成功", that);
-						that.$emit("success");
+						let formData = {
+							skuName: that.form.skuName,
+							skuLevel: 1
+						};
+						if (that.form.skuId > 0) {
+							formData["skuId"] = that.form.skuId;
+						}
+						addAndUpdateSkuType(formData)
+							.then(data => {
+								if (data.succeed) {
+									that.$message.success(
+										that.form.skuId > 0 ? "修改成功" : "添加成功",
+										that
+									);
+									that.visible = false;
+									that.$emit("success");
+								} else {
+									that.$message.warning(data.body.message || that.MSG_UNKNOWN, that);
+								}
+							})
+							.catch(err => {
+								that.$message.warning(err.body.message || that.MSG_UNKNOWN, that);
+							})
+							.finally(() => {
+								that.submitting = false;
+							});
 					} else {
 						console.log("Failure of form validation!!");
 					}
 				});
 			},
-			query() {}
+			query() {
+				let that = this;
+				that.submitting = true;
+				getSkuType({ skuId: this.form.skuId })
+					.then(data => {
+						if (data.succeed) {
+							that.form.skuName = data.body.skuName;
+							this.visible = true;
+						} else {
+							that.$message.warning(data.body.message || that.MSG_UNKNOWN, that);
+						}
+					})
+					.catch(err => {
+						that.$message.warning(err.body.message || that.MSG_UNKNOWN, that);
+					})
+					.finally(() => {
+						that.submitting = false;
+					});
+			}
 		}
 	};
 </script>

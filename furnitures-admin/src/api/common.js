@@ -161,7 +161,6 @@ export const getVersionJson = (params, success, failure, error) => {
 		success = failure = error = success[0];
 	}
 	const domain = [window.location.protocol, window.location.host].join("//");
-	// const domain = ['http:', 'alpha.pack.ininin.com'].join('//')
 	const version = new Date().getTime();
 	params = params || {};
 	params.v = version;
@@ -169,15 +168,14 @@ export const getVersionJson = (params, success, failure, error) => {
 	axios
 		.get(`${domain}/static/version.json`, { params })
 		.then(function(res) {
-			// success callback
-			console.log(res);
-			res.succeed = res.status === 200;
-			let data = res.body || {};
-			if (res.succeed) {
-				success(data, params);
-			} else {
-				failure(data, params);
-			}
+			 // success callback
+             res.succeed = res.status === 200
+             let data = res.data || {}
+             if (res.succeed) {
+                 success(data, params)
+             } else {
+                 failure(data, params)
+             }
 		})
 		.catch(function(res) {
 			// error callback

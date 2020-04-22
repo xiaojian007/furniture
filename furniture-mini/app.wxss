@@ -5,11 +5,11 @@
 
 
 page {
-  background: #f7f7f7;
+  background: #f3f3f3;
 }
 
 .common-header-xian {
-  border-top: 1rpx solid #eee;
+  /* border-top: 1rpx solid #eee; */
   position: fixed;
   top: 0;
   width: 100%;
@@ -51,67 +51,6 @@ page {
 .yoshop-notcont .img image {
   width: 100%;
   height: 100%;
-}
-
-.category-list {
-  overflow: hidden;
-}
-
-.category-list .list {
-  box-sizing: border-box;
-  width: 50%;
-  float: left;
-}
-
-.category-list .list:nth-child(2n) {
-  border-left: 2px solid #f7f7f7;
-  border-bottom: 4px solid #f7f7f7;
-}
-
-.category-list .list:nth-child(2n-1) {
-  border-right: 2px solid #f7f7f7;
-  border-bottom: 4px solid #f7f7f7;
-}
-
-.category-list .list .left, .category-list .right {
-  width: 100%;
-}
-
-.category-list .list .left .img image {
-  width: 100%;
-  height: 375rpx;
-  display: block;
-}
-
-.category-list .right .cont {
-  padding: 0 12rpx;
-}
-
-.category-list .right .cont .title {
-  height: 40rpx;
-  line-height: 1.3;
-}
-
-.category-list.arrange .list {
-  overflow: hidden;
-  padding: 15rpx;
-  border-bottom: 1rpx solid #f7f7f7;
-  width: 100%;
-}
-
-.category-list.arrange .list .left {
-  width: 35%;
-  float: left;
-}
-
-.category-list.arrange .list .right {
-  width: 65%;
-  float: left;
-}
-
-.category-list.arrange .list .left .img image {
-  width: 220rpx;
-  height: 220rpx;
 }
 
 .button-common button {
@@ -217,7 +156,7 @@ page {
 
 .selectNumber .default {
   width: 34px;
-  height: 34px;
+  height: 32px;
   float: left;
   line-height: 32px;
   padding: 0;
@@ -417,18 +356,17 @@ page {
   bottom: 0px;
   left: 0px;
   right: 0px;
-  height: 46px;
+  height: 10.8vw;
   z-index: 18;
-  box-shadow: 1px 5px 15px rgba(50, 50, 50, 0.3);
   background: #fff;
 }
 
 .order-bt {
   width: 50%;
-  background-color: #ff495e;
+  background-color: #3a7df0;
   color: #fff;
   text-align: center;
-  line-height: 46px;
+  line-height: 10.8vw;
 }
 
 .swiper-box .wx-swiper-dot {
@@ -937,4 +875,27 @@ page {
 
 .p20 {
   padding: 20rpx;
+}
+
+
+.footer-btn {
+  position: fixed;
+  width: 90%;
+  box-sizing: border-box;
+  color: #fff;
+  bottom: 7vw;
+  left: 5%;
+  height: 10.8vw;
+  line-height: 10.8vw;
+  z-index: 18;
+  text-align: center;
+  background: #3A7DF0;
+  border-radius: 40rpx;
+}
+
+.space-between{
+  justify-content: space-between;
+}
+.align-items{
+  align-items: center;
 }
