@@ -21,10 +21,10 @@
 				<div class="el-dropdown-link">
 					<div v-if="user.userName" class="user-info">
 						<span class="nick1">
-							{{ user.nickName || '某某某' }}
+							{{ user.userName || 'admin' }}
 						</span>
 						<span class="nick2">
-							{{ user.userName }}
+							{{ user.mobile }}
 						</span>
 					</div>
 					<i class="el-icon-arrow-down el-icon--right header-icon-right"></i>

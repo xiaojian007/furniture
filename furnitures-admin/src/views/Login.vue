@@ -42,7 +42,7 @@
 	import { mapActions } from "vuex";
 	import SpiderAnimation from "@assets/js/spiderAnimation.js"; // 动效js
 	import { submitLogin } from "@api/user";
-	import { md5 } from "@utils/crypto";
+	// import { md5 } from "@utils/crypto";
 	export default {
 		data() {
 			return {
@@ -78,58 +78,80 @@
 			 * @method login
 			 */
 			login() {
-				this.submitting = true;
-				let params = {
-					mobile: this.form.account,
-					password: md5(md5(this.form.password))
-				};
-				submitLogin(params)
-					.then(data => {
-						console.log(data);
-						let user = {
-							token: new Date().getTime().toString(),
-							user: {
-								userName: this.form.account,
-								userId: 1,
-								menuPermissionIds: "22,32,44,33,33,233,44,1,2,3,4,5",
-								btnPermissionIds: "02,3,4,5,3,4"
-							}
+				let that = this;
+				that.$refs.form.validate(valid => {
+					if (valid) {
+						this.submitting = true;
+						let params = {
+							mobile: this.form.account,
+							password: this.form.password
 						};
-						this.setInfo(user)
-							.then(() => {
-								this.submitting = false;
-								this.$router.push({ path: "/" });
+						submitLogin(params)
+							.then(data => {
+								if (data.succeed) {
+									data = data.body || {};
+									let user = {
+										token: data.token,
+										user: {
+											mobile: data.loginUserVo.mobile,
+											userId: data.loginUserVo.userId,
+											userName: data.loginUserVo.userName,
+											menuPermissionIds: !data.loginUserVo.menuPermissionIds
+												? ""
+												: data.loginUserVo.menuPermissionIds.join(","),
+											btnPermissionIds: !data.loginUserVo.menuPermissionIds
+												? ""
+												: data.loginUserVo.menuPermissionIds.join(",")
+										}
+									};
+									this.setInfo(user)
+										.then(() => {
+											this.submitting = false;
+											this.$router.push({ path: "/" });
+										})
+										.catch(err => {
+											this.submitting = false;
+											console.log(err);
+										});
+									this.submitting = false;
+								} else {
+									that.$message.warning(
+										data.body.message || that.MSG_UNKNOWN,
+										that
+									);
+									this.submitting = false;
+								}
 							})
 							.catch(err => {
+								that.$message.warning(err.body.message || that.MSG_UNKNOWN, that);
 								this.submitting = false;
 								console.log(err);
 							});
-						this.submitting = false;
-					})
-					.catch(err => {
-						this.submitting = false;
-						console.log(err);
-					});
-				// 写死用户
-				setTimeout(() => {
-					this.setInfo({
-							token: new Date().getTime().toString(),
-							user: {
-								userName: this.form.account,
-								userId: 1,
-								menuPermissionIds: "22,32,44,33,33,233,44,1,2,3,4,5",
-								btnPermissionIds: "02,3,4,5,3,4"
-							}
-						})
-						.then(() => {
-							this.submitting = false;
-							this.$router.push({ path: "/" });
-						})
-						.catch(err => {
-							this.submitting = false;
-							console.log(err);
-						});
-				}, 600);
+
+						// 写死用户
+						// setTimeout(() => {
+						// 	this.setInfo({
+						// 			token: new Date().getTime().toString(),
+						// 			user: {
+						// 				userName: this.form.account,
+						// 				userId: 1,
+						// 				menuPermissionIds: "22,32,44,33,33,233,44,1,2,3,4,5",
+						// 				btnPermissionIds: "02,3,4,5,3,4"
+						// 			}
+						// 		})
+						// 		.then(() => {
+						// 			this.submitting = false;
+						// 			this.$router.push({ path: "/" });
+						// 		})
+						// 		.catch(err => {
+						// 			this.submitting = false;
+						// 			console.log(err);
+						// 		});
+						// }, 600);
+					} else {
+						console.log("Failure of form validation!!");
+					}
+				});
 			}
 		}
 	};

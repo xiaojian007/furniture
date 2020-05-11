@@ -17,5 +17,15 @@ export default [
 			icon: "role",
             auth: [permission.VALUE_CHAIN_LOOK]
 		}
+    },
+    {
+		path: "VI",
+		name: "VI",
+		component: () => import(/* webpackChunkName: "info-list" */ "@views/information/VI.vue"),
+		meta: {
+			label: "VI列表",
+			icon: "role",
+            auth: [permission.VALUE_CHAIN_LOOK]
+		}
 	}
 ];

@@ -1,8 +1,8 @@
 //测试
-// const API_URL = 'https://alpha.api.saas.ininin.com/'
+// const API_URL = 'http://192.168.1.103:8080/'
 //const H5_URL = ''
 //正式
-const API_URL = 'https://api.saas.ininin.com/'
+const API_URL = 'http://47.101.209.229:8080/'
 const H5_URL = ''
 /**
  * tabBar页面路径列表 (用于链接跳转时判断)
@@ -11,7 +11,7 @@ const H5_URL = ''
 const tabBarLinks = [
   'pages/home/index',
   'pages/find/index',
-  'pages/shopping-cart/index',
+  'pages/shopping-cart/shopping',
   'pages/my/index'
 ];
 const util = require('utils/util.js')
@@ -79,16 +79,17 @@ App({
     }
     return data
   },
+
+
   /**
    * 设置登录信息
+   * @params {Object} data 用户信息
    */
   setAuth(data) {
+    this.loginChecking = true
     data = data || {}
-    console.log(data)
-    let user = data.user || {}
-    this.globalData.token = data.token || ''
-    this.globalData.user = user
-    this.globalData.userInfo = data.userInfo || {}
+    this.globalData.token = data.openid || ''
+    this.globalData.userInfo.userId = data.userId || ''
     this.setStorage(this.globalData.STORAGE_KEY_TOKEN, data)
   },
 
@@ -126,8 +127,8 @@ App({
       }
       options.data = options.data || {}
       options.success = function(res) {
-        if (res.data.resultCode == 1000) {
-          opts.success && opts.success(res.data.resultData)
+        if (res.data.code === '200') {
+          opts.success && opts.success(res.data.body)
         } else if (res.data.resultCode == 1003) {
           that.setAuth()
           that.setStorage(that.globalData.STORAGE_KEY_TOKEN, () => {
@@ -164,16 +165,12 @@ App({
     let that = this
     that.getStorage(that.globalData.STORAGE_KEY_TOKEN, (data) => {
       // 写死的用户信息
-      data = {
-        token: "cc8290fe-1e83-4fd3-91c5-4be4746025a2",
-        userInfo: {
-          "id": null,
-          "userId": 158,
-          "userName": '李健',
-          "userTel": 17621376429,
-        }
-      }
-      if (data && data.token) {
+      // data = {
+      //   token: "cc8290fe-1e83-4fd3-91c5-4be4746025a2",
+      //   openid: "cc8290fe-1e83-4fd3-91c5-4be4746025a2",
+      //   userId: "cc8290fe-1e83-4fd3-91c5-4be4746025a2",
+      // }
+      if (data && data.openid) {
         const setUserInfo = (() => {
           that.setAuth(data)
           pageObj.setData({
@@ -186,11 +183,15 @@ App({
             url: 'tools/user_info/info',
             method: 'GET',
             data: {
-              isDetail: 0
+              userId: that.globalData.userInfo.userId,
+              openid: that.globalData.token
             },
             success: ((res) => {
-              debugger
-              data.userInfo = res
+              data = {
+                token: res.openid,
+                openid: res.openid,
+                userId: res.userId
+              }
               setUserInfo()
             }),
             fail: ((err) => {
@@ -207,7 +208,6 @@ App({
             loginChecking: that.loginChecking
           })
           callback()
-          that.openRecord('loginCheck')
         })
       }
     })
@@ -248,14 +248,19 @@ App({
         if (res.code) {
           this.request({
             method: 'POST',
-            url: 'user/wx/login',
+            url: 'wechat/getOpenId',
             data: {
               code: res.code,
               fromUserId: this.globalData.shareCode,
               platform: 'MINI_PROGRAM'
             },
             success: (data) => {
-              this.setAuth(data)
+              let loginData = {
+                token: data.openid,
+                openid: data.openid,
+                userId: data.userId
+              }
+              this.setAuth(loginData)
               wx.hideLoading()
               console.log('登录成功', data)
               callback(data)
@@ -333,19 +338,6 @@ App({
     });
   },
 
-  /**
-   * 设置登录信息
-   * @params {Object} data 用户信息
-   */
-  setAuth(data) {
-    this.loginChecking = true
-    data = data || {}
-    console.log(data)
-    let user = data.user || {}
-    this.globalData.token = data.token || ''
-    this.globalData.userInfo = data.userInfo || {}
-    this.setStorage(this.globalData.STORAGE_KEY_TOKEN, data)
-  },
 
   /**
    * 验证登录 . todo
@@ -395,6 +387,8 @@ App({
     STORAGE_KEY_TOKEN: 'tps-token', //登录信息本地缓存KEY
     token: '', //登录标识
     user: {}, //登录信息
-    userInfo: {}
+    userInfo: {
+      userId: ''
+    }
   }
 })

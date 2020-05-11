@@ -1,3 +1,7 @@
+// pages/my/index.js
+const util = require('../../utils/util.js')
+//获取应用实例
+const app = getApp()
 // components/homelist/index.js
 Component({
   /**
@@ -23,7 +27,7 @@ Component({
     topNumber: 0,
     isShow: false,
     params: {
-      currentPage: 1,
+      currentPage: 0,
       pageSize: 10
     },
     productYuewu: [{
@@ -39,6 +43,7 @@ Component({
       id: 4,
       name: '全屋定制'
     }], // 悦物数据
+    typeList: [], // 二级类别
     list: [], // 类型页商品数据
     total: 20, // 总条数
     home: [], // 首页商品数据
@@ -77,19 +82,10 @@ Component({
     },
     // 下拉到底触发
     scrollTolower() {
-      let currentPage = this.data.params.currentPage
-      currentPage = currentPage + 1
-      this.setData({
-        params: {
-          currentPage: currentPage
-        }
-      })
-      setTimeout(() => {
-        this.setData({
-          list: [...this.data.list, ...this.data.list]
-        })
-      }, 200)
-      console.log(this.data.params.currentPage)
+      if (this.data.isHome) {
+        return
+      }
+      this.getTypeProduct()
     },
     query() {
       if (this.data.isShow) {
@@ -101,51 +97,11 @@ Component({
         isShow: true
       })
       if (this.data.typeId === 0) {
-
+        this.getFeatured()
+      } else {
+        this.getTypeDetail(this.data.typeId)
+        this.getTypeProduct()
       }
-      let list = [{
-        id: 0,
-        name: '情感'
-      }, {
-        id: 1,
-        name: '情感'
-      }, {
-        id: 2,
-        name: '情感'
-      }, {
-        id: 3,
-        name: '情感'
-      }, {
-        id: 4,
-        name: '情感'
-      }, {
-        id: 5,
-        name: '情感'
-      }, {
-        id: 6,
-        name: '情感'
-      }, {
-        id: 6,
-        name: '情感'
-      }, {
-        id: 6,
-        name: '情感'
-      }, {
-        id: 6,
-        name: '情感'
-      }, {
-        id: 6,
-        name: '情感'
-      }, {
-        id: 6,
-        name: '情感'
-      }, {
-        id: 6,
-        name: '情感'
-      }, {
-        id: 6,
-        name: '情感'
-      }]
       let imgUrls = [
         'https://images.unsplash.com/photo-1551334787-21e6bd3ab135?w=640',
         'https://images.unsplash.com/photo-1551214012-84f95e060dee?w=640',
@@ -158,12 +114,127 @@ Component({
       })
       setTimeout(() => {
         this.setData({
-          list,
-          imgUrls,
           homeImgUrls,
           loading: false
         })
       }, 2000)
+    },
+    // 精选
+    getFeatured() {
+      if (this.data.list.length > 0 && this.data.total === this.data.list.length) {
+        return
+      }
+      // 精选传值
+      let paramsFeatured = {
+        isPerfect: 1,
+        pageNum: 1,
+        pageSize: 20
+      }
+      app.request({
+        method: 'GET',
+        url: 'product/page',
+        data: paramsFeatured,
+        success: (data) => {
+          wx.hideLoading()
+          wx.stopPullDownRefresh()
+          this.setData({
+            loading: false,
+          })
+          let list = data.list || []
+          let total = data.total || 0
+          this.setData({
+            total,
+            list: [...list, ...this.data.list]
+          })
+        },
+        fail: (err) => {
+          wx.hideLoading()
+          this.setData({
+            loading: false
+          })
+          wx.showToast({
+            title: app.globalData.msgUnknown,
+            icon: 'none'
+          })
+        }
+      })
+    },
+    // 获取轮播图和二级类别
+    getTypeDetail(typeId) {
+      // 精选传值
+      let params = {
+        typeId: typeId
+      }
+      app.request({
+        method: 'GET',
+        url: 'producttype/list-second',
+        data: params,
+        success: (data) => {
+          let typeList = data.typeVoList || []
+          let imgUrls = data.bannerImage ? data.bannerImage.split(',') : []
+          this.setData({
+            imgUrls,
+            typeList
+          })
+          wx.hideLoading()
+          wx.stopPullDownRefresh()
+          this.setData({
+            loading: false,
+          })
+        },
+        fail: (err) => {
+          wx.hideLoading()
+          this.setData({
+            loading: false
+          })
+          wx.showToast({
+            title: app.globalData.msgUnknown,
+            icon: 'none'
+          })
+        }
+      })
+    },
+    // 获取商品
+    getTypeProduct() {
+      let currentPage = this.data.params.currentPage
+      if (this.data.list.length > 0 && this.data.total === this.data.list.length) {
+        return
+      } else {
+        currentPage += 1
+      }
+      let params = {
+        typeFirstId: this.data.typeId,
+        pageNum: currentPage,
+        pageSize: this.data.params.pageSize
+      }
+
+      app.request({
+        method: 'GET',
+        url: 'product/page',
+        data: params,
+        success: (data) => {
+          wx.hideLoading()
+          this.setData({
+            loading: false,
+          })
+          let list = data.list || []
+          let total = data.total || 0
+          this.setData({
+            total,
+            list: [...list, ...this.data.list]
+          })
+        },
+        fail: (err) => {
+          wx.hideLoading()
+          this.setData({
+            loading: false
+          })
+          wx.showToast({
+            title: app.globalData.msgUnknown,
+            icon: 'none'
+          })
+        }
+      })
     }
   }
 })

@@ -2,7 +2,7 @@
 	<div class="list-panel" v-loading="loading">
 		<div class="list-search">
 			<el-form ref="form" :inline="true" :model="params" class="form-search">
-				<el-form-item size="small">
+				<el-form-item size="small" label="下单时间：" class="data-time">
 					<ComDateRange
 						ref="input-0"
 						:mode="1"
@@ -11,24 +11,7 @@
 						@change="changeDateRangeOperate"
 					></ComDateRange>
 				</el-form-item>
-				<el-form-item label="拓展状态" size="small">
-					<el-select
-						v-model="params.extendedState"
-						@change="query"
-						clearable
-						placeholder="请选择"
-						class="visit-person"
-					>
-						<el-option
-							v-for="item in enumExpandState.arr"
-							:key="item.value"
-							:label="item.text"
-							:value="item.value"
-						>
-						</el-option>
-					</el-select>
-				</el-form-item>
-				<el-form-item label="报价状态" size="small">
+				<el-form-item label="订单状态" size="small">
 					<el-select
 						v-model="params.reportPrice"
 						@change="query"
@@ -46,13 +29,13 @@
 					</el-select>
 				</el-form-item>
 				<div class="input-search">
-					<el-form-item size="small" label=" ">
+					<el-form-item size="small">
 						<el-input
 							v-model.trim="params.searchKey"
 							class="search-key"
 							clearable
-							placeholder="请输入内容"
-							@keyup.enter.native="enterSearch"
+							placeholder="订单编号、下单人、手机号"
+							@keyup.enter.native="search"
 						></el-input>
 					</el-form-item>
 					<el-form-item size="small">
@@ -65,8 +48,6 @@
 		</div>
 		<div class="list-result">
 			<div class="list-buttons">
-				<el-button type="primary" size="small" :loading="querying">添加 </el-button>
-
 				<el-button @click="query" size="small" :loading="querying">刷新</el-button>
 			</div>
 			<div class="list-table">
@@ -95,23 +76,23 @@
 							:min-width="field.width || 100"
 						>
 							<template slot-scope="scope">
-								<template v-if="field.prop === 'extendedState'">
-									{{ enumExpandState.obj[scope.row[field.prop]] | nullValue }}
-								</template>
-								<template v-else-if="field.prop === 'reportPrice'">
+								<template v-if="field.prop === 'reportPrice'">
 									{{ enumOfferType.obj[scope.row[field.prop]] | nullValue }}
 								</template>
 								<template v-else-if="field.prop === 'createTime'">
 									<div v-html="formatDateOutput(scope.row[field.prop])"></div>
 								</template>
 								<template v-else-if="field.prop === 'operation'">
-									<el-button type="text">
-										查看
+									<el-button type="text" @click="confirmOrder(scope.row.id)">
+										确认收货
 									</el-button>
-									<el-button type="text">
-										修改
+									<el-button type="text" @click="$refs.deliveryInformation.load(scope.row.id)">
+										去发货
 									</el-button>
-									<el-button type="text">
+									<el-button type="text" @click="$refs.orderDetail.load(scope.row.id)">
+										详情
+									</el-button>
+									<el-button type="text" @click="deteleOrder(scope.row.id)">
 										删除
 									</el-button>
 								</template>
@@ -140,18 +121,23 @@
 			>
 			</el-pagination>
 		</div>
+		<DeliveryInformation ref="deliveryInformation"></DeliveryInformation>
+        <OrderDetail ref="orderDetail"></OrderDetail>
 	</div>
 </template>
 
 <script>
 	import listMixin from "@mixins/list.mixin";
-	import { enumExpandState, enumOfferType } from "@common/enums/index";
+	import { enumOfferType } from "@common/enums/index";
+    import DeliveryInformation from "./components/DialogDeliveryInformation";
+    import OrderDetail from "./components/DialogOrderDetail";
+
 
 	export default {
 		mixins: [listMixin],
+		components: { DeliveryInformation, OrderDetail },
 		data() {
 			return {
-				enumExpandState, //拓展状态
 				enumOfferType, //是否保价
 				searchKey: "", //回车值是否变化
 				list: [], //账号list
@@ -159,7 +145,6 @@
 					startTime: "", //开始时间
 					endTime: "", //结束时间
 					visiter: "", //拜访人
-					extendedState: "", //拓展状态
 					reportPrice: "", //报价状态
 					searchKey: "" //关键字
 				},
@@ -175,24 +160,23 @@
 					},
 					{
 						show: true,
+						prop: "supplierId",
+						align: "center",
+						label: "订单编号"
+					},
+					{
+						show: true,
 						prop: "creator",
 						align: "center",
-						label: "订单编号",
-						width: 130
+						label: "订购人",
+						width: 100
 					},
 					{
 						show: true,
 						prop: "createTime",
 						align: "center",
-						label: "提交时间",
-						width: 100
-					},
-					{
-						show: true,
-						prop: "creatorId",
-						align: "center",
-						label: "订单金额",
-						width: 80
+						label: "订购人手机号",
+						width: 160
 					},
 					{
 						show: true,
@@ -209,10 +193,23 @@
 					},
 					{
 						show: true,
+						prop: "commentPurpose",
+						align: "center",
+						label: "下单时间",
+						width: 160
+					},
+					{
+						show: true,
+						prop: "creatorId",
+						align: "center",
+						label: "总金额",
+						width: 80
+					},
+					{
+						show: true,
 						prop: "comments",
 						align: "center",
-						label: "订单状态",
-						width: 180
+						label: "订单状态"
 					},
 					{
 						show: true,
@@ -221,7 +218,7 @@
 						align: "center",
 						className: "table-operation-col",
 						label: "操作",
-						width: 140
+						width: 180
 					}
 				]
 			};
@@ -233,14 +230,6 @@
 			}
 		},
 		methods: {
-			//回车搜索
-			enterSearch() {
-				let that = this;
-				if (that.searchKey !== that.params.searchKey) {
-					that.search();
-				}
-				that.searchKey = that.params.searchKey;
-			},
 			//时间搜索
 			changeDateRangeOperate(dateRanges) {
 				dateRanges = dateRanges || [];
@@ -421,6 +410,82 @@
 					that.querying = false;
 					that.loading = false;
 				}, 1000);
+            },
+            confirmOrder(id) {
+                let that = this;
+				that.$confirm(
+					"是否确认收货？",
+					"提示",
+					{
+						confirmButtonText: "确认",
+						cancelButtonText: "取消",
+						customClass: "custom-confirm", // 图标样式
+						confirmButtonClass: "el-button--primary", // 确认按钮样式
+						closeOnClickModal: that.CONFIRM_MODAL_CLOSE, // 是否可以点击空白关闭
+						closeOnPressEscape: that.CONFIRM_ESC_CLOSE, // 是否可以esc关闭
+						showClose: false // 是否显示关闭按钮
+					}
+				).then(() => {
+					// that.loading = true;
+					// that.querying = true;
+					console.log(id);
+					// orderReview({id: id}, () => {
+					//     that.$message.success('已接单', that)
+					//     that.query()
+					//     that.loading = false
+					//     that.querying = false
+					// }, (data) => {
+					//     that.loading = false
+					//     that.querying = false
+					//     that.$alert(data.resultMsg, '温馨提示', {
+					//         confirmButtonText: '知道了'
+					//     })
+					// }, (data) => {
+					//     that.loading = false
+					//     that.querying = false
+					//     that.$alert(data.resultMsg, '温馨提示', {
+					//         confirmButtonText: '知道了'
+					//     })
+					// })
+				}).catch(()=>{});
+            },
+            deteleOrder(id) {
+				let that = this;
+				that.$confirm(
+					"是否确认删除改订单吗？",
+					"提示",
+					{
+						confirmButtonText: "确认",
+						cancelButtonText: "取消",
+						customClass: "custom-confirm custom-confirm-danger", // 图标样式
+						confirmButtonClass: "el-button--primary", // 确认按钮样式
+						closeOnClickModal: that.CONFIRM_MODAL_CLOSE, // 是否可以点击空白关闭
+						closeOnPressEscape: that.CONFIRM_ESC_CLOSE, // 是否可以esc关闭
+						showClose: false // 是否显示关闭按钮
+					}
+				).then(() => {
+					// that.loading = true;
+					// that.querying = true;
+					console.log(id);
+					// orderReview({id: id}, () => {
+					//     that.$message.success('已接单', that)
+					//     that.query()
+					//     that.loading = false
+					//     that.querying = false
+					// }, (data) => {
+					//     that.loading = false
+					//     that.querying = false
+					//     that.$alert(data.resultMsg, '温馨提示', {
+					//         confirmButtonText: '知道了'
+					//     })
+					// }, (data) => {
+					//     that.loading = false
+					//     that.querying = false
+					//     that.$alert(data.resultMsg, '温馨提示', {
+					//         confirmButtonText: '知道了'
+					//     })
+					// })
+				}).catch(()=>{});
 			}
 		}
 	};

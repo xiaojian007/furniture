@@ -148,19 +148,19 @@ page {
 
 .selectNumber {
   height: 34px;
-  flex-direction: row;
   border: 1rpx solid #eee;
   border-radius: 10rpx;
-  display: inline-block;
+  display: flex;
+  width: 118px;
 }
 
 .selectNumber .default {
   width: 34px;
-  height: 32px;
-  float: left;
-  line-height: 32px;
+  height: 34px;
+  flex: 1;
+  text-align: center;
+  line-height: 28px;
   padding: 0;
-  background: #fff;
   color: #444;
   font-size: 48rpx;
 }
@@ -179,11 +179,13 @@ page {
   float: left;
   width: 50px;
   height: 34px;
+  /* background: #f4f4f4; */
   line-height: 34px;
   border-right: 1rpx solid #eee;
   border-left: 1rpx solid #eee;
   text-align: center;
-  font-size: 28rpx;
+  font-weight: bold;
+  font-size: 30rpx;
   color: #444;
 }
 
@@ -193,20 +195,24 @@ page {
   position: fixed;
   bottom: 150rpx;
   z-index: 20;
-  right: 12px;
-  background: rgba(255, 255, 255, 0.9);
-  width: 76rpx;
-  height: 76rpx;
-  border-radius: 76rpx;
-  border: 1rpx solid #eee;
+  right: 24rpx;
+  height: 80rpx;
+  width: 80rpx;
+  background: rgba(0, 0, 0, .3);
+  border-radius: 50%;
 }
-
+.widget-goTop .go-top{
+  width: 100%;
+  height: 100%;
+}
 .widget-goTop .icon-fanhuidingbu {
-  color: #666;
-  display: block;
-  text-align: center;
-  line-height: 76rpx;
-  font-size: 32rpx;
+  height: 80rpx;
+  width: 80rpx;
+  position: fixed;
+  bottom: 150rpx;
+  background: rgba(0, 0, 0, .3);
+  right: 30rpx;
+  border-radius: 50%;
 }
 
 .index-loading .loading {
@@ -363,7 +369,7 @@ page {
 
 .order-bt {
   width: 50%;
-  background-color: #3a7df0;
+  background-color: #3B7CF0;
   color: #fff;
   text-align: center;
   line-height: 10.8vw;
@@ -822,7 +828,7 @@ page {
 
 .wxParse-inline {
   font-size: 28rpx;
-  text-align: center;
+  /* text-align: center; */
 }
 
 .wxParse-div {

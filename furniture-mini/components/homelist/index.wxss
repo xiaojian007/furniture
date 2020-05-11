@@ -142,7 +142,7 @@
 
 .category-type {
   width: 100%;
-  padding: 26rpx 0;
+  padding: 26rpx 0 0;
 }
 
 .type-list {
@@ -242,7 +242,7 @@
 .home-title {
   font-size: 30rpx;
   line-height: 30rpx;
-  padding-bottom: 35rpx;
+  padding: 35rpx 0;
 }
 
 .yuewu .yuewu-item {

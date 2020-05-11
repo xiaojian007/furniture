@@ -31,9 +31,6 @@
   font-size: 24rpx;
 }
 
-.home .cu-bar .action>text:active {
-  background: #fff;
-}
 
 .tab-h {
   height: 94rpx;

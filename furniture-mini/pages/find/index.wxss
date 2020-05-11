@@ -7,6 +7,7 @@
   background: #f3f3f3;
 }
 
+.weui-panel::after,
 .weui-panel::before {
   display: none;
 }

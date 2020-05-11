@@ -1,0 +1,98 @@
+/* components/skulist/sku.wxss */
+@import "/app.wxss";
+
+.good-sku{
+  position: relative;
+  padding-top: 50rpx;
+  padding-bottom: 124rpx;
+  background: #fff;
+  text-align: left;
+  width: 100%;
+  min-height: 20vh;
+}
+.good-sku .good-img {
+  width: 222rpx;
+  height: 222rpx;
+  border-radius: 4rpx;
+  margin-right: 30rpx;
+}
+.good-sku .good-img image{
+  width: 100%;
+  height: 100%;
+}
+.good-sku .good-detail{
+  padding: 0 30rpx;
+}
+.good-sku .good-detail .good-title{
+  color: #333;
+  font-size: 30rpx;
+  margin-bottom: 20rpx;
+
+}
+.good-sku .good-detail .good-type{
+  font-size: 22rpx;
+  color: #999;
+  margin-bottom: 50rpx;
+}
+
+.good-sku .good-detail .good-price{
+  font-size: 28rpx;
+  color: #F0563C;
+}
+.good-sku .good-detail .good-price text{
+  font-size: 20rpx;
+}
+.good-sku .good-detail .good-stock{
+  font-size: 20rpx;
+  color: #999;
+}
+.good-sku .add-car{
+  height: 94rpx;
+  font-size: 30rpx;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1;
+  text-align: center;
+  background: #3B7CF0;
+  color: #fff;
+  line-height: 94rpx;
+}
+
+.good-sku .no-check{
+  background: #000;
+}
+.good-sku .sku-list{
+  padding: 0 30rpx;
+}
+.sku-list .sku-name{
+  font-size: 28rpx;
+  color: #000;
+  font-weight: bold;
+  padding: 18rpx 0;
+}
+.sku-list .sku-item-list .item-name{
+  font-size: 20rpx;
+  padding: 10rpx 26rpx;
+  background: #f4f4f4;
+  color: #000;
+  margin-right: 30rpx;
+  border-radius: 4rpx;
+}
+.sku-list .sku-item-list .item-name.cur{
+  color: #fff;
+  background: #3B7CF0;
+}
+.good-sku .chioce-number{
+  padding: 20rpx 30rpx;
+  margin-top: 20rpx;
+}
+.chioce-number .number-tile{
+  font-size: 26rpx;
+  color: #000;
+}
+.chioce-number .number-tile text{
+  font-size: 20rpx;
+  color: #999;
+}

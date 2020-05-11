@@ -17,7 +17,7 @@
 					</view>
 					<view class="shop-goods">
 						<!-- 列表标题 -->
-						<navigator hover-class="none" url="../goods/index?goods_id={{item.goods_id}}">
+						<navigator hover-class="none" url="../goods/index?productId={{item.productId}}">
 							<view class="goods-name">
 								<text class="twolist-hidden f-30 col-3">{{item.title}}</text>
 							</view>
@@ -34,15 +34,15 @@
 							<!-- 商品数量加减  style='display:{{show_edit}}'-->
 							<view class="selectNumber">
 								<!--减按钮  -->
-								<button class="default" bindtap="btn_minus" data-obj="{{obj}}" data-index="{{index}}">-</button>
+								<view class="default" bindtap="btn_minus" data-obj="{{obj}}" data-index="{{index}}">-</view>
 								<input class="view_text_center" bindinput='input_num' data-index="{{index}}" disabled="{{true}}" type="number" value="{{item.num}}" />
 								<!-- 加按钮-->
-								<button class="default" bindtap="btn_add" data-index="{{index}}">+</button>
+								<view class="default" bindtap="btn_add" data-index="{{index}}">+</view>
 							</view>
 						</view>
 					</view>
 				</view>
-				<view class="remove" data-id="{{item.id}}" data-goods-id="{{item.goods_id}}" data-sku-id="{{item.goods_sku_id}}" bindtap='deletes'>{{remove}}删除</view>
+				<view class="remove" data-goods-id="{{item.productId}}" data-index="{{index}}" data-shop-id="{{item.shopId}}" bindtap='deletes'>删除</view>
 			</view>
 		</block>
 

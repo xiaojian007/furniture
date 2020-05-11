@@ -1,4 +1,4 @@
-const App = getApp();
+const app = getApp();
 
 Page({
   data: {
@@ -12,12 +12,15 @@ Page({
 
     // 分类列表
     list: [],
-
+    // 轮播图
+    autoplay: false,
+    interval: 5000,
+    duration: 600,
     // show
     notcont: false
   },
 
-  onLoad: function() {
+  onLoad: function () {
     let that = this;
     // 设置分类列表高度
     that.setListHeight();
@@ -28,10 +31,10 @@ Page({
   /**
    * 设置分类列表高度
    */
-  setListHeight: function() {
+  setListHeight: function () {
     let that = this;
     wx.getSystemInfo({
-      success: function(res) {
+      success: function (res) {
         that.setData({
           scrollHeight: res.windowHeight - 47,
         });
@@ -42,124 +45,61 @@ Page({
   /**
    * 获取分类列表
    */
-  getCategoryList: function() {
+  getCategoryList() {
     let that = this;
-    let data = {
-      list: [{
-        category_id: 1,
-        name: '汀·西米娅',
-        child: [{
-          file_id: 21,
-          image: {
-            file_path: 'http://cloud.pdp.ininin.com/FkbnmXWHzzEhSwQrt6UTERWP_f5w',
-          },
-          name: '分类1-1'
-        }]
-      }, {
-        category_id: 2,
-        name: '汀·西海岸',
-        child: [{
-          file_id: 22,
-          image: {
-            file_path: 'http://cloud.pdp.ininin.com/FkbnmXWHzzEhSwQrt6UTERWP_f5w',
-          },
-          name: '分类2-0'
-        }, {
-          file_id: 22,
-          image: {
-            file_path: 'http://cloud.pdp.ininin.com/FkbnmXWHzzEhSwQrt6UTERWP_f5w',
-          },
-          name: '分类2-1'
-        }, {
-          file_id: 22,
-          image: {
-            file_path: 'http://cloud.pdp.ininin.com/FkbnmXWHzzEhSwQrt6UTERWP_f5w',
-          },
-          name: '分类2-1'
-        }, {
-          file_id: 22,
-          image: {
-            file_path: 'http://cloud.pdp.ininin.com/FkbnmXWHzzEhSwQrt6UTERWP_f5w',
-          },
-          name: '分类2-1'
-        }, {
-          file_id: 22,
-          image: {
-            file_path: 'http://cloud.pdp.ininin.com/FkbnmXWHzzEhSwQrt6UTERWP_f5w',
-          },
-          name: '分类2-1'
-        }, {
-          file_id: 22,
-          image: {
-            file_path: 'http://cloud.pdp.ininin.com/FkbnmXWHzzEhSwQrt6UTERWP_f5w',
-          },
-          name: '分类2-1'
-        }, {
-          file_id: 22,
-          image: {
-            file_path: 'http://cloud.pdp.ininin.com/FkbnmXWHzzEhSwQrt6UTERWP_f5w',
-          },
-          name: '分类2-1'
-        }, {
-          file_id: 22,
-          image: {
-            file_path: 'http://cloud.pdp.ininin.com/FkbnmXWHzzEhSwQrt6UTERWP_f5w',
-          },
-          name: '分类2-1'
-        }, {
-          file_id: 22,
-          image: {
-            file_path: 'http://cloud.pdp.ininin.com/FkbnmXWHzzEhSwQrt6UTERWP_f5w',
-          },
-          name: '分类2-1'
-        }, {
-          file_id: 22,
-          image: {
-            file_path: 'http://cloud.pdp.ininin.com/FkbnmXWHzzEhSwQrt6UTERWP_f5w',
-          },
-          name: '分类2-1'
-        }, {
-          file_id: 22,
-          image: {
-            file_path: 'http://cloud.pdp.ininin.com/FkbnmXWHzzEhSwQrt6UTERWP_f5w',
-          },
-          name: '分类2-1'
-        }, {
-          file_id: 22,
-          image: {
-            file_path: 'http://cloud.pdp.ininin.com/FkbnmXWHzzEhSwQrt6UTERWP_f5w',
-          },
-          name: '分类2-1'
-        }, {
-          file_id: 22,
-          image: {
-            file_path: 'http://cloud.pdp.ininin.com/FkbnmXWHzzEhSwQrt6UTERWP_f5w',
-          },
-          name: '分类2-1'
-        }]
-      }, {
-        category_id: 3,
-        name: '君士坦丁',
-        child: [{
-          file_id: 24,
-          image: {
-            file_path: 'http://cloud.pdp.ininin.com/FkbnmXWHzzEhSwQrt6UTERWP_f5w',
-          },
-          name: '分类3-1'
-        }]
-      }]
+    wx.showLoading({
+      title: '加载中',
+    })
+    this.setData({
+      loading: true
+    })
+    let params = {
+      hasSecond: true
     }
-    that.setData({
-      list: data.list,
-      curNav: data.list.length > 0 ? data.list[0].category_id : true,
-      notcont: !data.list.length
-    });
+    app.request({
+      method: 'GET',
+      url: 'producttype/list',
+      data: params,
+      success: (data) => {
+        wx.hideLoading()
+        wx.stopPullDownRefresh()
+        this.setData({
+          loading: false,
+        })
+        let typeList = []
+        let list = data || []
+        list.forEach((item) => {
+          let typeItem = {
+            bannerImageList: item.bannerImage ? item.bannerImage.split(',') : [],
+            typeId: item.typeId,
+            typeName: item.typeName,
+            typeVoList: item.typeVoList
+          }
+          typeList.push(typeItem)
+        })
+        that.setData({
+          list: typeList,
+          curNav: list.length > 0 ? list[0].category_id : true,
+          notcont: !list.length
+        });
+      },
+      fail: (err) => {
+        wx.hideLoading()
+        this.setData({
+          loading: false
+        })
+        wx.showToast({
+          title: app.globalData.msgUnknown,
+          icon: 'none'
+        })
+      }
+    })
   },
 
   /**
    * 一级分类：选中分类
    */
-  selectNav: function(t) {
+  selectNav: function (t) {
     let curNav = t.target.dataset.id,
       curIndex = parseInt(t.target.dataset.index);
     this.setData({
@@ -167,16 +107,6 @@ Page({
       curIndex,
       scrollTop: 0
     });
-  },
-
-  /**
-   * 设置分享内容
-   */
-  onShareAppMessage: function() {
-    return {
-      title: "全部分类",
-      path: "/pages/category/index"
-    };
   }
 
 });

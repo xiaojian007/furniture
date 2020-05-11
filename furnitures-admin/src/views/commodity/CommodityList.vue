@@ -15,9 +15,9 @@
 						>
 							新增
 						</li>
-						<li v-if="props.data.id">
+						<!-- <li v-if="props.data.id">
 							{{ props.data.sss === 1 ? "置顶" : "取消置顶" }}
-						</li>
+						</li> -->
 						<li
 							@click="handleRenameTree(props.data, props.node)"
 							v-if="props.data.id !== 0"
@@ -137,25 +137,26 @@
 										>
 											修改
 										</el-button>
-										<el-button type="text"
-                                            @click="deleteProductItem(scope.row.productId)"
-                                        >
+										<el-button
+											type="text"
+											@click="deleteProductItem(scope.row.productId)"
+										>
 											删除
 										</el-button>
 									</template>
 									<template v-else-if="field.prop === 'isPerfect'">
 										<el-switch
-											:value="scope.row.isPerfect === 1"
+											:value="scope.row.isPerfect == 1"
 											@change="
 												(val, id) =>
-													changePutShelves(val, scope.row.productId)
+													changeFeatured(val, scope.row.productId)
 											"
 										>
 										</el-switch>
 									</template>
 									<template v-else-if="field.prop === 'publishStatus'">
 										<el-switch
-											:value="scope.row.publishStatus === 1"
+											:value="scope.row.publishStatus == 1"
 											@change="
 												(val, id) =>
 													changePutShelves(val, scope.row.productId)
@@ -207,8 +208,9 @@
 		getProductAndProductType,
 		getProductTypeList,
 		getProductList,
-        deleteProductType,
-        deteleProduct
+		deleteProductType,
+		deteleProduct,
+		updateFeaturedAndPutShelves
 	} from "@api/commodity/product";
 	import { enumCommodityPublishStatus, enumCommodityPerfectStatus } from "@common/enums/index";
 
@@ -228,6 +230,9 @@
 				searchKey: "", //回车值是否变化
 				list: [], //账号list
 				params: {
+					hasSecond: true,
+					typeSecondId: "",
+					typeFirstId: "",
 					publishStatus: "", // 商品状态
 					isPerfect: "", // 是否精选
 					searchKey: "" //关键字
@@ -260,8 +265,8 @@
 						show: true,
 						prop: "price",
 						align: "center",
-						label: "商品价格",
-						width: 80
+						label: "商品价格(区间)",
+						width: 130
 					},
 					{
 						show: true,
@@ -327,7 +332,7 @@
 			changePutShelves(value, id) {
 				console.log(id);
 				let that = this;
-				that.$confirm(value ? "是否确认开通云图推送？" : "是否确认关闭云图推送？", "", {
+				that.$confirm(value ? "是否确认上架？" : "是否确认下架？", "", {
 					confirmButtonText: "确定",
 					cancelButtonText: "取消",
 					showClose: false,
@@ -337,53 +342,91 @@
 					confirmButtonClass: "message-confirm",
 					cancelButtonClass: "message-cancel"
 				}).then(() => {
-					// switchPush(
-					// 	{ id: id },
-					// 	() => {
-					// 		that.$message({
-					// 			type: "success",
-					// 			message: value ? "云图推送开通成功！" : "云图推送关闭成功！"
-					// 		});
-					// 		that.search();
-					// 	},
-					// 	() => {
-					// 		that.$alert(
-					// 			"操作失败：请检查账号与钉钉手机号码是否一致！",
-					// 			"温馨提示",
-					// 			{
-					// 				confirmButtonText: "知道了"
-					// 			}
-					// 		);
-					// 	},
-					// 	data => {
-					// 		that.$alert(data.resultMsg || that.MSG.unknown, "温馨提示", {
-					// 			confirmButtonText: "知道了"
-					// 		});
-					// 	}
-					// );
+					let params = {
+						productId: id,
+						publishStatus: value ? 1 : 0
+					};
+					updateFeaturedAndPutShelves(params)
+						.then(data => {
+							if (data.succeed) {
+								that.$message({
+									type: "success",
+									message: value ? "上架成功！" : "下架成功！"
+								});
+								that.query();
+							} else {
+								that.$message.warning(data.body.message || that.MSG_UNKNOWN, that);
+							}
+						})
+						.catch(err => {
+							that.$message.warning(err.body.message || that.MSG_UNKNOWN, that);
+						})
+						.finally(() => {
+							that.querying = false;
+						});
 				});
-            },
-            /**
+			},
+			/**
+			 * 是否精选
+			 * @method changeFeatured
+			 * @param {Bolean} value 打开还是关闭
+			 * @param {Number} id 点击的列表数据id
+			 *
+			 */
+			changeFeatured(value, id) {
+				console.log(id);
+				let that = this;
+				that.$confirm(value ? "是否设置该产品为精选产品？" : "是否取消该精选产品？", "", {
+					confirmButtonText: "确定",
+					cancelButtonText: "取消",
+					showClose: false,
+					closeOnPressEscape: false,
+					closeOnClickModal: false,
+					customClass: "message-custom",
+					confirmButtonClass: "message-confirm",
+					cancelButtonClass: "message-cancel"
+				}).then(() => {
+					let params = {
+						productId: id,
+						isPerfect: value ? 1 : 0
+					};
+					updateFeaturedAndPutShelves(params)
+						.then(data => {
+							if (data.succeed) {
+								that.$message({
+									type: "success",
+									message: value ? "上架成功！" : "下架成功！"
+								});
+								that.query();
+							} else {
+								that.$message.warning(data.body.message || that.MSG_UNKNOWN, that);
+							}
+						})
+						.catch(err => {
+							that.$message.warning(err.body.message || that.MSG_UNKNOWN, that);
+						})
+						.finally(() => {
+							that.querying = false;
+						});
+				});
+			},
+			/**
 			 * 删除产品
-			 * @method changePutShelves
+			 * @method deleteProductItem
 			 * @param {Number} id 商品id
 			 *
 			 */
 			deleteProductItem(id) {
 				let that = this;
-				that.$confirm(
-					"确认删除改商品？",
-					"提示",
-					{
-						confirmButtonText: "确认",
-						cancelButtonText: "取消",
-						customClass: "custom-confirm custom-confirm-danger", // 图标样式
-						confirmButtonClass: "el-button--primary", // 确认按钮样式
-						closeOnClickModal: that.CONFIRM_MODAL_CLOSE, // 是否可以点击空白关闭
-						closeOnPressEscape: that.CONFIRM_ESC_CLOSE, // 是否可以esc关闭
-						showClose: false // 是否显示关闭按钮
-					}
-				).then(() => {
+				that.$confirm("确认删除改商品？", "提示", {
+					confirmButtonText: "确认",
+					cancelButtonText: "取消",
+					customClass: "custom-confirm custom-confirm-danger", // 图标样式
+					confirmButtonClass: "el-button--primary", // 确认按钮样式
+					closeOnClickModal: that.CONFIRM_MODAL_CLOSE, // 是否可以点击空白关闭
+					closeOnPressEscape: that.CONFIRM_ESC_CLOSE, // 是否可以esc关闭
+					showClose: false // 是否显示关闭按钮
+				}).then(() => {
 					that.querying = true;
 					deteleProduct({ productId: id })
 						.then(data => {
@@ -404,13 +447,14 @@
 			},
 			// 点击产品类别 获取列表
 			handleNodeClick(data) {
-				if (data.data.id == 0) {
-					this.params.parentCategoryId = "";
+				if (data.data.id !== 0 && data.data.parentId !== 0) {
+					this.params.typeFirstId = data.data.parentId;
+					this.params.typeSecondId = data.data.id;
 				} else {
-					this.params.parentCategoryId = data.data.id;
+					this.params.typeFirstId = data.data.id == 0 ? '' : data.data.id;
 				}
 				this.params.pageNum = 1;
-				// this.queryProductList()
+				this.queryCommodityList();
 			},
 			// 添加产品类别
 			handleAddTree(data, node) {
@@ -451,7 +495,10 @@
 										that.$message.success("删除成功！", that);
 										that.queryCommodityTree();
 									} else {
-										that.$message.warning(data.body.message || "删除失败！", that);
+										that.$message.warning(
+											data.body.message || "删除失败！",
+											that
+										);
 									}
 								})
 								.catch(err => {
@@ -469,7 +516,8 @@
 			enterSearch() {
 				let that = this;
 				if (that.searchKey !== that.params.searchKey) {
-					that.search();
+					this.params.pageNum = 1;
+					this.queryCommodityList();
 				}
 				that.searchKey = that.params.searchKey;
 			},
@@ -480,7 +528,8 @@
 					this.params.startTime = dateRanges[0];
 					this.params.endTime = dateRanges[1];
 				}
-				this.query();
+				this.params.pageNum = 1;
+				this.queryCommodityList();
 			},
 			// 获取产品tree和产品列表
 			query() {
@@ -575,8 +624,7 @@
 				let that = this;
 				that.queryingTree = true;
 				that.loading = true;
-
-				getProductList({})
+				getProductList(this.params)
 					.then(data => {
 						if (data.succeed) {
 							that.list = data.body.list || [];
@@ -636,9 +684,9 @@
 		.list-search {
 			.el-select {
 				width: 80px;
-            }
+			}
 		}
-    }
+	}
 </style>
 
 <style lang="less" scope>

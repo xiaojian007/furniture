@@ -119,4 +119,11 @@ export const deteleProduct = params => {
 	return post('/product/delete', params);
 };
 
-
+/**
+ * 精选、上下架
+ * @param {Object} params 参数
+ * @returns {Promise} 返回一个promise
+ */
+export const updateFeaturedAndPutShelves = params => {
+	return post('/product/update', params);
+};

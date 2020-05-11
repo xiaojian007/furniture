@@ -1,4 +1,7 @@
-var numbers = 1;
+// pages/my/index.js
+const util = require('../../utils/util.js')
+//获取应用实例
+const app = getApp()
 var bool = true;
 Page({
   data: {
@@ -10,101 +13,12 @@ Page({
     // 默认展示数据
     hasList: true,
     // 商品列表数据
-    list: [{
-      id: 1,
-      title: '园艺大师抗皱精华露园艺大师抗皱精华露园艺大师抗皱精华露',
-      image: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1586600782721&di=98630207a9dd72bf14dd816c5d526888&imgtype=0&src=http%3A%2F%2Fm.tuniucdn.com%2Ffb2%2Ft1%2FG2%2FM00%2FAF%2F3F%2FCii-T1gA04iIcXfZABp5vaXUmGYAADY2wOtpLIAGnnV994_w500_h280_c1_t0.png',
-      pro_name: "30ml",
-      num: 1,
-      price: 180,
-      selected: true
-    },
-    {
-      id: 2,
-      title: '伊芙琳玫瑰护手霜',
-      image: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1586600782721&di=98630207a9dd72bf14dd816c5d526888&imgtype=0&src=http%3A%2F%2Fm.tuniucdn.com%2Ffb2%2Ft1%2FG2%2FM00%2FAF%2F3F%2FCii-T1gA04iIcXfZABp5vaXUmGYAADY2wOtpLIAGnnV994_w500_h280_c1_t0.png',
-      pro_name: "25g",
-      num: 1,
-      price: 62,
-      selected: true
-    },
-    {
-      id: 2,
-      title: '燕麦山羊乳舒缓护手霜',
-      image: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1586600782721&di=98630207a9dd72bf14dd816c5d526888&imgtype=0&src=http%3A%2F%2Fm.tuniucdn.com%2Ffb2%2Ft1%2FG2%2FM00%2FAF%2F3F%2FCii-T1gA04iIcXfZABp5vaXUmGYAADY2wOtpLIAGnnV994_w500_h280_c1_t0.png',
-      pro_name: "75ml",
-      num: 1,
-      price: 175,
-      selected: true
-    },
-    {
-      id: 2,
-      title: '燕麦山羊乳舒缓护手霜',
-      image: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1586600782721&di=98630207a9dd72bf14dd816c5d526888&imgtype=0&src=http%3A%2F%2Fm.tuniucdn.com%2Ffb2%2Ft1%2FG2%2FM00%2FAF%2F3F%2FCii-T1gA04iIcXfZABp5vaXUmGYAADY2wOtpLIAGnnV994_w500_h280_c1_t0.png',
-      pro_name: "75ml",
-      num: 1,
-      price: 175,
-      selected: true
-    },
-    {
-      id: 2,
-      title: '燕麦山羊乳舒缓护手霜',
-      image: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1586600782721&di=98630207a9dd72bf14dd816c5d526888&imgtype=0&src=http%3A%2F%2Fm.tuniucdn.com%2Ffb2%2Ft1%2FG2%2FM00%2FAF%2F3F%2FCii-T1gA04iIcXfZABp5vaXUmGYAADY2wOtpLIAGnnV994_w500_h280_c1_t0.png',
-      pro_name: "75ml",
-      num: 1,
-      price: 175,
-      selected: true
-    },
-    {
-      id: 2,
-      title: '燕麦山羊乳舒缓护手霜',
-      image: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1586600782721&di=98630207a9dd72bf14dd816c5d526888&imgtype=0&src=http%3A%2F%2Fm.tuniucdn.com%2Ffb2%2Ft1%2FG2%2FM00%2FAF%2F3F%2FCii-T1gA04iIcXfZABp5vaXUmGYAADY2wOtpLIAGnnV994_w500_h280_c1_t0.png',
-      pro_name: "75ml",
-      num: 1,
-      price: 175,
-      selected: true
-    },
-    {
-      id: 2,
-      title: '燕麦山羊乳舒缓护手霜',
-      image: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1586600782721&di=98630207a9dd72bf14dd816c5d526888&imgtype=0&src=http%3A%2F%2Fm.tuniucdn.com%2Ffb2%2Ft1%2FG2%2FM00%2FAF%2F3F%2FCii-T1gA04iIcXfZABp5vaXUmGYAADY2wOtpLIAGnnV994_w500_h280_c1_t0.png',
-      pro_name: "75ml",
-      num: 1,
-      price: 175,
-      selected: true
-    },
-    {
-      id: 2,
-      title: '燕麦山羊乳舒缓护手霜',
-      image: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1586600782721&di=98630207a9dd72bf14dd816c5d526888&imgtype=0&src=http%3A%2F%2Fm.tuniucdn.com%2Ffb2%2Ft1%2FG2%2FM00%2FAF%2F3F%2FCii-T1gA04iIcXfZABp5vaXUmGYAADY2wOtpLIAGnnV994_w500_h280_c1_t0.png',
-      pro_name: "75ml",
-      num: 1,
-      price: 175,
-      selected: true
-    },
-    {
-      id: 2,
-      title: '燕麦山羊乳舒缓护手霜',
-      image: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1586600782721&di=98630207a9dd72bf14dd816c5d526888&imgtype=0&src=http%3A%2F%2Fm.tuniucdn.com%2Ffb2%2Ft1%2FG2%2FM00%2FAF%2F3F%2FCii-T1gA04iIcXfZABp5vaXUmGYAADY2wOtpLIAGnnV994_w500_h280_c1_t0.png',
-      pro_name: "75ml",
-      num: 1,
-      price: 175,
-      selected: true
-    },
-    {
-      id: 2,
-      title: '燕麦山羊乳舒缓护手霜',
-      image: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1586600782721&di=98630207a9dd72bf14dd816c5d526888&imgtype=0&src=http%3A%2F%2Fm.tuniucdn.com%2Ffb2%2Ft1%2FG2%2FM00%2FAF%2F3F%2FCii-T1gA04iIcXfZABp5vaXUmGYAADY2wOtpLIAGnnV994_w500_h280_c1_t0.png',
-      pro_name: "75ml",
-      num: 1,
-      price: 175,
-      selected: true
-    }
+    list: [
     ],
     // 金额
     totalPrice: 0, // 总价，初始为0
     // 全选状态
-    selectAllStatus: true, // 全选状态，默认全选
+    selectAllStatus: false, // 全选状态，默认全选
 
 
     startX: 0, //开始坐标
@@ -112,14 +26,60 @@ Page({
   },
 
   onShow() {
+    this.query()
+    // 价格方法
+    this.count_price();
+  },
+  query() {
     wx.showToast({
       title: '加载中',
       icon: "loading",
       duration: 1000
     })
-
-    // 价格方法
-    this.count_price();
+    let params = {
+      userId: app.globalData.userInfo.userId,
+      pageSize: 10,
+      pageNum: 1,
+    }
+    app.request({
+      method: 'GET',
+      url: 'ordershopcart/page',
+      data: params,
+      success: (data) => {
+        wx.hideLoading()
+        this.setData({
+          loading: false,
+        })
+        let carList = data.list || []
+        let list = []
+        carList.forEach(item => {
+          list.push({
+            id: item.shopId,
+            productId: item.productId,
+            shopId: item.shopId,
+            title: item.productName,
+            image: item.smallImage,
+            pro_name: item.productSkuName,
+            productSkuId: item.productSkuId,
+            productSkuIds: item.productSkuIds,
+            num: item.quantity,
+            price: item.currentPrice,
+            selected: false
+          })
+        })
+        this.setData({ list })
+      },
+      fail: (err) => {
+        wx.hideLoading()
+        this.setData({
+          loading: false
+        })
+        wx.showToast({
+          title: app.globalData.msgUnknown,
+          icon: 'none'
+        })
+      }
+    })
   },
   /**
    * 当前商品选中事件
@@ -174,30 +134,57 @@ Page({
     var that = this;
     // 获取索引
     const index = e.currentTarget.dataset.index;
+    const shopId = e.currentTarget.dataset.shopId;
     // 获取商品列表数据
     let list = this.data.list;
     wx.showModal({
       title: '提示',
       content: '确认删除吗',
-      success: function (res) {
+      success:  (res)=> {
         if (res.confirm) {
-          // 删除索引从1
-          list.splice(index, 1);
-          // 页面渲染数据
-          that.setData({
-            list: list
-          });
-          // 如果数据为空
-          if (!list.length) {
-            that.setData({
-              hasList: false
-            });
-          } else {
-            // 调用金额渲染数据
-            that.count_price();
+          wx.showLoading()
+          let params = {
+            userId: app.globalData.userInfo.userId,
+            shopId: shopId
           }
+          app.request({
+            method: 'POST',
+            url: 'ordershopcart/delete',
+            data: params,
+            success: (data) => {
+              wx.hideLoading()
+              wx.stopPullDownRefresh()
+              that.setData({
+                loading: false,
+              })// 删除索引从1
+              list.splice(index, 1);
+              // 页面渲染数据
+              that.setData({
+                list: list
+              });
+              // 如果数据为空
+              if (!list.length) {
+                that.setData({
+                  hasList: false
+                });
+              } else {
+                // 调用金额渲染数据
+                that.count_price();
+              }
+            },
+            fail: (err) => {
+              wx.hideLoading()
+              this.setData({
+                loading: false
+              })
+              wx.showToast({
+                title: app.globalData.msgUnknown,
+                icon: 'none'
+              })
+            }
+          })
         } else {
-          console.log(res);
+          console.log('用户点击取消')
         }
       },
       fail: function (res) {
@@ -248,8 +235,43 @@ Page({
     this.setData({
       list: list
     });
-    // 计算金额方法
-    this.count_price();
+    wx.showLoading()
+    let goodDetail = this.data.list[index]
+    let params = {
+      userId: app.globalData.userInfo.userId,
+      productId: goodDetail.productId,
+      shopId: goodDetail.shopId,
+      productName: goodDetail.title,
+      productSkuId: goodDetail.id,
+      productSkuIds: goodDetail.productSkuIds,
+      productSkuName: goodDetail.pro_name,
+      price: goodDetail.price,
+      quantity: num
+    }
+    app.request({
+      method: 'POST',
+      url: 'ordershopcart/update',
+      data: params,
+      success: (data) => {
+        wx.hideLoading()
+        wx.stopPullDownRefresh()
+        this.setData({
+          loading: false,
+        })
+        // 计算金额方法
+        this.count_price();
+      },
+      fail: (err) => {
+        wx.hideLoading()
+        this.setData({
+          loading: false
+        })
+        wx.showToast({
+          title: app.globalData.msgUnknown,
+          icon: 'none'
+        })
+      }
+    })
   },
 
   /**
@@ -381,36 +403,10 @@ Page({
   * @param {Object} end 终点坐标
   */
 
-  angle (start, end) {
+  angle(start, end) {
     var _X = end.X - start.X,
       _Y = end.Y - start.Y
     //返回角度 /Math.atan()返回数字的反正切值
     return 360 * Math.atan(_Y / _X) / (2 * Math.PI);
-  },
-
-  //删除商品
-
-  remove (e) {
-    let that = this;
-    let index = e.currentTarget.dataset.index;
-    let list = that.data.list;
-    wx.showModal({
-      title: '温馨提示！',
-      content: '你确认删除吗？',
-      success: function (res) {
-        if (res.confirm) {
-          console.log('444')
-          list.splice(index, 1)
-          that.setData({
-            list: list
-          })
-        } else {
-          console.log('用户点击取消')
-        }
-      }
-    })
-
-
-  },
-
+  }
 })

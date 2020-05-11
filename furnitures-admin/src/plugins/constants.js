@@ -1,6 +1,4 @@
-import config from './config' //配置
 
-console.log('config.RID', config.RID)
 /**
  * 注册常量
  */
@@ -13,8 +11,6 @@ const downloadUrl = '//wg.cloud.ininin.com/'
  * 常量
  */
 const constants = {
-    //权限ID
-    RID: config.RID,
     //普通弹窗是否可以通过点击 modal 关闭 Dialog
     DIALOG_MODAL_CLOSE: false,
     //普通弹窗是否可以通过按下 ESC 关闭 Dialog

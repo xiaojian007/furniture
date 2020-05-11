@@ -137,7 +137,8 @@
 			load(id = 0) {
 				this.visible = true;
 				if (id > 0) {
-					this.title = "修改角色";
+                    this.title = "修改角色";
+                    this.form.roleId = id;
 					this.query(); // 获取角色信息
 				} else {
 					this.title = "新增角色";

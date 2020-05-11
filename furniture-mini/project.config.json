@@ -22,9 +22,9 @@
 			"outputPath": ""
 		}
 	},
-	"compileType": "miniprogram",
+	"compileType": "汀西海岸",
 	"libVersion": "2.10.3",
-	"appid": "wxb30457e8f72e11ab",
+	"appid": "wx9de49c6b3bc0c7c5",
 	"projectname": "furniture",
 	"debugOptions": {
 		"hidedInDevtools": []
@@ -123,6 +123,34 @@
 					"id": -1,
 					"name": "pages/category/list",
 					"pathName": "pages/category/list",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/my/fans",
+					"pathName": "pages/my/fans",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/goods/index",
+					"pathName": "pages/goods/index",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/goods/index",
+					"pathName": "pages/goods/index",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/goods/index",
+					"pathName": "pages/goods/index",
 					"scene": null
 				}
 			]

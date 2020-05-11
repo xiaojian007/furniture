@@ -53,7 +53,7 @@ instance.interceptors.response.use(
 			store.dispatch("setInfo", {});
 			router.replace("/login");
 		} else {
-			response.body = data;
+            response.body = data;
 		}
 		console.log(response);
 		return response || {};

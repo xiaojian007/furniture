@@ -11,7 +11,7 @@ export default [
 	{
 		path: "commiss-list",
 		name: "commiss-list",
-		component: () => import(/* webpackChunkName: "commiss-list" */ "@views/commission/index.vue"),
+		component: () => import(/* webpackChunkName: "commiss-list" */ "@views/commission/index"),
 		meta: {
 			label: "佣金列表",
 			icon: "role",

@@ -5,7 +5,6 @@
 </template>
 
 <script>
-	import { queryUploadToken } from "@api/common";
 	import plugins from "./plugins";
 	import toolbar from "./toolbar";
 	import fontFormats from "./fontFormats";
@@ -63,6 +62,7 @@
 		},
 		watch: {
 			value(val) {
+				// debugger;
 				if (!this.hasChange && this.hasInit) {
 					this.$nextTick(() =>
 						tinymce.get(this.tinymceId).setContent(filterWord(val) || "")
@@ -78,13 +78,16 @@
 				this.$nextTick(() => this.initTinymce());
 			}
 		},
+		created() {
+			tinymce = window.tinymce || {};
+		},
 		mounted() {
 			tinymceImagePlugin();
-			this.initTinymce();
+			// this.initTinymce();
 		},
-		activated() {
-			this.initTinymce();
-		},
+		// activated() {
+		// 	this.initTinymce();
+		// },
 		deactivated() {
 			this.destroyTinymce();
 		},
@@ -94,50 +97,47 @@
 		methods: {
 			initTinymce() {
 				const _this = this;
-				tinymce
-					.init({
-						language: "zh_CN",
-						language_url: "/static/tinymce4.7.5/langs/zh_CN.js",
-						// theme_url: '/static/tinymce4.7.5/theme/modern/theme.min.js',
-						// skin_url: '/static/tinymce4.7.5/skins/skin.min.css',
-						// content_css: '/static/tinymce4.7.5/skins/content.min.css',
-						selector: `#${this.tinymceId}`,
-						height: this.height,
-						object_resizing: false,
-						plugins,
-						readonly: this.disabled,
-						toolbar: this.toolbar.length > 0 ? this.toolbar : toolbar,
-						menubar: this.menubar,
-						contextmenu: "link inserttable | cell row column deletetable",
-						// end_container_on_empty_block: true,
-						// powerpaste_word_import: 'clean',
-						fontsize_formats: "12px 14px 16px 18px 20px 24px 36px",
-						fullpage_default_font_size: "16px",
-						font_formats: fontFormats,
-						fullpage_default_font_family: "arial, Chinese Quote;",
-						branding: false,
-						resize: false,
-						// images_upload_handler: this.handleImageUpload,
-						init_instance_callback: editor => {
-							if (_this.value) {
-								editor.setContent(filterWord(_this.value));
-							}
-							_this.hasInit = true;
-							editor.on("NodeChange Change KeyUp SetContent", () => {
-								_this.hasChange = true;
-								_this.$emit("input", filterWord(editor.getContent()));
-							});
-						},
-						setup(editor) {
-							editor.on("FullscreenStateChanged", e => {
-								_this.fullscreen = e.state;
-							});
-						},
-						imageSelectorCallback: this.imageUploadCallback
-					})
-					.then(() => {
-                        tinymce.activeEditor.setContent(this.value || '')
-					});
+				tinymce.init({
+					language: "zh_CN",
+					language_url: `/static/tinymce4.7.5/langs/zh_CN.js`,
+					// theme_url: '/static/tinymce4.7.5/theme/modern/theme.min.js',
+					// skin_url: '/static/tinymce4.7.5/skins/skin.min.css',
+					// content_css: '/static/tinymce4.7.5/skins/content.min.css',
+					selector: `#${this.tinymceId}`,
+					height: this.height,
+					object_resizing: false,
+					plugins,
+					readonly: this.disabled,
+					toolbar: this.toolbar.length > 0 ? this.toolbar : toolbar,
+					menubar: this.menubar,
+					contextmenu: "link inserttable | cell row column deletetable",
+					// end_container_on_empty_block: true,
+					// powerpaste_word_import: 'clean',
+					fontsize_formats: "12px 14px 16px 18px 20px 24px 36px",
+					fullpage_default_font_size: "16px",
+					font_formats: fontFormats,
+					fullpage_default_font_family: "arial, Chinese Quote;",
+					branding: false,
+					resize: false,
+					// images_upload_handler: this.handleImageUpload,
+					init_instance_callback: editor => {
+						if (_this.value) {
+							console.log("init_instance_callback", _this.value);
+							editor.setContent(filterWord(_this.value));
+						}
+						_this.hasInit = true;
+						editor.on("NodeChange Change KeyUp SetContent", () => {
+							_this.hasChange = true;
+							_this.$emit("input", filterWord(editor.getContent()));
+						});
+					},
+					setup(editor) {
+						editor.on("FullscreenStateChanged", e => {
+							_this.fullscreen = e.state;
+						});
+					},
+					imageSelectorCallback: this.imageUploadCallback
+				});
 			},
 			destroyTinymce() {
 				const tinymce1 = tinymce.get(this.tinymceId);
@@ -149,40 +149,38 @@
 				}
 			},
 			setContent(value) {
+				console.log("setContent000000", value);
 				tinymce.get(this.tinymceId).setContent(value);
 			},
 			getContent() {
 				return tinymce.get(this.tinymceId).getContent();
 			},
+			// 实例化
+			initFormTinymce() {
+				// debugger
+				console.log("initFormTinymce");
+				this.destroyTinymce();
+				this.$nextTick(() => this.initTinymce());
+			},
 			imageUploadCallback(file, success) {
-				queryUploadToken(
-					{},
-					data => {
-						const token = data.qiniuUpToken;
-						const formData = new FormData();
-						formData.append("token", token);
-						formData.append("file", file);
-						axios
-							.post(this.QINIU_UP, formData)
-							.then(response => {
-								const { hash } = response.data;
-								const url = this.QINIU_DOWNLOAD + hash;
-								success(url);
-							})
-							.catch(err => {
-								console.log(err);
-								this.message.warning(this, "上传失败");
-							});
-					},
-					data => {
-						console.log(data);
+				const formData = new FormData();
+				formData.append("file", file);
+				axios
+					.post("//47.101.209.229:8080/upload/image", formData)
+					.then(response => {
+						if (response.data && response.data.code === "200") {
+							const hash = response.data.body;
+                            const url = hash;
+							success(url);
+						} else {
+							console.log(response.data.message);
+							this.message.warning(this, "上传失败");
+						}
+					})
+					.catch(err => {
+						console.log(err.resultMsg);
 						this.message.warning(this, "上传失败");
-					},
-					data => {
-						console.log(data);
-						this.message.warning(this, "上传失败");
-					}
-				);
+					});
 			}
 		}
 	};

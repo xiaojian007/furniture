@@ -12,9 +12,9 @@ import { SET_USERINFO } from "./mutation-types";
 
 const state = {
 	token: "", //登录令牌
-	userId: "", //用户名id
-	userName: "", //用户名
-	tel: "" //手机号码
+    userId: "", //用户名id
+    mobile: "", // 手机号
+	userName: "" //用户名
 };
 
 const mutations = {
@@ -22,10 +22,12 @@ const mutations = {
 		if (data && data.token && data.user) {
 			state.token = data.token;
             state.userId = data.user.userId;
+            state.mobile = data.user.mobile;
 			state.userName = data.user.userName;
 		} else {
 			state.token = "";
 			state.userId = "";
+			state.mobile = "";
 			state.userName = "";
         }
 	}

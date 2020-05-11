@@ -10,8 +10,7 @@ Page({
    * 页面的初始数据
    */
   data: {
-    H5_URL: app.globalData.H5_URL,
-    newsId: '',
+    articleId: '',
     detail: {},
     hasInvitCode: false
   },
@@ -21,7 +20,7 @@ Page({
    */
   onLoad: function(e) {
     this.setData({
-      newsId: e.newsId || '',
+      articleId: e.articleId || '',
     })
   },
 
@@ -72,12 +71,12 @@ Page({
     app.shareRecord()
     const code = app.getInviteCode()
     app.isShowNewPage = true
-    const newsId = this.data.newsId
-    console.log('/pages/news/detail?invitCode=' + code + '&newsId=' + newsId)
+    const articleId = this.data.articleId
+    console.log('/pages/news/detail?invitCode=' + code + '&articleId=' + articleId)
     return {
       title: this.data.detail.title || '资讯详情-云印微供',
       imageUrl: app.globalData.QINIU_DOWNLOAD + app.globalData.SHARE_IMAGE,
-      path: '/pages/news/detail?invitCode=' + code + '&newsId=' + newsId
+      path: '/pages/news/detail?invitCode=' + code + '&articleId=' + articleId
     }
   },
 
@@ -94,20 +93,20 @@ Page({
     })
   },
   getDetail() {
-    const foundId = this.data.newsId
+    const articleId = this.data.articleId
     wx.showLoading({
       title: '加载中'
     })
     app.request({
-      methed: 'GET',
-      url: app.globalData.API_NEWS_URL + 'message/article/details',
+      method: 'POST',
+      url: 'article/detail',
       data: {
-        foundId
+        articleId: articleId
       },
       success: res => {
         wx.hideLoading()
         res.updateTimeText = util.format(new Date(res.updateTime), 'yyyy-MM-dd')
-        res.contentText = util.getBody(res.content)
+        res.contentText = util.getBody(res.articleContent)
         // console.log(res.contentText)
 
         /*** WxParse.wxParse(bindName , type, data, target,imagePadding)

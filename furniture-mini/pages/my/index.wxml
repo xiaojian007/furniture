@@ -54,7 +54,7 @@
 			<view class="order-navbar-item flex-box">
 				<form bindsubmit="onTargetOrder" data-type="payment">
 					<button formType="submit" class="btn-normal">
-						<text class="order-navbar__icon iconfont daifukuan"></text>
+						<text class="order-navbar__icon iconfont form-all"></text>
 						<text class="order-navbar__name">待付款</text>
 						<text class="order-badge" wx:if="{{orderCount.payment > 0}}">{{orderCount.payment}}</text>
 					</button>
@@ -63,7 +63,7 @@
 			<view class="order-navbar-item flex-box">
 				<form bindsubmit="onTargetOrder" data-type="delivery">
 					<button formType="submit" class="btn-normal">
-						<text class="order-navbar__icon iconfont edit"></text>
+						<text class="order-navbar__icon iconfont daifukuan"></text>
 						<text class="order-navbar__name">待发货</text>
 						<text class="order-badge" wx:if="{{orderCount.delivery > 0}}">{{orderCount.delivery}}</text>
 					</button>
@@ -72,7 +72,7 @@
 			<view class="order-navbar-item flex-box">
 				<form bindsubmit="onTargetOrder" data-type="received">
 					<button formType="submit" class="btn-normal">
-						<text class="order-navbar__icon iconfont  form-all"></text>
+						<text class="order-navbar__icon iconfont daishouhuo"></text>
 						<text class="order-navbar__name">待收货</text>
 						<text class="order-badge" wx:if="{{orderCount.received > 0}}">{{orderCount.received}}</text>
 					</button>
@@ -92,10 +92,10 @@
 	<view class="fan-list m-top20">
 		<view class="order-navbar-header dis-flex">
 			<text class="f-30">我的粉丝</text>
-			<view class="dis-flex flex-y-center">
+			<navigator url="/pages/my/fans" hover-class="none" class="dis-flex flex-y-center">
 				<text class="f-24 col-6">查看所有</text>
 				<text class="iconfont icon-xiangyoujiantou user-orderJtou"></text>
-			</view>
+			</navigator>
 		</view>
 		<view class="weui-flex">
 			<navigator class="weui-flex__item add">

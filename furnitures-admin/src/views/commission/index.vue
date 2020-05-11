@@ -11,24 +11,7 @@
 						@change="changeDateRangeOperate"
 					></ComDateRange>
 				</el-form-item>
-				<el-form-item label="拓展状态" size="small">
-					<el-select
-						v-model="params.extendedState"
-						@change="query"
-						clearable
-						placeholder="请选择"
-						class="visit-person"
-					>
-						<el-option
-							v-for="item in enumExpandState.arr"
-							:key="item.value"
-							:label="item.text"
-							:value="item.value"
-						>
-						</el-option>
-					</el-select>
-				</el-form-item>
-				<el-form-item label="报价状态" size="small">
+				<!-- <el-form-item label="报价状态" size="small">
 					<el-select
 						v-model="params.reportPrice"
 						@change="query"
@@ -44,7 +27,7 @@
 						>
 						</el-option>
 					</el-select>
-				</el-form-item>
+				</el-form-item> -->
 				<div class="input-search">
 					<el-form-item size="small" label=" ">
 						<el-input
@@ -95,13 +78,7 @@
 							:min-width="field.width || 100"
 						>
 							<template slot-scope="scope">
-								<template v-if="field.prop === 'extendedState'">
-									{{ enumExpandState.obj[scope.row[field.prop]] | nullValue }}
-								</template>
-								<template v-else-if="field.prop === 'reportPrice'">
-									{{ enumOfferType.obj[scope.row[field.prop]] | nullValue }}
-								</template>
-								<template v-else-if="field.prop === 'createTime'">
+								<template v-if="field.prop === 'createTime'">
 									<div v-html="formatDateOutput(scope.row[field.prop])"></div>
 								</template>
 								<template v-else-if="field.prop === 'operation'">
@@ -109,10 +86,7 @@
 										查看
 									</el-button>
 									<el-button type="text">
-										修改
-									</el-button>
-									<el-button type="text">
-										删除
+										发放
 									</el-button>
 								</template>
 								<template v-else>
@@ -145,14 +119,11 @@
 
 <script>
 	import listMixin from "@mixins/list.mixin";
-	import { enumExpandState, enumOfferType } from "@common/enums/index";
 
 	export default {
 		mixins: [listMixin],
 		data() {
 			return {
-				enumExpandState, //拓展状态
-				enumOfferType, //是否保价
 				searchKey: "", //回车值是否变化
 				list: [], //账号list
 				params: {
@@ -167,52 +138,38 @@
 				fields: [
 					{
 						show: true,
-						prop: "createTime",
+						prop: "id",
 						align: "center",
-						label: "拜访时间",
-						className: "t-date",
-						width: 80
-					},
-					{
-						show: true,
-						prop: "companyName",
-						align: "center",
-						label: "公司名称",
-						width: 130
+						label: "序号",
+						width: 70
 					},
 					{
 						show: true,
 						prop: "creator",
 						align: "center",
-						label: "拜访人",
+						label: "用户姓名",
 						width: 80
 					},
 					{
 						show: true,
-						prop: "extendedState",
+						prop: "creatorId",
 						align: "center",
-						label: "拓展状态",
+						label: "电话号码",
 						width: 80
 					},
 					{
 						show: true,
 						prop: "reportPrice",
 						align: "center",
-						label: "报价状态",
+						label: "体现金额",
 						width: 80
 					},
 					{
 						show: true,
-						prop: "commentPurpose",
+						prop: "createTime",
 						align: "center",
-						label: "拜访目的"
-					},
-					{
-						show: true,
-						prop: "comments",
-						align: "center",
-						label: "拜访结果",
-						width: 180
+						label: "提现时间",
+						className: "t-date"
 					},
 					{
 						show: true,

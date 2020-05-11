@@ -48,7 +48,13 @@
 		</div>
 		<div class="list-result">
 			<div class="list-buttons">
-				<el-button @click="$refs.edit.load()" type="primary" size="small" :loading="querying">添加 </el-button>
+				<el-button
+					@click="$refs.edit.load()"
+					type="primary"
+					size="small"
+					:loading="querying"
+					>添加
+				</el-button>
 
 				<el-button @click="query" size="small" :loading="querying">刷新</el-button>
 			</div>
@@ -80,14 +86,21 @@
 							:min-width="field.width || 100"
 						>
 							<template slot-scope="scope">
-								<template v-if="field.prop === 'createTime'">
+								<template v-if="field.prop === 'updateTime'">
 									<div v-html="formatDateOutput(scope.row[field.prop])"></div>
 								</template>
+								<template v-else-if="field.prop === 'userStatus'">
+									{{ scope.row.userStatus === 0 ? "未审核" : "已审核" }}
+								</template>
+
 								<template v-else-if="field.prop === 'operation'">
-									<el-button type="text" @click="$refs.edit.load(scope.row.id)">
+									<!-- <el-button
+										type="text"
+										@click="$refs.edit.load(scope.row.userId)"
+									>
 										修改
-									</el-button>
-									<el-button type="text" @click="deleteUser(scope.row.id)">
+									</el-button> -->
+									<el-button type="text" @click="deleteUser(scope.row.userId)">
 										删除
 									</el-button>
 								</template>
@@ -116,21 +129,21 @@
 			>
 			</el-pagination>
 		</div>
-		<EditUser ref="edit" @success="query"></EditUser>
+		<EditUser :roleList="roleList" ref="edit" @success="query"></EditUser>
 	</div>
 </template>
 
 <script>
 	import listMixin from "@mixins/list.mixin";
-	import { enumExpandState } from "@common/enums/index";
 	import EditUser from "./components/DialogEditUser";
-
+	import { getUserList, deteleUser } from "@api/users/user";
+	import { getRoleList } from "@api/users/role";
 	export default {
 		mixins: [listMixin],
 		components: { EditUser },
 		data() {
 			return {
-				roleList: [{ value: "", text: "全部" }].concat(enumExpandState.arr),
+				roleList: [],
 				searchKey: "", //回车值是否变化
 				list: [], //账号list
 				params: {
@@ -143,37 +156,37 @@
 				fields: [
 					{
 						show: true,
-						prop: "creator",
+						prop: "userName",
 						align: "center",
-						label: "姓名",
+						label: "用户名称",
 						width: 130
 					},
 					{
 						show: true,
-						prop: "companyName",
+						prop: "mobile",
 						align: "center",
-						label: "账号",
+						label: "手机号",
 						width: 80
 					},
 					{
 						show: true,
-						prop: "extendedState",
+						prop: "roleName",
 						align: "center",
-						label: "角色",
+						label: "角色名称",
 						width: 80
 					},
 					{
 						show: true,
-						prop: "reportPrice",
+						prop: "userStatus",
 						align: "center",
 						label: "状态",
 						width: 80
 					},
 					{
 						show: true,
-						prop: "commentPurpose",
+						prop: "updateTime",
 						align: "center",
-						label: "创建时间"
+						label: "更新时间"
 					},
 					{
 						show: true,
@@ -215,178 +228,62 @@
 				let that = this;
 				that.querying = true;
 				that.loading = true;
-				setTimeout(() => {
-					let list = [
-						{
-							id: 270,
-							supplierId: 60,
-							extendedState: 3,
-							reportPrice: 3,
-							commentPurpose: "测试",
-							comments: "测",
-							creatorId: 2061,
-							creator: "黄庆鸿",
-							deleted: 0,
-							updateTime: null,
-							companyName: "上海乐盈纸业",
-							extendedStateStr: null,
-							reportPriceStr: null
-						},
-						{
-							id: 268,
-							supplierId: 1124,
-							extendedState: 5,
-							reportPrice: 3,
-							commentPurpose: "同时咯啦咯",
-							comments: "统计咯聚咯某家了",
-							creatorId: 2061,
-							creator: "黄庆鸿",
-							deleted: 0,
-							updateTime: null,
-							createTime: "2020-03-09 14:17:57",
-							companyName: "岳阳立华包装材料科技",
-							extendedStateStr: null,
-							reportPriceStr: null
-						},
-						{
-							id: 258,
-							supplierId: 417,
-							extendedState: 3,
-							reportPrice: 3,
-							commentPurpose: "sd2222",
-							comments: "df222\n34\n34\n3\n434\n34",
-							creatorId: 43,
-							creator: "冯露露",
-							deleted: 0,
-							updateTime: "2020-02-27 17:39:53",
-							createTime: "2020-02-27 17:39:42",
-							companyName: "上海联合包装装潢",
-							extendedStateStr: null,
-							reportPriceStr: null
-						},
-						{
-							id: 257,
-							supplierId: 417,
-							extendedState: 3,
-							reportPrice: 3,
-							commentPurpose: "sdas",
-							comments: "sad",
-							creatorId: 43,
-							creator: "冯露露",
-							deleted: 0,
-							updateTime: null,
-							createTime: "2020-02-27 17:36:26",
-							companyName: "上海联合包装装潢",
-							extendedStateStr: null,
-							reportPriceStr: null
-						},
-						{
-							id: 256,
-							supplierId: 417,
-							extendedState: 4,
-							reportPrice: 3,
-							commentPurpose: "拜访目的",
-							comments: "拜访结果",
-							creatorId: 43,
-							creator: "冯露露",
-							deleted: 0,
-							updateTime: null,
-							createTime: "2020-02-27 17:33:19",
-							companyName: "上海联合包装装潢",
-							extendedStateStr: null,
-							reportPriceStr: null
-						},
-						{
-							id: 255,
-							supplierId: 417,
-							extendedState: 3,
-							reportPrice: 1,
-							commentPurpose: "太阳LOL",
-							comments: "头像log",
-							creatorId: 2061,
-							creator: "黄庆鸿",
-							deleted: 0,
-							updateTime: "2020-01-19 15:23:16",
-							createTime: "2020-01-18 18:56:41",
-							companyName: "上海联合包装装潢",
-							extendedStateStr: null,
-							reportPriceStr: null
-						},
-						{
-							id: 253,
-							supplierId: 323,
-							extendedState: 4,
-							reportPrice: 3,
-							commentPurpose: "这是拜访目的",
-							comments: "这是采访结果",
-							creatorId: 43,
-							creator: "冯露露",
-							deleted: 0,
-							updateTime: null,
-							createTime: "2020-01-18 17:45:08",
-							companyName: "上海瑞邦纸品包装",
-							extendedStateStr: null,
-							reportPriceStr: null
-						},
-						{
-							id: 251,
-							supplierId: 60,
-							extendedState: 4,
-							reportPrice: 3,
-							commentPurpose: "15464",
-							comments: "宁静和你聊213123\n11\n213213\n\nwew",
-							creatorId: 43,
-							creator: "冯露露",
-							deleted: 0,
-							updateTime: "2020-01-10 19:31:50",
-							createTime: "2020-01-10 19:31:31",
-							companyName: "上海乐盈纸业",
-							extendedStateStr: null,
-							reportPriceStr: null
-						},
-						{
-							id: 250,
-							supplierId: 60,
-							extendedState: 4,
-							reportPrice: 3,
-							commentPurpose: "15464",
-							comments: "宁静和你聊213123\n\n213213\n\nwew",
-							creatorId: 43,
-							creator: "冯露露",
-							deleted: 0,
-							updateTime: null,
-							createTime: "2020-01-10 19:30:35",
-							companyName: "上海乐盈纸业",
-							extendedStateStr: null,
-							reportPriceStr: null
-						},
-						{
-							id: 249,
-							supplierId: 60,
-							extendedState: 4,
-							reportPrice: 3,
-							commentPurpose: "15464",
-							comments: "宁静和你聊\n\nwew",
-							creatorId: 43,
-							creator: "冯露露",
-							deleted: 0,
-							updateTime: "2020-01-10 19:28:41",
-							createTime: "2020-01-10 17:43:13",
-							companyName: "上海乐盈纸业",
-							extendedStateStr: null,
-							reportPriceStr: null
+				let paramsData = {
+					pageNum: that.params.pageNum,
+					pageSize: that.params.pageSize,
+					roleId: that.params.roleId,
+					startTime: that.params.startTime,
+					endTime: that.params.endTime,
+					searchKey: that.params.searchKey
+				};
+				getUserList(paramsData)
+					.then(data => {
+						if (data.succeed) {
+							that.list = data.body.list || [];
+							that.page.totalCount = data.body.total;
+						} else {
+							that.$message.warning(data.body.message || that.MSG_UNKNOWN, that);
 						}
-					];
-					this.list = list;
-					that.querying = false;
-					that.loading = false;
-				}, 1000);
-            },
+					})
+					.catch(err => {
+						that.$message.warning(err.body.message || that.MSG_UNKNOWN, that);
+					})
+					.finally(() => {
+						that.querying = false;
+						that.loading = false;
+					});
+				getRoleList({
+					pageNum: 1,
+					pageSize: 1000
+				})
+					.then(data => {
+						if (data.succeed) {
+							let list = data.body.list || [];
+							let roleList = [];
+							list.forEach(item => {
+								roleList.push({
+									text: item.roleName,
+									value: item.roleId
+								});
+							});
+							that.roleList = roleList;
+						} else {
+							that.$message.warning(data.body.message || that.MSG_UNKNOWN, that);
+						}
+					})
+					.catch(err => {
+						that.$message.warning(err.body.message || that.MSG_UNKNOWN, that);
+					})
+					.finally(() => {
+						that.querying = false;
+						that.loading = false;
+					});
+			},
 
 			deleteUser(id) {
 				let that = this;
 				that.$confirm(
-					"删除该角色后，该角色下的用户将全部被删除，确认删除改角色？",
+					"删除该用户后，该用户下的用户将全部被删除，确认删除改用户？",
 					"提示",
 					{
 						confirmButtonText: "确认",
@@ -400,25 +297,21 @@
 				).then(() => {
 					that.loading = true;
 					that.querying = true;
-					console.log(id);
-					// orderReview({id: id}, () => {
-					//     that.$message.success('已接单', that)
-					//     that.query()
-					//     that.loading = false
-					//     that.querying = false
-					// }, (data) => {
-					//     that.loading = false
-					//     that.querying = false
-					//     that.$alert(data.resultMsg, '温馨提示', {
-					//         confirmButtonText: '知道了'
-					//     })
-					// }, (data) => {
-					//     that.loading = false
-					//     that.querying = false
-					//     that.$alert(data.resultMsg, '温馨提示', {
-					//         confirmButtonText: '知道了'
-					//     })
-					// })
+					deteleUser({ userId: id })
+						.then(data => {
+							if (data.succeed) {
+								that.$message.success("删除成功", that);
+								that.query();
+							} else {
+								that.$message.warning(data.body.message || that.MSG_UNKNOWN, that);
+							}
+						})
+						.catch(err => {
+							that.$message.warning(err.body.message || that.MSG_UNKNOWN, that);
+						})
+						.finally(() => {
+							that.querying = false;
+						});
 				});
 			}
 		}

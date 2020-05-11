@@ -29,31 +29,7 @@ Page({
     scrollLeft: 0,
     swiperAutoplay: false,
     currentTab: 0,
-    tabList: [{
-      id: 0,
-      name: '精选'
-    }, {
-      id: 1,
-      name: '情感情感情感情感'
-    }, {
-      id: 2,
-      name: '情感情感情感情感情感'
-    }, {
-      id: 3,
-      name: '情感'
-    }, {
-      id: 4,
-      name: '情感情感情感情感情感'
-    }, {
-      id: 5,
-      name: '情感'
-    }, {
-      id: 6,
-      name: '情感'
-    }, {
-      id: 7,
-      name: '情感'
-    }]
+    tabList: []
   },
 
   /**
@@ -157,7 +133,53 @@ Page({
     console.log(2222)
   },
   query() {
-    this.selectComponent("#homeList0").query()
+    wx.showLoading({
+      title: '加载中',
+    })
+    this.setData({
+      loading: true
+    })
+    let params = {
+      hasSecond: false
+    }
+    app.request({
+      method: 'GET',
+      url: 'producttype/list',
+      data: params,
+      success: (data) => {
+        wx.hideLoading()
+        wx.stopPullDownRefresh()
+        this.setData({
+          loading: false,
+        })
+        let list = data || []
+        let tabList = [{
+          id: 0,
+          name: '精选'
+        }]
+        list.forEach((item) => {
+          tabList.push({
+            id: item.typeId,
+            name: item.typeName
+          })
+        })
+        this.setData({
+          tabList
+        })
+        // 调用子组件
+        this.selectComponent("#homeList0").query()
+      },
+      fail: (err) => {
+        wx.hideLoading()
+        this.setData({
+          loading: false
+        })
+        wx.showToast({
+          title: app.globalData.msgUnknown,
+          icon: 'none'
+        })
+      }
+    })
   },
   // 滚动切换标签样式
   switchTab(e) {

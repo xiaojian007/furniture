@@ -63,10 +63,10 @@
 			};
 		},
 		watch: {
-			data: () => {
-				let that = this;
-				let data = that.data || [];
-				that.list = [];
+			data: function() {
+                let that = this;
+                let data = that.data || [];
+                that.list = [];
 				if (Array.isArray(data)) {
 					data.forEach(key => {
 						if (key) {
@@ -76,7 +76,7 @@
 							});
 						}
 					});
-				}
+                }
 				that.$emit("change", that.getKeys(), that.getKeys(true), that.list);
 			}
 		},

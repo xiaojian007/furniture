@@ -8,9 +8,6 @@ Page({
    * 页面的初始数据
    */
   data: {
-    H5_URL: app.globalData.H5_URL,
-    QINIU_DOWNLOAD: app.globalData.QINIU_DOWNLOAD,
-    thumbnail: '?',
     list: []
   },
 
@@ -84,7 +81,6 @@ Page({
     app.isShowNewPage = true
     return {
       title: '微供资讯创造价值',
-      imageUrl: app.globalData.QINIU_DOWNLOAD + app.globalData.SHARE_IMAGE,
       path: '/pages/find/index?invitCode=' + code
     }
   },
@@ -103,7 +99,7 @@ Page({
     this.showDetail = true
     let dataset = app.getEventDataset(e)
     wx.navigateTo({
-      url: '/pages/find/detail?newsId=' + dataset.newsId
+      url: '/pages/find/detail?articleId=' + dataset.articleId
     })
   },
 
@@ -136,20 +132,17 @@ Page({
       })
     }
     app.request({
-      url: app.globalData.API_NEWS_URL + 'message/article/not_login_article',
+      url: 'article/page',
       data: that.params,
       method: 'GET',
       success(res) {
         wx.hideLoading()
         wx.stopPullDownRefresh()
         let list = res.list || []
-        list.forEach(item => {
-          item.tags = util.jsonParse(item.tag) || []
-        })
         that.setData({
           loading: false,
           list: nextPage ? [...that.data.list, ...list] : list,
-          total: res.totalCount || 0
+          total: res.total || 0
         })
       },
       fail(err) {

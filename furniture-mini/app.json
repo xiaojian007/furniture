@@ -1,6 +1,7 @@
 {
   "pages": [
     "pages/home/index",
+    "pages/goods/index",
     "pages/shopping-cart/index",
     "pages/my/index",
     "pages/find/detail",
@@ -14,7 +15,8 @@
     "pages/category/list",
     "pages/vi/detail",
     "pages/vi/index",
-    "pages/shopping-cart/shopping"
+    "pages/shopping-cart/shopping",
+    "pages/my/fans"
   ],
   "window": {
     "navigationBarBackgroundColor": "#ffffff",

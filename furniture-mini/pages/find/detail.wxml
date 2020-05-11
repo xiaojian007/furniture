@@ -1,14 +1,12 @@
 <!--pages/news/detail.wxml-->
-<!-- <web-view src="{{H5_URL}}page=newsDetail&id={{newsId}}" bindmessage="onBindMessage"></web-view> -->
 <import src="../../wxParse/wxParse.wxml" />
 <view class="container panel-fixed">
-  <view class="title p20 bold-text f16">{{detail.title}}</view>
+  <view class="title p20 bold-text f16">{{detail.articleTitle}}</view>
   <view class="content p20">
-    <!-- <rich-text nodes="{{detail.contentText}}" /> -->
     <template is="wxParse" data="{{wxParseData:article.nodes}}" />
   </view>
   <view class="footer weui-flex space-between p20">
-    <view class="date">{{detail.recordTime}}</view>
+    <view class="date">{{detail.updateTime}}</view>
     <view class="source">来源：{{detail.sources}}</view>
   </view>
 </view>

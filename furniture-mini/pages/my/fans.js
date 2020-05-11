@@ -1,4 +1,4 @@
-// pages/adress/create.js
+// pages/my/fans.js
 Page({
 
   /**

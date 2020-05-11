@@ -52,13 +52,13 @@
 							</template>
 						</el-cascader>
 					</el-form-item>
-					<el-form-item label="商品价格:" size="small" prop="price">
+					<!-- <el-form-item label="商品价格:" size="small" prop="price">
 						<el-input
 							v-model="form.price"
 							maxlength="10"
-							placeholder="请输入商品价格"
+							placeholder="请输入商品价格区间"
 						></el-input>
-					</el-form-item>
+					</el-form-item> -->
 				</el-col>
 				<el-col :span="12">
 					<el-form-item label="市场价格:" size="small" prop="originalPrice">
@@ -95,8 +95,7 @@
 			<!-- 图片 -->
 			<el-row>
 				<el-col :span="5">
-					<el-form-item label="缩略图:" size="small">
-						<!-- <el-form-item label="缩略图:" size="small" prop="smallImage"> -->
+					<el-form-item label="缩略图:" size="small" prop="smallImage">
 						<ComUploadSinglePicture
 							:styleBox="true"
 							ref="commodityTypeSinglePic"
@@ -105,8 +104,7 @@
 					</el-form-item>
 				</el-col>
 				<el-col :span="19">
-					<!-- <el-form-item label="商品图片:" size="small" prop="uploadImage"> -->
-					<el-form-item label="商品图片:" size="small">
+					<el-form-item label="商品图片:" size="small" prop="uploadImage">
 						<ComUploadMultiPicture
 							ref="commodityTypeMultPic"
 							@imagePreview="imagePreview"
@@ -124,7 +122,7 @@
 
 			<el-row>
 				<el-col :span="14">
-					<el-form-item label="属性类型:" size="small">
+					<el-form-item label="属性类型:" size="small" prop="selectSkuParentIdList">
 						<el-select
 							v-model="form.selectSkuParentIdList"
 							filterable
@@ -139,7 +137,7 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="规格(SKU):" size="small">
+					<el-form-item label="规格(SKU):" size="small" prop="checkBoxSkuAttr">
 						<div class="specification-list">
 							<template v-if="selectCheckedType.length > 0">
 								<div
@@ -194,7 +192,7 @@
 										size="small"
 										class="dialog-input-center"
 										maxlength="4"
-										v-model="scope.row.unitPrice"
+										v-model="scope.row.attributePrice"
 									></el-input>
 								</template>
 							</el-table-column>
@@ -260,7 +258,7 @@
 					typeId: [], // 商品类型
 					typeName: "", // 类别名称
 					smallImage: "", // 缩略图
-					uploadImage: "", // 商品图片 轮播
+					uploadImage: [], // 商品图片 轮播
 					price: "", // 商品价格
 					publishStatus: "", // 商品状态 0：下架 1：上架
 					isPerfect: "", // 是否精选 0：否 1：是
@@ -274,12 +272,17 @@
 				selectCheckedType: [], // 选择的sku属性类型 id
 				skuTypeList: [], // 商品sku list
 				checkedSkuList: [], // 选中的id集合进行 不分层
+				modifyCalcSkuList: [], // 修改时sku列表  用于修改时排除已有选项
 				rules: {
 					name: [{ required: true, message: "商品标题不能为空", trigger: "blur" }],
 					shortName: [{ required: true, message: "商品简称不能为空", trigger: "blur" }],
-					// isPerfect: [{ required: true, message: "请选择商品类别", trigger: "change" }],
-					// publishStatus: [{ required: true, message: "请选择商品类别", trigger: "change" }],
 					typeId: [{ required: true, message: "请选择商品类别", trigger: "change" }],
+					selectSkuParentIdList: [
+						{ required: true, message: "请选择属性类型", trigger: "change" }
+					],
+					checkBoxSkuAttr: [
+						{ required: true, message: "请选择商品规格", trigger: "change" }
+					],
 					smallImage: [{ required: true, message: "缩略图不能为空", trigger: "blur" }],
 					detail: [{ required: true, message: "商品详细不能为空", trigger: "blur" }],
 					uploadImage: [
@@ -290,6 +293,7 @@
 							required: true,
 							validator: positiveRealNumber({
 								field: "商品价格",
+								minimum: 0,
 								decimals: 4
 							}),
 							trigger: "blur"
@@ -310,7 +314,8 @@
 		},
 		methods: {
 			// 选择sku
-			changeCheckedSku(item) {
+			changeCheckedSku() {
+				let item = this.form.checkBoxSkuAttr;
 				let checkedSkuList = []; // 选中的数组集合
 				this.skuTypeList.forEach(skuTypeItem => {
 					skuTypeItem.child.forEach(skuItem => {
@@ -339,7 +344,7 @@
 					skuList.push(skuItem);
 				});
 				let calcList = this.calcDescartes(skuList); // 笛卡尔积算法，可用于商品SKU计算
-				let calcSkuList = [];
+				let calcSkuList = []; // 选中后生成的sku
 				calcList.forEach(cale => {
 					let nameList = [];
 					if (Array.isArray(cale)) {
@@ -365,8 +370,36 @@
 						attributeStock: "" // 库存
 					});
 				});
-				this.calcSkuList = calcSkuList;
-				console.log("calcSkuList", calcSkuList);
+				if (this.form.productId > 0) {
+					let updateCalcSkuList = [];
+					// sku修改
+					calcSkuList.forEach(updateSku => {
+						this.modifyCalcSkuList.forEach(skuItem => {
+							if (
+								updateSku.attributeNameList === skuItem.attributeNameList &&
+								updateSku.attributeIds === skuItem.attributeIds
+							) {
+								updateCalcSkuList.push({
+									attributeNameList: skuItem.attributeNameList, // 名称
+									attributeIds: skuItem.attributeIds, // id
+									attributePrice: skuItem.attributePrice, //价格
+									attributeStock: skuItem.attributeStock // 库存
+								});
+							} else {
+								updateCalcSkuList.push({
+									attributeNameList: updateSku.attributeNameList, // 名称
+									attributeIds: updateSku.attributeIds, // id
+									attributePrice: updateSku.attributePrice, //价格
+									attributeStock: updateSku.attributeStock // 库存
+								});
+							}
+						});
+					});
+					this.calcSkuList = updateCalcSkuList;
+				} else {
+					// 新增
+					this.calcSkuList = calcSkuList;
+				}
 			},
 			// 选中数组进行父子组合
 			sortParentList(array) {
@@ -430,16 +463,29 @@
 				}
 			},
 			close() {
-				this.reset();
-				this.visible = false;
-				this.submitting = false;
-			},
-			reset() {
 				let that = this;
-				that.$refs.form.resetFields();
-				that.form.typeId = [];
+				that.$nextTick(() => {
+					if (that.$refs.commodityTypeMultPic) {
+						that.$refs.commodityTypeMultPic.data = [];
+					}
+					if (that.$refs.commodityTypeSinglePic) {
+						that.$refs.commodityTypeSinglePic.data = "";
+					}
+				});
+				that.visible = false;
+				that.submitting = false;
 			},
 			add(id = 0) {
+				this.reset();
+				this.form.typeId = [];
+				this.form.selectSkuParentIdList = [];
+				this.form.checkBoxSkuAttr = [];
+				this.form.uploadImage = [];
+				this.commodityTypeList = []; // 商品类别
+				this.calcSkuList = []; // 选中后生成的sku
+				this.selectCheckedType = []; // 选择的sku属性类型 id
+				this.skuTypeList = []; // 商品sku list
+				this.checkedSkuList = []; // 选中的id集合进行 不分层
 				if (id > 0) {
 					this.form.productId = id;
 					this.title = "修改商品";
@@ -457,13 +503,18 @@
 						let typeSecondId = that.form.typeId[1];
 						let typeFirstName = "";
 						let typeSecondName = "";
-						that.commodityTypeList.forEach(item => {
-							item.typeVoList.forEach(itemChild => {
-								if (typeSecondId === itemChild.typeId) {
-									typeSecondName = itemChild.typeName;
-									typeFirstName = item.typeName;
-								}
-							});
+						let commodityTypeList = that.commodityTypeList || [];
+						commodityTypeList.forEach(item => {
+							if (item.typeVoList) {
+								item.typeVoList.forEach(itemChild => {
+									if (typeSecondId === itemChild.typeId) {
+										typeSecondName = itemChild.typeName;
+										typeFirstName = item.typeName;
+									}
+								});
+							} else {
+								typeFirstName = item.typeName;
+							}
 						});
 						let formData = {
 							typeFirstId: typeFirstId, // 一级类型id
@@ -473,18 +524,16 @@
 							detail: that.form.detail, // 想想
 							isPerfect: that.form.isPerfect || 0,
 							name: that.form.name,
-							stock: 0, // 库存
 							originalPrice: that.form.originalPrice,
-							price: that.form.price,
-							productImage:
-								"//n.sinaimg.cn/news/1_img/upload/cf3881ab/67/w1000h667/20200408/66a8-iryninw4454635.jpg,//n.sinaimg.cn/news/1_img/upload/cf3881ab/67/w1000h667/20200408/66a8-iryninw4454635.jpg,//n.sinaimg.cn/news/1_img/upload/cf3881ab/67/w1000h667/20200408/66a8-iryninw4454635.jpg",
+							productImage: that.form.uploadImage.join(","),
 							publishStatus: that.form.publishStatus || 0,
 							shortName: that.form.shortName,
-							smallImage:
-								"//n.sinaimg.cn/news/1_img/upload/cf3881ab/67/w1000h667/20200408/66a8-iryninw4454635.jpg"
+							smallImage: that.form.smallImage
 						};
 						let skuAttributeDtoList = [];
 						let stock = 0;
+
+						let priceList = [];
 						that.calcSkuList.forEach(item => {
 							let skuAttributeItem = {
 								attributeIds: item.attributeIds,
@@ -492,10 +541,13 @@
 								attributePrice: item.attributePrice,
 								attributeStock: item.attributeStock
 							};
+							priceList.push(Number(item.attributePrice));
 							stock = stock + Number(item.attributeStock);
 							skuAttributeDtoList.push(skuAttributeItem);
 						});
-						formData.stock = stock;
+						formData["stock"] = stock;
+						formData["price"] =
+							Math.min.apply(Math, priceList) + "-" + Math.max.apply(Math, priceList);
 						formData["skuAttributeDtoList"] = skuAttributeDtoList;
 						formData["skuIds"] = that.form.checkBoxSkuAttr.join(",");
 						if (that.form.productId > 0) {
@@ -504,8 +556,7 @@
 						addAndUpdateProduct(formData)
 							.then(data => {
 								if (data.succeed) {
-									console.log(data);
-									that.visible = false;
+									that.close();
 									that.$message.success(
 										that.form.productId > 0 ? "修改成功" : "添加成功",
 										that
@@ -532,14 +583,67 @@
 			query() {
 				let that = this;
 				that.submitting = true;
-				getALLProductQuery(that.form)
+				getALLProductQuery({ productId: that.form.productId, hasSecond: true })
 					.then(res => {
 						if (that.form.productId > 0) {
 							if (res[0].succeed && res[1].succeed && res[2].succeed) {
-								let skuTypeArr = res[1].body || [];
-								that.skuTypeList = that.setDetailData(skuTypeArr);
 								let commodityTypeList = res[0].body || [];
 								that.commodityTypeList = commodityTypeList;
+								let skuTypeArr = res[1].body || [];
+								that.skuTypeList = that.setDetailData(skuTypeArr);
+								let detail = res[2].body;
+								that.form = {
+									productId: detail.productId, //id
+									name: detail.name, //商品名称
+									shortName: detail.shortName, // 商品简称
+									typeName: detail.typeName, // 类别名称
+									smallImage: detail.smallImage || "", // 缩略图
+									uploadImage: !detail.productImage
+										? []
+										: detail.productImage.split(","), // 商品图片 轮播
+									price: detail.price, // 商品价格
+									publishStatus: detail.publishStatus, // 商品状态 0：下架 1：上架
+									isPerfect: detail.isPerfect, // 是否精选 0：否 1：是
+									originalPrice: detail.originalPrice, //市场价格
+									detail: detail.detail, // 商品详情
+									typeId: [detail.typeFirstId, detail.typeSecondId] // 商品类型
+								};
+								that.calcSkuList = detail.allAttrList || []; // skulist
+								that.modifyCalcSkuList = detail.allAttrList || []; // 修改时sku列表  用于修改时排除已有选项
+								let attrList = detail.attrList || [];
+
+								let selectSkuParentIdList = [];
+								let checkBoxSkuAttr = [];
+								attrList.forEach(item => {
+									selectSkuParentIdList.push(item.skuId);
+									let productSkuAttrList = item.productSkuAttrList || [];
+									productSkuAttrList.forEach(itemChild => {
+										checkBoxSkuAttr.push(itemChild.skuId);
+									});
+								});
+								that.form.checkBoxSkuAttr = checkBoxSkuAttr;
+								that.form.selectSkuParentIdList = selectSkuParentIdList;
+								// 显示规格(SKU)
+								let selectCheckedType = [];
+								selectSkuParentIdList.forEach(typeId => {
+									this.skuTypeList.forEach(item => {
+										if (typeId === item.id) {
+											selectCheckedType.push(item);
+										}
+									});
+								});
+								this.selectCheckedType = selectCheckedType;
+
+								that.$nextTick(() => {
+									if (that.$refs.commodityTypeMultPic) {
+										that.$refs.commodityTypeMultPic.data =
+											that.form.uploadImage || [];
+									}
+									if (that.$refs.commodityTypeSinglePic) {
+										that.$refs.commodityTypeSinglePic.data =
+											that.form.smallImage || "";
+									}
+								});
 								that.visible = true;
 							} else {
 								that.$message.warning("获取商品详情失败，请联系管理员", that);
@@ -555,9 +659,12 @@
 								that.$message.warning("获取商品详情失败，请联系管理员", that);
 							}
 						}
+						that.$nextTick(() => {
+							that.$refs.detail.initFormTinymce();
+						});
 					})
-					.catch(err => {
-						that.$message.warning(err.body.message || that.MSG_UNKNOWN, that);
+					.catch(() => {
+						that.$message.warning(that.MSG_UNKNOWN, that);
 					})
 					.finally(() => {
 						that.submitting = false;
@@ -594,9 +701,11 @@
 			},
 			changeMultiPicture(key, value, list) {
 				console.log(key, value, list);
+				this.form.uploadImage = value || [];
 			},
 			changeSinglePicture(key, value) {
 				console.log(key, value);
+				this.form.smallImage = value;
 			}
 		}
 	};

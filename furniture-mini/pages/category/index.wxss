@@ -94,7 +94,7 @@ page {
 .cate-cont-box .cate-img image {
   display: block;
   margin: 0 auto;
-  width: 120rpx;
+  width: 100rpx;
   height: 100rpx;
 }
 
@@ -110,4 +110,17 @@ page {
 .cate-two-box {
   width: 100%;
   padding: 0 10px;
+}
+
+.no-data{
+  text-align: center;
+  padding-top: 80rpx;
+}
+
+.home-swiper-contain{
+  padding: 0 10px;
+}
+.home-list-swiper,
+.slide-image{
+  height: 200rpx;
 }

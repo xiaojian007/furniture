@@ -18,15 +18,15 @@
 			@submit.native.prevent
 			label-width="95px"
 		>
-			<el-form-item label="用户姓名：" size="small" prop="roleName">
-				<el-input v-model="form.roleName" placeholder="请输入用户姓名"></el-input>
+			<el-form-item label="用户姓名：" size="small" prop="userName">
+				<el-input v-model="form.userName" placeholder="请输入用户姓名"></el-input>
 			</el-form-item>
 			<el-form-item label="用户账号：" size="small" prop="remark">
 				<el-input v-model="form.remark" placeholder="请输入用户手机号"></el-input>
 			</el-form-item>
-			<el-form-item label="邮箱：" size="small">
+			<!-- <el-form-item label="邮箱：" size="small">
 				<el-input v-model="form.remark" placeholder="请输入用户邮箱"></el-input>
-			</el-form-item>
+			</el-form-item> -->
 			<el-form-item label="初始密码：" size="small">
 				<el-input value="123456" disabled placeholder="请输入用户邮箱"></el-input>
 			</el-form-item>
@@ -34,9 +34,9 @@
 				<el-select v-model="form.roleId" placeholder="请选择角色">
 					<el-option
 						v-for="item in roleList"
-						:key="item.id"
-						:label="item.value"
-						:value="item.id"
+						:key="item.value"
+						:label="item.text"
+						:value="item.value"
 					>
 					</el-option>
 				</el-select>
@@ -53,37 +53,27 @@
 
 <script>
 	import formMixin from "@mixins/form.mixin";
+	import { addAndUpdateUser } from "@api/users/user";
 
 	export default {
 		mixins: [formMixin],
+		props: {
+			roleList: {
+				type: Array,
+				default: () => {
+					return [];
+				}
+			}
+		},
 		data() {
 			return {
 				form: {
-					id: "",
+					userId: "",
 					roleId: "", //用户id
-					roleName: "", //用户名称
-					resourceIdList: [], //权限id
-					remark: "" //用户描述
-				},
-				roleList: [
-					{
-						id: 1,
-						value: "业务员"
-					},
-					{
-						id: 2,
-						value: "业务员1"
-					},
-					{
-						id: 3,
-						value: "业务员2"
-					}
-				],
-				params: {
-					roleId: ""
+					userName: "" //用户名称
 				},
 				rules: {
-					roleName: [
+					userName: [
 						{
 							required: true,
 							message: "不能为空",
@@ -116,7 +106,8 @@
 			load(id = 0) {
 				this.visible = true;
 				if (id > 0) {
-					this.title = "修改用户";
+                    this.title = "修改用户";
+                    this.form.userId = id;
 					this.query(); // 获取用户信息
 				} else {
 					this.title = "新增用户";
@@ -126,10 +117,38 @@
 				let that = this;
 				that.$refs.form.validate(valid => {
 					if (valid) {
-						console.log(valid);
-						that.visible = false;
-						that.$message.success("提交成功", that);
-						that.$emit("success");
+                        that.submitting = true;
+						let formData = {
+                            roleId: that.form.roleId, //角色id
+                            mobile: that.form.mobile,
+							userName: that.form.userName
+						};
+						if (that.form.userId > 0) {
+							formData["userId"] = that.form.userId;
+						}
+                        addAndUpdateUser({userInfoDto: formData})
+							.then(data => {
+								if (data.succeed) {
+									that.visible = false;
+									that.$message.success("添加成功", that);
+									that.$emit("success");
+									that.visible = false;
+								} else {
+									that.$message.warning(
+										data.body.message || that.MSG_UNKNOWN,
+										that
+									);
+								}
+							})
+							.catch(err => {
+								that.$message.warning(
+									err.body.message || that.MSG_UNKNOWN,
+									that
+								);
+							})
+							.finally(() => {
+								that.submitting = false;
+							});
 					} else {
 						console.log("Failure of form validation!!");
 					}

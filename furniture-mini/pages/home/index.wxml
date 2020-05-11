@@ -2,7 +2,7 @@
 <view class="home">
 	<view class="cu-bar search">
 		<navigator url='/pages/category/index' class="action" hover-class="none">
-			<text class="cuIcon-sort" hover-class="none">分类</text>
+			<text class="cuIcon-sort">分类</text>
 		</navigator>
 		<view class="search-form radius">
 			<text class="cuIcon-search"></text>

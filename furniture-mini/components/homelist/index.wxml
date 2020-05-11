@@ -57,7 +57,7 @@
 				<!-- 悦物 -->
 				<view class="yuewu">
 					<view class="home-title">悦物</view>
-					<navigator class="yuewu-item {{index===0?'yuewu-item-0':''}}" hover-class="none" wx:for="{{productYuewu}}" wx:key="index">
+					<navigator url="/pages/goods/index" class="yuewu-item {{index===0?'yuewu-item-0':''}}" hover-class="none" wx:for="{{productYuewu}}" wx:key="index">
 						<image class="yuewu-img" mode="widthFix" src="{{index===0?'../../image/home_p1.png':'../../image/home_p2.png'}}"></image>
 						<view class="yuewu-0" wx:if="{{index===0}}">
 							产品才是需要标准，幸福却是生活的自我定义
@@ -70,18 +70,18 @@
 				<view class=" home-title">热销产品</view>
 				<!-- 商品列表 -->
 				<view class="category-list">
-					<navigator class="list b-f" hover-class="none" url="../goods/index?goods_id={{item.goods_id}}" wx:for="{{list}}" wx:key="index">
+					<navigator class="list b-f" hover-class="none" url="../goods/index?productId={{item.productId}}" wx:for="{{list}}" wx:key="index">
 						<view class="left">
 							<view class="img">
-								<image class="goodsImg" mode="aspectFill" src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1586600782721&di=98630207a9dd72bf14dd816c5d526888&imgtype=0&src=http%3A%2F%2Fm.tuniucdn.com%2Ffb2%2Ft1%2FG2%2FM00%2FAF%2F3F%2FCii-T1gA04iIcXfZABp5vaXUmGYAADY2wOtpLIAGnnV994_w500_h280_c1_t0.png"></image>
+								<image class="goodsImg" mode="aspectFill" src="{{!item.smallImage ? 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1586600782721&di=98630207a9dd72bf14dd816c5d526888&imgtype=0&src=http%3A%2F%2Fm.tuniucdn.com%2Ffb2%2Ft1%2FG2%2FM00%2FAF%2F3F%2FCii-T1gA04iIcXfZABp5vaXUmGYAADY2wOtpLIAGnnV994_w500_h280_c1_t0.png' : item.smallImage }}"></image>
 							</view>
 						</view>
 						<view class="right">
 							<view class="cont">
-								<view class="f-24 title twolist-hidden m-top10">你好反反复复你好反反复复你好反反复复你好反反复复你好反反复复</view>
-								<view class="type f-20 col-9">美式实木套房</view>
-								<view class="price f-24 col-m f-w">￥333.33</view>
-								<view class="sold f-20 col-9">已售29</view>
+								<view class="f-24 title twolist-hidden m-top10">{{item.name}}</view>
+								<view class="type f-20 col-9">{{item.typeSecondName}}</view>
+								<view class="price f-24 col-m f-w">￥{{item.price}}</view>
+								<view class="sold f-20 col-9">已售{{item.sale ? item.sale : 0}}</view>
 							</view>
 						</view>
 					</navigator>
@@ -120,50 +120,54 @@
 		<view class="product-type">
 			<scroll-view scroll-y scroll-top='{{topNumber}}' scroll-with-animation="true" class="scoll-h" bindscrolltolower="scrollTolower" bindscroll="pageScroll">
 				<!-- 轮播图 -->
-				<view class="home-swiper-contain">
-					<swiper class="home-list-swiper" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" circular='true' bindchange="homeSwiperChange">
-						<block wx:for="{{imgUrls}}" wx:key="index">
-							<swiper-item>
-								<image src="{{item}}" class="slide-image" lazy-load='true' mode="widthFix" style='width:100%' />
-							</swiper-item>
-						</block>
-					</swiper>
-					<view class="dots">
-						<block wx:for="{{imgUrls}}" wx:key="index">
-							<view class="dot{{index == current ? ' active' : ''}}"></view>
-						</block>
+				<block wx:if="{{imgUrls.length}}">
+					<view class="home-swiper-contain">
+						<swiper class="home-list-swiper" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" circular='true' bindchange="homeSwiperChange">
+							<block wx:for="{{imgUrls}}" wx:key="index">
+								<swiper-item>
+									<image src="{{item}}" class="slide-image" lazy-load='true' mode="widthFix" style='width:100%' />
+								</swiper-item>
+							</block>
+						</swiper>
+						<view class="dots">
+							<block wx:for="{{imgUrls}}" wx:key="index">
+								<view class="dot{{index == current ? ' active' : ''}}"></view>
+							</block>
+						</view>
 					</view>
-				</view>
-				<!-- 子类别 -->
-				<view class="category-type" catchtouchmove="doNothing">
-					<scroll-view class="type-list" scroll-x style="width: 100%">
-						<navigator wx:for="{{list}}" wx:key="index" hover-class="none" url="/pages/goods/index?goods_id={{item.goods_id}}" class="type-item">
-							<image class="type-img" src="//cloud.pdp.ininin.com/FkbnmXWHzzEhSwQrt6UTERWP_f5w"></image>
-							<text class="type-text">客厅系列</text>
-						</navigator>
-					</scroll-view>
-				</view>
+				</block>
+				<block wx:if="{{typeList.length}}">
+					<!-- 子类别 -->
+					<view class="category-type" catchtouchmove="doNothing">
+						<scroll-view class="type-list" scroll-x style="width: 100%">
+							<navigator wx:for="{{typeList}}" wx:key="index" hover-class="none" url="/pages/goods/index?typeId={{item.typeId}}" class="type-item">
+								<image class="type-img" src="{{!item.typeImage ?'//cloud.pdp.ininin.com/FkbnmXWHzzEhSwQrt6UTERWP_f5w': item.typeImage}}"></image>
+								<text class="type-text">{{item.typeName}}</text>
+							</navigator>
+						</scroll-view>
+					</view>
+				</block>
 				<!-- 商品列表 -->
-				<view class=" home-title">新品热销</view>
+				<view class="home-title">新品热销</view>
 				<view class="category-list">
-					<navigator class="list b-f" hover-class="none" url="../goods/index?goods_id={{item.goods_id}}" wx:for="{{list}}" wx:key="index">
+					<navigator class="list b-f" hover-class="none" url="../goods/index?productId={{item.productId}}" wx:for="{{list}}" wx:key="index">
 						<view class="left">
 							<view class="img">
-								<image class="goodsImg" mode="aspectFill" src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1586600782721&di=98630207a9dd72bf14dd816c5d526888&imgtype=0&src=http%3A%2F%2Fm.tuniucdn.com%2Ffb2%2Ft1%2FG2%2FM00%2FAF%2F3F%2FCii-T1gA04iIcXfZABp5vaXUmGYAADY2wOtpLIAGnnV994_w500_h280_c1_t0.png"></image>
+								<image class="goodsImg" mode="aspectFill" src="{{!item.smallImage ? 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1586600782721&di=98630207a9dd72bf14dd816c5d526888&imgtype=0&src=http%3A%2F%2Fm.tuniucdn.com%2Ffb2%2Ft1%2FG2%2FM00%2FAF%2F3F%2FCii-T1gA04iIcXfZABp5vaXUmGYAADY2wOtpLIAGnnV994_w500_h280_c1_t0.png' : item.smallImage }}"></image>
 							</view>
 						</view>
 						<view class="right">
 							<view class="cont">
-								<view class="f-24 title twolist-hidden m-top10">你好反反复复你好反反复复你好反反复复你好反反复复你好反反复复</view>
-								<view class="type f-20 col-9">美式实木套房</view>
-								<view class="price f-24 col-m f-w">￥333.33</view>
-								<view class="sold f-20 col-9">已售29</view>
+								<view class="f-24 title twolist-hidden m-top10">{{item.name}}</view>
+								<view class="type f-20 col-9">{{item.typeSecondName}}</view>
+								<view class="price f-24 col-m f-w">￥{{item.price}}</view>
+								<view class="sold f-20 col-9">已售{{item.sale ? item.sale : 0}}</view>
 							</view>
 						</view>
 					</navigator>
 				</view>
 				<view class="weui-panel__ft">
-					<template is="loading" data="{{list: list, total: total, text: '资讯'}}" />
+					<template is="loading" data="{{list: list, total: total, text: '商品'}}" />
 				</view>
 			</scroll-view>
 		</view>

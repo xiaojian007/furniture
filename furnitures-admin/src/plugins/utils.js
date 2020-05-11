@@ -22,7 +22,27 @@ export default {
 				return "0%";
 			}
 			return Calculator.fixed(value * 100, 2) + "%";
-		};
+        };
+        Vue.prototype.setFormData = function(form, data) {
+            form = form || {}
+            data = data || {}
+            Object.keys(form).forEach(function(key) {
+                let val = data[key]
+                let formType = typeof form[key]
+                let dataType = typeof data[key]
+                if (dataType === 'string') {
+                    val = val.trim()
+                }
+                if (formType !== 'object' && dataType !== 'object') {
+                    if (val == null) {
+                        form[key] = ''
+                    } else {
+                        form[key] = val
+                    }
+                }
+            })
+            return form
+        }
 		//JSON解析
 		Vue.prototype.jsonParse = function(str) {
 			let json;

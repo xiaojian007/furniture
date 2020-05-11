@@ -1,0 +1,36 @@
+<!--components/skulist/sku.wxml-->
+<view class="good-sku">
+	<view class="good-detail weui-flex">
+		<view class="good-img">
+			<image src="{{goodDetail.pic}}"></image>
+		</view>
+		<view class="good-right weui-flex__item">
+			<view class="good-title twolist-hidden">{{name}}</view>
+			<view class="good-type">{{typeName}}</view>
+			<view class="good-price">
+				<text>¥</text>
+				{{goodDetail.attributePrice}}
+			</view>
+			<view class="good-stock">库存{{goodDetail.stock}}</view>
+		</view>
+	</view>
+	<view class="sku-list">
+		<view class="sku-item" wx:for="{{skuGroup}}" wx:key="index" wx:for-index="idx">
+			<view class="sku-name">{{item.name}}</view>
+			<view class="sku-item-list weui-flex">
+				<view class="item-name {{itemChild.check?'cur':''}}" wx:for="{{item.child}}" wx:for-index="childIdx" wx:key="childIndex" wx:for-item="itemChild" bindtap="choiseType" data-id="{{itemChild.id}}" data-index="{{idx}}"  data-child-index="{{childIdx}}">{{itemChild.name}}</view>
+			</view>
+		</view>
+	</view>
+	<view class="chioce-number b-b b-t weui-flex align-items space-between">
+    <view class="number-tile">数量
+      <text>1个起定</text>
+    </view>
+		<view class="selectNumber">
+			<view bindtap="down" class="default  {{goods_num>1?'':' default-active'}}" type="default">-</view>
+			<input bindinput="import" type="number" value="{{goodsNum}}" disabled></input>
+			<view bindtap="up" class="default" type="default">+</view>
+		</view>
+	</view>
+	<view class="add-car" :class="{{goodDetail.stock>0 ? '' : 'no-check'}} " bindtap="addCar">加入购物车</view>
+</view>

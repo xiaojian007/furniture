@@ -179,8 +179,15 @@
 			query() {
 				let that = this;
 				that.querying = true;
-				that.loading = true;
-				getRoleList(that.params)
+                that.loading = true;
+                let paramsData = {
+                    pageNum: that.params.pageNum,
+                    pageSize: that.params.pageSize,
+                    startTime: that.params.startTime,
+                    endTime: that.params.endTime,
+                    searchKey: that.params.searchKey
+                }
+				getRoleList(paramsData)
 					.then(data => {
 						if (data.succeed) {
 							that.list = data.body.list || [];
