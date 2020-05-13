@@ -2,12 +2,10 @@
   "pages": [
     "pages/home/index",
     "pages/goods/index",
-    "pages/shopping-cart/index",
     "pages/my/index",
     "pages/find/detail",
     "pages/find/index",
     "pages/address/index",
-    "pages/address/detail",
     "pages/address/create",
     "pages/order/index",
     "pages/order/detail",
@@ -16,7 +14,9 @@
     "pages/vi/detail",
     "pages/vi/index",
     "pages/shopping-cart/shopping",
-    "pages/my/fans"
+    "pages/my/fans",
+    "pages/find/search",
+    "pages/search/index"
   ],
   "window": {
     "navigationBarBackgroundColor": "#ffffff",

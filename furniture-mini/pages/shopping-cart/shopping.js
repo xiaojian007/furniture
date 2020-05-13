@@ -8,10 +8,8 @@ Page({
     show_edit: "block",
     edit_name: "编辑",
     edit_show: "none",
-    // list: [],               // 购物车列表
-    // hasList: false,          // 列表是否有数据
     // 默认展示数据
-    hasList: true,
+    hasList: false,
     // 商品列表数据
     list: [
     ],
@@ -20,54 +18,94 @@ Page({
     // 全选状态
     selectAllStatus: false, // 全选状态，默认全选
 
-
+    productList: [],
+    productTotal: 0,
     startX: 0, //开始坐标
     startY: 0
   },
-
+  params: {
+    isPerfect: 1,
+    pageNum: 1,
+    pageSize: 10
+  },
+  carParams: {
+    userId: app.globalData.userInfo.userId,
+    pageSize: 10,
+    pageNum: 1,
+  },
   onShow() {
-    this.query()
+    this.query(false, true)
     // 价格方法
     this.count_price();
   },
-  query() {
-    wx.showToast({
-      title: '加载中',
-      icon: "loading",
-      duration: 1000
-    })
-    let params = {
-      userId: app.globalData.userInfo.userId,
-      pageSize: 10,
-      pageNum: 1,
+  /**
+    * 页面相关事件处理函数--监听用户下拉动作
+    */
+  onPullDownRefresh: function () {
+    if (this.data.list.length > 0) {
+      this.query(false)
+    } else {
+      this.getFeatured(false)
     }
+  },
+  query(nextPage = false, show = false) {
+    let that = this
+    if (that.data.loading) return
+    if (nextPage) {
+      if (that.data.list.length > 0 && that.data.list.length === that.data.total) {
+        wx.stopPullDownRefresh()
+        return
+      }
+      that.carParams.pageNum += 1
+    } else {
+      that.carParams.pageNum = 1
+    }
+    if (show) {
+      wx.showLoading()
+    }
+    that.setData({
+      loading: true
+    })
+    if (show) {
+      wx.showLoading({
+        title: '加载中'
+      })
+    }
+    this.carParams.userId = app.globalData.userInfo.userId
     app.request({
       method: 'GET',
       url: 'ordershopcart/page',
-      data: params,
+      data: this.carParams,
       success: (data) => {
-        wx.hideLoading()
-        this.setData({
-          loading: false,
-        })
         let carList = data.list || []
-        let list = []
-        carList.forEach(item => {
-          list.push({
-            id: item.shopId,
-            productId: item.productId,
-            shopId: item.shopId,
-            title: item.productName,
-            image: item.smallImage,
-            pro_name: item.productSkuName,
-            productSkuId: item.productSkuId,
-            productSkuIds: item.productSkuIds,
-            num: item.quantity,
-            price: item.currentPrice,
-            selected: false
+        if (carList.length == 0) {
+          this.getFeatured(false, true)
+        } else {
+          wx.hideLoading()
+          this.setData({
+            loading: false,
           })
-        })
-        this.setData({ list })
+          let list = []
+          carList.forEach(item => {
+            list.push({
+              id: item.shopId,
+              productId: item.productId,
+              shopId: item.shopId,
+              title: item.productName,
+              image: item.smallImage,
+              pro_name: item.productSkuName,
+              productSkuId: item.productSkuId,
+              productSkuIds: item.productSkuIds,
+              num: item.quantity,
+              price: item.currentPrice,
+              selected: false
+            })
+          })
+          this.setData({
+            list,
+            hasList: true
+          })
+        }
       },
       fail: (err) => {
         wx.hideLoading()
@@ -140,7 +178,7 @@ Page({
     wx.showModal({
       title: '提示',
       content: '确认删除吗',
-      success:  (res)=> {
+      success: (res) => {
         if (res.confirm) {
           wx.showLoading()
           let params = {
@@ -156,7 +194,8 @@ Page({
               wx.stopPullDownRefresh()
               that.setData({
                 loading: false,
-              })// 删除索引从1
+              })
+              // 删除索引从1
               list.splice(index, 1);
               // 页面渲染数据
               that.setData({
@@ -408,5 +447,62 @@ Page({
       _Y = end.Y - start.Y
     //返回角度 /Math.atan()返回数字的反正切值
     return 360 * Math.atan(_Y / _X) / (2 * Math.PI);
+  },
+
+  // 精选
+  getFeatured(nextPage = false, show = false) {
+    let that = this
+    if (nextPage) {
+      if (that.data.productList.length > 0 && that.data.productList.length === that.data.productTotal) {
+        wx.stopPullDownRefresh()
+        return
+      }
+      that.params.pageNum += 1
+    } else {
+      that.params.pageNum = 1
+    }
+    if (show) {
+      wx.showLoading()
+    }
+    that.setData({
+      loading: true
+    })
+    if (show) {
+      wx.showLoading({
+        title: '加载中'
+      })
+    }
+    app.request({
+      method: 'GET',
+      url: 'product/page',
+      data: this.params,
+      success: (data) => {
+        wx.hideLoading()
+        this.setData({
+          loading: false,
+          hasList: false
+        })
+        let list = data.list || []
+        this.setData({
+          productList: [...list, ...this.data.productList],
+          productTotal: data.total
+        })
+      },
+      fail: (err) => {
+        wx.hideLoading()
+        this.setData({
+          loading: false
+        })
+        wx.showToast({
+          title: app.globalData.msgUnknown,
+          icon: 'none'
+        })
+      }
+    })
+  },
+  goShopping() {
+    wx.switchTab({
+      url: '/pages/home/index'
+    })
   }
 })

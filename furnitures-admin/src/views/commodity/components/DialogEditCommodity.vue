@@ -654,7 +654,7 @@
 								that.skuTypeList = that.setDetailData(skuTypeArr);
 								let commodityTypeList = res[0].body || [];
 								that.commodityTypeList = commodityTypeList;
-								that.visible = true;
+                                that.visible = true;
 							} else {
 								that.$message.warning("获取商品详情失败，请联系管理员", that);
 							}

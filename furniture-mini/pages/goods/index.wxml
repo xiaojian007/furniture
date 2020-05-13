@@ -85,10 +85,9 @@
 
 		<!-- 底部操作栏 -->
 		<view class="footer-fixed f-30">
-			<!-- 在线客服 -->
+			<!-- 首页 -->
 			<view class="goods-fixed-icon dis-flex flex-x-center flex-y-center">
-				<button open-type="contact" sessionFrom="weapp" size="27" style="opacity: 0;position:absolute;top:0px;left:0px;display:block;width:100%;height:100%;" type="default-light"></button>
-				<text class="iconfont icon-icon_service"></text>
+				<text class="iconfont icon-home"></text>
 			</view>
 			<!-- 在线客服 -->
 			<view class="goods-fixed-icon dis-flex flex-x-center flex-y-center">

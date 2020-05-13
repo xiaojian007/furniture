@@ -18,7 +18,7 @@ Page({
    * 查询参数
    */
   params: {
-    currentPage: 1,
+    pageNum: 1,
     pageSize: 15
   },
 
@@ -120,9 +120,9 @@ Page({
         wx.stopPullDownRefresh()
         return
       }
-      that.params.currentPage += 1
+      that.params.pageNum += 1
     } else {
-      that.params.currentPage = 1
+      that.params.pageNum = 1
     }
     if (show) {
       wx.showLoading()

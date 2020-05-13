@@ -27,7 +27,7 @@ Component({
     topNumber: 0,
     isShow: false,
     params: {
-      currentPage: 0,
+      pageNum: 0,
       pageSize: 10
     },
     productYuewu: [{
@@ -196,15 +196,15 @@ Component({
     },
     // 获取商品
     getTypeProduct() {
-      let currentPage = this.data.params.currentPage
+      let pageNum = this.data.params.pageNum
       if (this.data.list.length > 0 && this.data.total === this.data.list.length) {
         return
       } else {
-        currentPage += 1
+        pageNum += 1
       }
       let params = {
         typeFirstId: this.data.typeId,
-        pageNum: currentPage,
+        pageNum: pageNum,
         pageSize: this.data.params.pageSize
       }
 
@@ -234,6 +234,12 @@ Component({
             icon: 'none'
           })
         }
+      })
+    },
+    toSearch(e){
+      let item = app.getEventDataset(e).item
+      wx.navigateTo({
+        url: '/pages/search/index?typeSecondId='+item.typeId + '&typeFirstId='+item.parentId,
       })
     }
   }

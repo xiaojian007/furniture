@@ -828,6 +828,7 @@ page {
 
 .wxParse-inline {
   font-size: 28rpx;
+  text-indent: 2em;
   /* text-align: center; */
 }
 
@@ -897,6 +898,10 @@ page {
   text-align: center;
   background: #3A7DF0;
   border-radius: 40rpx;
+}
+.footer-btn:active,
+.footer-btn:hover{
+  background: #3A7DF0;
 }
 
 .space-between{

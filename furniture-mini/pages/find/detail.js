@@ -18,7 +18,7 @@ Page({
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function(e) {
+  onLoad: function (e) {
     this.setData({
       articleId: e.articleId || '',
     })
@@ -27,12 +27,12 @@ Page({
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
-  onReady: function() {},
+  onReady: function () { },
 
   /**
    * 生命周期函数--监听页面显示
    */
-  onShow: function() {
+  onShow: function () {
     if (app.isShowNewPage) {
       app.isShowNewPage = false
     } else {
@@ -45,36 +45,36 @@ Page({
   /**
    * 生命周期函数--监听页面隐藏
    */
-  onHide: function() {},
+  onHide: function () { },
 
   /**
    * 生命周期函数--监听页面卸载
    */
-  onUnload: function() {},
+  onUnload: function () { },
 
   /**
    * 页面相关事件处理函数--监听用户下拉动作
    */
-  onPullDownRefresh: function() {
+  onPullDownRefresh: function () {
 
   },
 
   /**
    * 页面上拉触底事件的处理函数
    */
-  onReachBottom: function() {},
+  onReachBottom: function () { },
 
   /**
    * 用户点击右上角分享
    */
-  onShareAppMessage: function(res) {
+  onShareAppMessage: function (res) {
     app.shareRecord()
     const code = app.getInviteCode()
     app.isShowNewPage = true
     const articleId = this.data.articleId
     console.log('/pages/news/detail?invitCode=' + code + '&articleId=' + articleId)
     return {
-      title: this.data.detail.title || '资讯详情-云印微供',
+      title: this.data.detail.title || '发现详情',
       imageUrl: app.globalData.QINIU_DOWNLOAD + app.globalData.SHARE_IMAGE,
       path: '/pages/news/detail?invitCode=' + code + '&articleId=' + articleId
     }
@@ -83,7 +83,7 @@ Page({
   /**
    * 网页向小程序 postMessage 时，会在特定时机（小程序后退、组件销毁、分享）触发并收到消息。e.detail = { data }
    */
-  onBindMessage: function(e) {
+  onBindMessage: function (e) {
     let detail = {}
     if (e && e.detail && e.detail.data) {
       detail = e.detail.data[0]
@@ -119,6 +119,10 @@ Page({
         this.setData({
           detail: res
         })
+        wx.setNavigationBarTitle({
+          title: res.articleTitle    // 其他页面传过来的标题名
+        })
+
       },
       fail: err => {
         console.log('资讯详情报错原因:', err)

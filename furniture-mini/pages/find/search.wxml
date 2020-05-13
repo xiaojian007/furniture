@@ -1,32 +1,25 @@
 <import src="/templates/loading.wxml" />
-<view class="find-fixed">
-	<view class="cu-bar search find-search">
-		<view class="search-form radius">
-			<text class="cuIcon-search"></text>
-			<input type="text" placeholder="请输入关键词搜索" bindconfirm="search"></input>
-		</view>
-	</view>
-	<view class="find-name">设计家</view>
-</view>
 <view class="weui-panel weui-panel_access">
 	<view class="weui-panel__bd">
 		<view wx:for="{{list}}" wx:key="index" class="news-item" bindtap="openDetail" data-article-id="{{item.articleId}}">
 			<view class="weui-media-box">
 				<view class="weui-media-box__hd">
 					<view class="news-img">
-						<image class="weui-media-box__thumb" mode="aspectFit" src="{{item.articleImage}}" />
+						<image class="weui-media-box__thumb" mode="heightFix" src="{{item.articleImage}}" />
 					</view>
+				</view>
+				<view class="weui-media-box__bd">
+					{{item.foundType===0 ? item.content : item.info}}
 				</view>
 			</view>
 			<view class="weui-flex">
 				<view class="weui-flex__item">
 					<view class="news-date">{{item.articleTitle}}</view>
-					<view class="news-time">{{item.updateTime}}</view>
 				</view>
 			</view>
 		</view>
 	</view>
 	<view class="weui-panel__ft">
-		<template is="loading" data="{{list: list, total: total, text: '发现'}}" />
+		<template is="loading" data="{{list: list, total: total, text: '资讯'}}" />
 	</view>
 </view>

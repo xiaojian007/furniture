@@ -151,6 +151,35 @@
 					"id": -1,
 					"name": "pages/goods/index",
 					"pathName": "pages/goods/index",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/my/index",
+					"pathName": "pages/my/index",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/find/index",
+					"pathName": "pages/find/index",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/category/list",
+					"pathName": "pages/category/list",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/category/list",
+					"pathName": "pages/category/list",
+					"query": "name=商品",
 					"scene": null
 				}
 			]

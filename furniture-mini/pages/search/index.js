@@ -12,12 +12,17 @@ Page({
 
     option: {},
     list: [],
-    total: 0
+    total: 0,
+
+    typeSecondId: 0,
+    currentTab: 0, // 滚动
+    scrollLeft: 0, //tab标题的滚动条位置
   },
 
   params: {
     name: '',
     orderType: 1,
+    typeSecondId: '',
     pageNum: 1,
     pageSize: 10
   },
@@ -26,15 +31,18 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (option) {
-    this.params.name = option.name
+    let typeFirstId = option.typeFirstId || ''
+    let typeSecondId = option.typeSecondId || ''
+    this.params.typeSecondId = typeSecondId
 
     let that = this;
     // 设置商品列表高度
     that.setListHeight();
     // 记录option
-    that.setData({ option, searchKey: option.name }, function () {
+    that.setData({ option, typeSecondId: typeSecondId }, function () {
       // 获取商品列表
       that.getGoodsList(false, true);
+      that.getTypeDetail(typeFirstId)
     });
 
   },
@@ -107,6 +115,35 @@ Page({
     }, false)
   },
 
+  getTypeDetail(typeId) {
+    // 精选传值
+    let params = {
+      typeId: typeId
+    }
+    app.request({
+      method: 'GET',
+      url: 'producttype/list-second',
+      data: params,
+      success: (data) => {
+        let typeList = data.typeVoList || []
+        this.setData({
+          typeList
+        })
+        wx.hideLoading()
+      },
+      fail: (err) => {
+        wx.hideLoading()
+        this.setData({
+          loading: false
+        })
+        wx.showToast({
+          title: app.globalData.msgUnknown,
+          icon: 'none'
+        })
+      }
+    })
+  },
+
   /**
    * 设置商品列表高度
    */
@@ -115,7 +152,7 @@ Page({
     wx.getSystemInfo({
       success: function (res) {
         that.setData({
-          scrollHeight: res.windowHeight - 90,
+          scrollHeight: res.windowHeight - 137,
         });
       }
     });
@@ -131,13 +168,23 @@ Page({
     if (newSortType === 'new') {
       that.params = {
         name: that.params.name,
+        typeSecondId: that.params.typeSecondId,
         isPerfect: 1,
         pageNum: 1,
         pageSize: 10
       }
-    } else if (newSortType === 'sales') {
+    } else if (newSortType === 'all') {
       that.params = {
         name: that.params.name,
+        typeSecondId: that.params.typeSecondId,
+        orderType: 1,
+        pageNum: 1,
+        pageSize: 10
+      }
+    }  else if (newSortType === 'sales') {
+      that.params = {
+        name: that.params.name,
+        typeSecondId: that.params.typeSecondId,
         orderType: 3,
         pageNum: 1,
         pageSize: 10
@@ -145,6 +192,7 @@ Page({
     } else if (newSortPrice) {
       that.params = {
         name: that.params.name,
+        typeSecondId: that.params.typeSecondId,
         pageNum: 1,
         orderType: 2,
         pageSize: 10
@@ -152,6 +200,7 @@ Page({
     } else if (newSortPrice) {
       that.params = {
         name: that.params.name,
+        typeSecondId: that.params.typeSecondId,
         pageNum: 1,
         orderType: 2,
         pageSize: 10
@@ -190,6 +239,35 @@ Page({
    */
   bindDownLoad: function () {
     this.getGoodsList(true);
-  }
+  },
 
+  //判断当前滚动超过一屏时，设置tab标题滚动条。
+  checkCor() {
+    if (this.data.currentTab > 4) {
+      this.setData({
+        scrollLeft: 300
+      })
+    } else {
+      this.setData({
+        scrollLeft: 0
+      })
+    }
+  },
+
+  // 点击标题切换当前页时改变样式
+  swichNav(e) {
+    let cur = e.target.dataset.current;
+    let typeSecondId = e.target.dataset.typeId;
+    if (this.data.currentTab == cur) {
+      return false;
+    } else {
+      this.setData({
+        currentTab: cur,
+        typeSecondId
+      })
+    }
+    this.checkCor()
+    this.params.typeSecondId = typeSecondId
+    this.getGoodsList(false)
+  }
 });

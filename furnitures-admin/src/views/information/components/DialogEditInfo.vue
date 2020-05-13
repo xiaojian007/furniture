@@ -111,6 +111,17 @@
 					this.query();
 				} else {
 					this.title = "新增文章";
+					this.visible = true;
+					this.$nextTick(() => {
+						this.$nextTick(() => {
+							if (this.$refs.commodityTypeSinglePic) {
+								this.$refs.commodityTypeSinglePic.data = "";
+							}
+						});
+						if (this.$refs.content) {
+							this.$refs.content.initFormTinymce();
+						}
+					});
 				}
 			},
 			submit() {
@@ -135,6 +146,7 @@
 										that.form.articleId > 0 ? "修改成功" : "添加成功",
 										that
 									);
+									that.close();
 									that.$emit("success");
 									that.visible = false;
 								} else {
@@ -163,8 +175,8 @@
 							if (data.succeed) {
 								that.setFormData(that.form, data.body);
 								that.$nextTick(() => {
-                                    that.$refs.content.initFormTinymce();
-                                    if (that.$refs.commodityTypeSinglePic) {
+									that.$refs.content.initFormTinymce();
+									if (that.$refs.commodityTypeSinglePic) {
 										that.$refs.commodityTypeSinglePic.data =
 											that.form.articleImage || "";
 									}

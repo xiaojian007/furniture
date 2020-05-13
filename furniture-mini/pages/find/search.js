@@ -26,6 +26,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (e) {
+    this.params.articleTitle = e.articleTitle
   },
 
   /**
@@ -71,6 +72,13 @@ Page({
    */
   onReachBottom: function () {
     this.getList(true)
+  },
+
+  /**
+   * 点击 tab 时触发
+   */
+  onTabItemTap: function () {
+    this.getList()
   },
 
   /**
@@ -139,19 +147,5 @@ Page({
         })
       }
     }, false)
-  },
-  /**
-     * 搜索
-     */
-  search(e) {
-    let articleTitle = e.detail.value
-    this.params.articleTitle = articleTitle
-    this.getList(false)
-    // if (articleTitle == '') {
-    //   return
-    // }
-    // wx.navigateTo({
-    //   url: './search?articleTitle=' + articleTitle
-    // });
   }
 })

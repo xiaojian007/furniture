@@ -23,10 +23,9 @@ Page({
       listen: 2234
     }],
     params: {
-      currentPage: 1,
+      pageNum: 1,
       pageSize: 10
     },
-    scrollLeft: 0,
     swiperAutoplay: false,
     currentTab: 0,
     tabList: []
@@ -129,8 +128,15 @@ Page({
   /**
    * 搜索
    */
-  search() {
-    console.log(2222)
+  
+  search(e) {
+    let name = e.detail.value
+    if (name == '') {
+      return
+    }
+    wx.navigateTo({
+      url: '/pages/category/list?name=' + name
+    });
   },
   query() {
     wx.showLoading({

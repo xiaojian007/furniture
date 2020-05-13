@@ -140,10 +140,10 @@
 					<!-- 子类别 -->
 					<view class="category-type" catchtouchmove="doNothing">
 						<scroll-view class="type-list" scroll-x style="width: 100%">
-							<navigator wx:for="{{typeList}}" wx:key="index" hover-class="none" url="/pages/goods/index?typeId={{item.typeId}}" class="type-item">
+							<view wx:for="{{typeList}}" wx:key="index" hover-class="none" bindtap="toSearch" data-item="{{item}}" class="type-item">
 								<image class="type-img" src="{{!item.typeImage ?'//cloud.pdp.ininin.com/FkbnmXWHzzEhSwQrt6UTERWP_f5w': item.typeImage}}"></image>
 								<text class="type-text">{{item.typeName}}</text>
-							</navigator>
+							</view>
 						</scroll-view>
 					</view>
 				</block>

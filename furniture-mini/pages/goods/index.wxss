@@ -173,10 +173,10 @@
 
 .order-number {
   width: 50%;
-  background-color: #f4a213;
+  background-color: #3B7CF0;
   color: #fff;
   text-align: center;
-  line-height: 46px;
+  line-height: 10.8vw;
 }
 
 .order-number button {
@@ -293,7 +293,8 @@
   margin: 0 auto;
   padding: 0 6rpx;
   border-left: 1rpx solid #eee;
-  height: 92rpx;
+  /* height: 92rpx; */
+  height: 10.8vw;
   position: relative;
 }
 

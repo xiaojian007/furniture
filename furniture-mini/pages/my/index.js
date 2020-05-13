@@ -7,7 +7,7 @@ Page({
    */
   data: {
     isLogin: false,
-    userInfo: {},
+    moblie: '',
     orderCount: {
       payment: 9
     },
@@ -24,8 +24,14 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow() {
-    app.loginCheck(this, () => {
-      // this.getUserDetail()
+    let that = this
+    app.loginCheck(that, () => {
+      app.authSettingCheck((boolean) => {
+        that.setData({
+          isLogin: boolean,
+          moblie: app.globalData.userInfo.moblie || ''
+        })
+      })
     }, false)
   },
 
@@ -60,26 +66,34 @@ Page({
     }
   },
 
-  /**
-   * 跳转到登录页
-   */
-  onLogin() {
-    wx.navigateTo({
-      url: '../login/login',
-    });
+  showModal(e) {
+    this.setData({
+      modalName: e.currentTarget.dataset.target
+    })
   },
 
-  /**
-   * 验证是否已登录
-   */
-  onCheckLogin() {
-    let _this = this;
-    if (!_this.data.isLogin) {
-      App.showError('很抱歉，您还没有登录');
-      return false;
-    }
-    return true;
+  hideModal(e) {
+    this.setData({
+      modalName: null
+    })
   },
-
-
+  // 授权登录
+  bindGetUserInfo() {
+    var that = this;
+    //获取用户信息
+    wx.getUserInfo({
+      success: function (res) {
+        app.updateUserInfo(res.userInfo, (data) => {
+          if (openid.openid) {
+            that.onShow()
+            this.setData({
+              modalName: null
+            })
+          } else {
+            console.log('更新用户信息失败')
+          }
+        })
+      }
+    })
+  }
 })

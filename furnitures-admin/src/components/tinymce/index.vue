@@ -97,6 +97,10 @@
 		methods: {
 			initTinymce() {
 				const _this = this;
+				// const tinymce1 = tinymce.get(this.tinymceId);
+				// if (tinymce1) {
+				// 	tinymce1.destroy();
+				// }
 				tinymce.init({
 					language: "zh_CN",
 					language_url: `/static/tinymce4.7.5/langs/zh_CN.js`,

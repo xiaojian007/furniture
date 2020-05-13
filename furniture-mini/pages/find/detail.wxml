@@ -1,27 +1,13 @@
 <!--pages/news/detail.wxml-->
 <import src="../../wxParse/wxParse.wxml" />
 <view class="container panel-fixed">
-  <view class="title p20 bold-text f16">{{detail.articleTitle}}</view>
-  <view class="content p20">
-    <template is="wxParse" data="{{wxParseData:article.nodes}}" />
-  </view>
-  <view class="footer weui-flex space-between p20">
-    <view class="date">{{detail.updateTime}}</view>
-    <view class="source">来源：{{detail.sources}}</view>
-  </view>
+	<!-- <view class="title p20 bold-text f16">{{detail.articleTitle}}</view> -->
+	<view class="content p20">
+		<template is="wxParse" data="{{wxParseData:article.nodes}}" />
+	</view>
+	<view class="footer weui-flex space-between p20">
+		<view class="date">{{detail.updateTime}}</view>
+		<view class="source">来源：汀西海岸微商城</view>
+	</view>
 </view>
-<view class="fixed-foot">
-  <view class="weui-flex">
-    <view wx:if="{{hasInvitCode}}" class="weui-flex bottom-fixed">
-      <view class="tohome" bindtap="handleToHome">
-        <image class="icon" src="/image/tohome.png"></image>
-        <text class="f12">首页</text>
-      </view>
-    </view>
-    <view class="weui-flex__item">
-      <button open-type='share' class="primary" hover-class="none" loading="{{loading}}" disabled="{{loading}}">
-        分享
-      </button>
-    </view>
-  </view>
-</view>
+<image bindtap='share' src='../../image/act-share.png' class='primary'></image>

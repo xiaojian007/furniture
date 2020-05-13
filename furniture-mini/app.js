@@ -19,7 +19,7 @@ const util = require('utils/util.js')
 App({
   loginChecking: false, //登录检查完毕
   isShowNewPage: false, //是否是弹出页面
-  onLaunch: function(options) {
+  onLaunch: function (options) {
     // this.clearAuth() // 清除缓存
     console.log('app.onLaunch', options)
   },
@@ -32,10 +32,10 @@ App({
     Object.keys(form).forEach((key) => {
       let val = data[key]
       let type = typeof val
-      if (typeof(val) === 'string') {
+      if (typeof (val) === 'string') {
         val = val.trim()
       }
-      if (typeof(val) !== 'object') {
+      if (typeof (val) !== 'object') {
         if (val === null) {
           form[key] = null
         } else if (type !== 'undefined') {
@@ -89,9 +89,12 @@ App({
     this.loginChecking = true
     data = data || {}
     this.globalData.token = data.openid || ''
+    this.setFormData(this.globalData.userInfo, data)
     this.globalData.userInfo.userId = data.userId || ''
+    this.globalData.userInfo.openId = data.openid || ''
     this.setStorage(this.globalData.STORAGE_KEY_TOKEN, data)
   },
+
 
   /**
    * 清除登录信息
@@ -107,7 +110,7 @@ App({
   /**
    * 发送请求
    */
-  request: function(opts, isCheckToken = true) {
+  request: function (opts, isCheckToken = true) {
     let that = this
     console.log('token=>', this.globalData.token)
     if (isCheckToken && !this.globalData.token) {
@@ -126,7 +129,7 @@ App({
         options.url = API_URL + opts.url
       }
       options.data = options.data || {}
-      options.success = function(res) {
+      options.success = function (res) {
         if (res.data.code === '200') {
           opts.success && opts.success(res.data.body)
         } else if (res.data.resultCode == 1003) {
@@ -142,10 +145,10 @@ App({
           opts.fail && opts.fail(res.data)
         }
       }
-      options.fail = function(res) {
+      options.fail = function (res) {
         opts.fail && opts.fail(res)
       }
-      options.complete = function(res) {
+      options.complete = function (res) {
         opts.complete && opts.complete(res)
         wx.hideNavigationBarLoading()
       }
@@ -195,7 +198,6 @@ App({
               setUserInfo()
             }),
             fail: ((err) => {
-              debugger
               console.log('获取用户信息报错原因', err)
             })
           })
@@ -283,14 +285,44 @@ App({
       }
     })
   },
-
+  /**
+   * 更新用户信息
+   */
+  updateUserInfo(info, callback) {
+    let params = {
+      avatarUrl: info.avatarUrl,
+      city: info.city,
+      language: info.language,
+      nickName: info.nickName,
+      province: info.province,
+      country: info.country,
+      openid: this.globalData.userInfo.openId,
+      userId: this.globalData.userInfo.userId
+    }
+    wx.showLoading()
+    this.request({
+      method: 'POST',
+      url: 'wechat/saveUserInfo',
+      data: params,
+      success: (data) => {
+        wx.hideLoading()
+        this.setAuth(data)
+        console.log('修改成功', data)
+        callback(data)
+      },
+      fail: (err) => {
+        console.log('修改失败', err)
+        callback(err)
+      }
+    }, false)
+  },
   /**
    * 检查是否通过分享进入
    */
   checkInviteCode(invitCode) {
     return invitCode != '' && invitCode != null
   },
-  
+
   /**
    * 获取登录用户邀请码(用户id)
    */
@@ -305,7 +337,7 @@ App({
    */
   loginFail() {
     wx.hideLoading()
-    this.showError('系统维护中...', () => {})
+    this.showError('系统维护中...', () => { })
     this.loginChecking = false
   },
   /**
@@ -382,13 +414,20 @@ App({
   },
 
   globalData: {
-    API_NEWS_URL: 'https://wq.ininin.com/', // 新闻路径前缀
-    QINIU_DOWNLOAD: 'https://wg.cloud.ininin.com/', // 图片路径前缀
     STORAGE_KEY_TOKEN: 'tps-token', //登录信息本地缓存KEY
     token: '', //登录标识
-    user: {}, //登录信息
     userInfo: {
-      userId: ''
+      userId: '',
+      openId: '',
+      avatarUrl: "",
+      city: "",
+      country: "",
+      gender: 0,
+      language: "",
+      nickName: "@小贱",
+      province: "上海市",
+      unionid: "",
+      moblie: ''
     }
   }
 })

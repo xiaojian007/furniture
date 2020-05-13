@@ -1,6 +1,9 @@
 .address-list {
   border-bottom: 1px solid #f6f6f9;
 }
+.p-bottom {
+  padding-bottom: 200rpx;
+}
 
 .address-list .list {
   padding: 15rpx;

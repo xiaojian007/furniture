@@ -1,29 +1,36 @@
 <view class="container m-b6 p-bottom">
 	<view class="common-header-xian"></view>
-	<custom-ul class="addres-list" wx:if="{{list.length}}">
-		<custom-li wx:for="{{list}}" wx:for-item="item" wx:key="this">
-			<view class="address-header b-f m-top18">
-				<view class="flow-header-left pl-12">
-					<view class="flow-checkout-admin">
-						{{item.name}}
-						<text class="phone">{{item.phone}}</text>
-						<text v-if="{{item.default === 1}}" class="defalut">默认地址</text>
+	<block wx:if="{{list.length}}">
+		<custom-ul class="addres-list">
+			<custom-li wx:for="{{list}}" wx:for-item="item" wx:key="this">
+				<view class="address-header b-f m-top18">
+					<view class="flow-header-left pl-12">
+						<view class="flow-checkout-admin">
+							{{item.name}}
+							<text class="phone">{{item.phone}}</text>
+							<text wx:if="{{item.isDefault === 1}}" class="defalut">默认地址</text>
+						</view>
+						<view class="flow-checkout-address">
+							{{item.adress.province}}{{item.adress.city}}{{item.adress.region}}{{item.adress.detail}}
+						</view>
 					</view>
-					<view class="flow-checkout-address">
-						{{item.region.province}} {{item.region.city}} {{item.region.region}} {{item.detail}}
+					<view class="list address dis-flex">
+						<view bindtap="editAddress" data-id="{{item.addressId}}">
+							<text class="iconfont icon-edit"></text>
+						</view>
+						<view bindtap="removeAddress" data-id="{{item.addressId}}">
+							<text class="iconfont icon-lajixiang"></text>
+						</view>
 					</view>
 				</view>
-				<view class="list address dis-flex">
-					<view bindtap="editAddress" data-id="{{item.address_id}}">
-						<text class="iconfont icon-edit"></text>
-					</view>
-					<view bindtap="removeAddress" data-id="{{item.address_id}}">
-						<text class="iconfont icon-lajixiang"></text>
-					</view>
-				</view>
+			</custom-li>
+		</custom-ul>
+		<!-- <view class="weui-panel__ft">
+			<view class="weui-footer footer-home">
+				<text class="weui-footer__text">我也是有底线的～</text>
 			</view>
-		</custom-li>
-	</custom-ul>
+		</view> -->
+	</block>
 	<block wx:else>
 		<view class="yoshop-notcont no-address">
 			<text class="iconfont icon-wushuju"></text>
