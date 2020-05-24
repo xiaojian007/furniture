@@ -1,10 +1,10 @@
 /**
  * 枚举定义
- * @author shlijian@ininin.com
+ * @author lijian
  * @since 2020-02-21
  * @version 1.0.0
  * @description 枚举定义
- * @copyright ininin.com
+ * @copyright lijian
  */
 
 import { setEnumAndArray } from "@utils";
@@ -45,5 +45,16 @@ export const enumCommodityPublishStatus = setEnumAndArray([
 export const enumCommodityPerfectStatus = setEnumAndArray([
     {k: 0, v: '否'},
     {k: 1, v: '是'}
+])
+
+
+//订单状态
+export const enumOrderStatus = setEnumAndArray([
+    {k: 0, v: '待付款'},
+    {k: 1, v: '待发货'},
+    {k: 2, v: '已发货'},
+    {k: 3, v: '已完成'},
+    {k: 4, v: '已关闭'},
+    {k: 5, v: '无效订单'}
 ])
 

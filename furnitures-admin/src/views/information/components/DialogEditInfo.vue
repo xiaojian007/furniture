@@ -22,7 +22,7 @@
 				<el-input v-model="form.articleTitle" placeholder="请输入文章标题"></el-input>
 			</el-form-item>
 			<el-form-item label="是否发布:" size="small">
-				<el-select v-model="form.articleStatus" placeholder="默认不发布">
+				<el-select v-model="form.articleStatus" placeholder="默认不发布" style="width: 100%">
 					<el-option
 						v-for="item in enumCommodityPerfectStatus.arr"
 						:key="item.value"
@@ -41,7 +41,7 @@
 			</el-form-item>
 
 			<!-- 富文本 -->
-			<el-form-item label="商品内容:" size="small" prop="articleContent">
+			<el-form-item label="资讯内容:" size="small" prop="articleContent">
 				<Tinymce v-model="form.articleContent" ref="content"></Tinymce>
 			</el-form-item>
 		</el-form>

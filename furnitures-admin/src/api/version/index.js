@@ -2,11 +2,11 @@ import { instance } from "../http";
 
 /**
  * 版本查询接口
- * @author shlijian@ininin.com
+ * @author lijian
  * @since 2020-02-21
  * @version 1.0.0
  * @description 版本查询接口
- * @copyright ininin.com
+ * @copyright lijian
  */
 
 /**

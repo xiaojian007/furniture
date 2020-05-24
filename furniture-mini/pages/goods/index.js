@@ -7,6 +7,8 @@ Page({
    * 页面的初始数据
    */
   data: {
+    modalName: null, // sku弹出
+    shareLoginModal: null, // 分享弹出
     nav_select: false, // 快捷导航
 
     isCanDraw: false, // 分享
@@ -28,10 +30,9 @@ Page({
     goods_num: 1, // 商品数量
     goods_sku_id: 0, // 规格id
     cart_total_num: 0, // 购物车商品总数量
-    specData: {
-    }, // 多规格信息
+    specData: {}, // 多规格信息
   },
-
+  productId: 0,
   // 记录规格的数组
   goods_spec_arr: [],
 
@@ -42,8 +43,13 @@ Page({
     let that = this;
     // 商品id
     that.data.productId = options.productId;
+    that.productId = options.productId;
+  },
+
+  onShow() {
+    let that = this;
     // 获取商品信息
-    that.getGoodsDetail(options.productId);
+    that.getGoodsDetail(that.productId);
   },
 
   /**
@@ -71,7 +77,7 @@ Page({
             : productDetail.productImage.split(","), // 商品图片 轮播,
           smallImage: productDetail.smallImage,
           productId: productDetail.productId,
-          sale: productDetail.price,
+          sale: productDetail.sale || 0,
           name: productDetail.name,
           content: productDetail.detail,
           attrList: productDetail.attrList,
@@ -100,7 +106,7 @@ Page({
           loading: false
         })
         wx.showToast({
-          title: app.globalData.msgUnknown,
+          title: err.message || app.globalData.msgUnknown,
           icon: 'none'
         })
       }
@@ -143,7 +149,6 @@ Page({
    * 显示/隐藏 返回顶部按钮
    */
   scroll(e) {
-    console.log(1111111)
     this.setData({
       floorstatus: e.detail.scrollTop > 200
     })
@@ -174,7 +179,7 @@ Page({
    */
   flowCart: function () {
     wx.switchTab({
-      url: "../flow/index"
+      url: "../shopping-cart/shopping"
     });
   },
 
@@ -204,10 +209,35 @@ Page({
       urls
     });
   },
-
+  // 分享生成图片
   createShareImage(e) {
-    this.setData({
-      isCanDraw: !this.data.isCanDraw
+    let that = this;
+    app.authSettingCheck((boolean) => {
+      if (boolean) {
+        that.setData({
+          isCanDraw: !that.data.isCanDraw
+        })
+      } else {
+        that.setData({
+          shareLoginModal: 'DialogModal1'
+        })
+      }
     })
+  },
+  // 回首页
+  toHome() {
+    wx.switchTab({
+      url: "/pages/home/index",
+    })
+  },
+
+
+  hideLogin(e) {
+    this.setData({
+      shareLoginModal: null
+    })
+  },
+  successBack() {
+    this.onShow()
   }
 })

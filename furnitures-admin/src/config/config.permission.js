@@ -1,10 +1,10 @@
 /**
  * api接口地址配置文件
- * @author shlijian@ininin.com
+ * @author lijian
  * @since 2020-02-12
  * @version 1.0.0
  * @description 配置api接口地址
- * @copyright ininin.com
+ * @copyright lijian
  */
 
 /* eslint-disable no-undef */

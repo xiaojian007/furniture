@@ -1,6 +1,6 @@
 /**
  * 过滤空值
- * @author shlijian@ininin.com
+ * @author lijian
  * @param {String} value 值
  * @param {String} unit 单位
  * @returns {String} {*}

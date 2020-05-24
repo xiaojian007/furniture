@@ -1,9 +1,9 @@
 /**
  * 引入element-ui
- * @author shlijian@ininin.com
+ * @author lijian
  * @since 2020-02-21
  * @version 1.0.0
- * @copyright ininin.com
+ * @copyright lijian
  */
 
 import Vue from "vue";

@@ -1,10 +1,10 @@
 /**
 * api工具类
-* @author shlijian@ininin.com
+* @author lijian
 * @since 2020-02-21
 * @version 1.0.0
 * @description api相关的工具函数
-* @copyright ininin.com
+* @copyright lijian
 */
 
 import { get, post, put, deletes } from "./http";

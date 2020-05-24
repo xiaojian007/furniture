@@ -1,10 +1,10 @@
 /**
  * 请求头参数配置
- * @author shlijian@ininin.com
+ * @author lijian
  * @since 2020-02-21
  * @version 1.0.0
  * @description 请求头参数配置
- * @copyright ininin.com
+ * @copyright lijian
  */
 
 /* eslint-disable no-undef */

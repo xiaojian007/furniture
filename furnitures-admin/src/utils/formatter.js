@@ -2,7 +2,7 @@
  * 格式化显示处理类
  * @summary 格式化显示处理类
  * @namespace formatter
- * @author shlijian@ininin.com
+ * @author lijian
  * @version 1.0.0
  * @since 2020/03/05
  * @constructor

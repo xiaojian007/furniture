@@ -2,7 +2,7 @@
 	<div class="list-panel" v-loading="loading">
 		<div class="list-search">
 			<el-form ref="form" :inline="true" :model="params" class="form-search">
-				<el-form-item size="small" label="下单时间：" class="data-time">
+				<el-form-item size="small">
 					<ComDateRange
 						ref="input-0"
 						:mode="1"
@@ -11,16 +11,16 @@
 						@change="changeDateRangeOperate"
 					></ComDateRange>
 				</el-form-item>
-				<el-form-item label="订单状态" size="small">
+				<el-form-item label="订单状态：" size="small">
 					<el-select
-						v-model="params.reportPrice"
+						v-model="params.orderStatus"
 						@change="query"
 						clearable
 						placeholder="请选择"
 						class="visit-person"
 					>
 						<el-option
-							v-for="item in enumOfferType.arr"
+							v-for="item in orderStatus"
 							:key="item.value"
 							:label="item.text"
 							:value="item.value"
@@ -29,13 +29,13 @@
 					</el-select>
 				</el-form-item>
 				<div class="input-search">
-					<el-form-item size="small">
+					<el-form-item size="small" label=" ">
 						<el-input
 							v-model.trim="params.searchKey"
 							class="search-key"
 							clearable
-							placeholder="订单编号、下单人、手机号"
-							@keyup.enter.native="search"
+							placeholder="请输入订单号"
+							@keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
 					<el-form-item size="small">
@@ -58,6 +58,8 @@
 					:highlight-current-row="true"
 					class="all-width"
 				>
+					<!-- <el-table-column label="序号" type="index" align="center" width="80">
+					</el-table-column> -->
 					<template v-for="(field, colIndex) in fields">
 						<el-table-column
 							v-if="field.show"
@@ -76,23 +78,34 @@
 							:min-width="field.width || 100"
 						>
 							<template slot-scope="scope">
-								<template v-if="field.prop === 'reportPrice'">
-									{{ enumOfferType.obj[scope.row[field.prop]] | nullValue }}
-								</template>
-								<template v-else-if="field.prop === 'createTime'">
+								<template v-if="field.prop === 'orderTime'">
 									<div v-html="formatDateOutput(scope.row[field.prop])"></div>
 								</template>
+								<template v-else-if="field.prop === 'orderStatus'">
+									{{ enumOrderStatus.obj[scope.row[field.prop]] }}
+								</template>
 								<template v-else-if="field.prop === 'operation'">
-									<el-button type="text" @click="confirmOrder(scope.row.id)">
-										确认收货
-									</el-button>
-									<el-button type="text" @click="$refs.deliveryInformation.load(scope.row.id)">
-										去发货
-									</el-button>
-									<el-button type="text" @click="$refs.orderDetail.load(scope.row.id)">
+									<el-button
+										type="text"
+										@click="$refs.oderDetail.load(scope.row.orderId)"
+									>
 										详情
 									</el-button>
-									<el-button type="text" @click="deteleOrder(scope.row.id)">
+									<el-button
+										v-if="scope.row.orderStatus == 1"
+										type="text"
+										@click="$refs.ship.load(scope.row)"
+									>
+										发货
+									</el-button>
+									<el-button
+										v-if="scope.row.orderStatus == 2"
+										type="text"
+										@click="receipt(scope.row.orderId)"
+									>
+										确认收货
+									</el-button>
+									<el-button type="text" @click="deletesOrder(scope.row.orderId)">
 										删除
 									</el-button>
 								</template>
@@ -121,95 +134,101 @@
 			>
 			</el-pagination>
 		</div>
-		<DeliveryInformation ref="deliveryInformation"></DeliveryInformation>
-        <OrderDetail ref="orderDetail"></OrderDetail>
+		<EditShip ref="ship" @success="query"></EditShip>
+		<OrderDetail ref="oderDetail"></OrderDetail>
 	</div>
 </template>
 
 <script>
 	import listMixin from "@mixins/list.mixin";
-	import { enumOfferType } from "@common/enums/index";
-    import DeliveryInformation from "./components/DialogDeliveryInformation";
-    import OrderDetail from "./components/DialogOrderDetail";
-
-
+	import EditShip from "./components/DialogEditShip";
+	import OrderDetail from "./components/DialogOrderDetail";
+	import { getOrderList, deteleOrder, updateOrder } from "@api/order/order";
+	import { enumOrderStatus } from "@common/enums/index";
 	export default {
 		mixins: [listMixin],
-		components: { DeliveryInformation, OrderDetail },
+		components: { EditShip, OrderDetail },
 		data() {
 			return {
-				enumOfferType, //是否保价
+				enumOrderStatus,
+				orderStatus: [{ value: "", text: "全部" }].concat(enumOrderStatus.arr),
 				searchKey: "", //回车值是否变化
 				list: [], //账号list
 				params: {
 					startTime: "", //开始时间
 					endTime: "", //结束时间
-					visiter: "", //拜访人
-					reportPrice: "", //报价状态
+					orderStatus: "", //拜访人
 					searchKey: "" //关键字
 				},
 				page: {},
 				fields: [
 					{
 						show: true,
-						prop: "id",
+						prop: "orderId",
 						align: "center",
-						label: "编号",
-						className: "t-date",
+						label: "序号",
 						width: 80
 					},
 					{
 						show: true,
-						prop: "supplierId",
+						prop: "orderNo",
 						align: "center",
-						label: "订单编号"
+						label: "订单号",
+						width: 170
 					},
 					{
 						show: true,
-						prop: "creator",
+						prop: "totalPreAmount",
 						align: "center",
-						label: "订购人",
+						label: "应付金额",
+						width: 90
+					},
+					{
+						show: true,
+						prop: "totalRealAmount",
+						align: "center",
+						label: "实付金额",
+						width: 90
+					},
+					{
+						show: true,
+						prop: "orderStatus",
+						align: "center",
+						label: "订单状态",
 						width: 100
 					},
 					{
 						show: true,
-						prop: "createTime",
-						align: "center",
-						label: "订购人手机号",
-						width: 160
-					},
-					{
-						show: true,
-						prop: "reportPrice",
-						align: "center",
-						label: "支付方式",
-						width: 80
-					},
-					{
-						show: true,
-						prop: "commentPurpose",
-						align: "center",
-						label: "订单来源"
-					},
-					{
-						show: true,
-						prop: "commentPurpose",
+						prop: "orderTime",
 						align: "center",
 						label: "下单时间",
-						width: 160
+						width: 120
+					},
+					// {
+					// 	show: true,
+					// 	prop: "receiveAddress",
+					// 	align: "center",
+					// 	label: "收货人",
+					// 	width: 80
+					// },
+					// {
+					// 	show: true,
+					// 	prop: "receiveAddress",
+					// 	align: "center",
+					// 	label: "收货地址",
+					// 	width: 80
+					// },
+					{
+						show: true,
+						prop: "deliverySn",
+						align: "center",
+						label: "物流单号"
 					},
 					{
 						show: true,
-						prop: "creatorId",
+						prop: "deliveryCompany",
 						align: "center",
-						label: "总金额",
-						width: 80
-					},
-					{
-						show: true,
-						prop: "comments",
-						align: "center",
-						label: "订单状态"
+						label: "物流公司"
 					},
 					{
 						show: true,
@@ -230,6 +249,14 @@
 			}
 		},
 		methods: {
+			//回车搜索
+			enterSearch() {
+				let that = this;
+				if (that.searchKey !== that.params.searchKey) {
+					that.search();
+				}
+				that.searchKey = that.params.searchKey;
+			},
 			//时间搜索
 			changeDateRangeOperate(dateRanges) {
 				dateRanges = dateRanges || [];
@@ -241,251 +268,87 @@
 			},
 			query() {
 				let that = this;
-				that.querying = true;
 				that.loading = true;
-				setTimeout(() => {
-					let list = [
-						{
-							id: 270,
-							supplierId: 60,
-							extendedState: 3,
-							reportPrice: 3,
-							commentPurpose: "测试",
-							comments: "测",
-							creatorId: 2061,
-							creator: "黄庆鸿",
-							deleted: 0,
-							updateTime: null,
-							createTime: "2020-03-10 11:26:07",
-							companyName: "上海乐盈纸业",
-							extendedStateStr: null,
-							reportPriceStr: null
-						},
-						{
-							id: 268,
-							supplierId: 1124,
-							extendedState: 5,
-							reportPrice: 3,
-							commentPurpose: "同时咯啦咯",
-							comments: "统计咯聚咯某家了",
-							creatorId: 2061,
-							creator: "黄庆鸿",
-							deleted: 0,
-							updateTime: null,
-							createTime: "2020-03-09 14:17:57",
-							companyName: "岳阳立华包装材料科技",
-							extendedStateStr: null,
-							reportPriceStr: null
-						},
-						{
-							id: 258,
-							supplierId: 417,
-							extendedState: 3,
-							reportPrice: 3,
-							commentPurpose: "sd2222",
-							comments: "df222\n34\n34\n3\n434\n34",
-							creatorId: 43,
-							creator: "冯露露",
-							deleted: 0,
-							updateTime: "2020-02-27 17:39:53",
-							createTime: "2020-02-27 17:39:42",
-							companyName: "上海联合包装装潢",
-							extendedStateStr: null,
-							reportPriceStr: null
-						},
-						{
-							id: 257,
-							supplierId: 417,
-							extendedState: 3,
-							reportPrice: 3,
-							commentPurpose: "sdas",
-							comments: "sad",
-							creatorId: 43,
-							creator: "冯露露",
-							deleted: 0,
-							updateTime: null,
-							createTime: "2020-02-27 17:36:26",
-							companyName: "上海联合包装装潢",
-							extendedStateStr: null,
-							reportPriceStr: null
-						},
-						{
-							id: 256,
-							supplierId: 417,
-							extendedState: 4,
-							reportPrice: 3,
-							commentPurpose: "拜访目的",
-							comments: "拜访结果",
-							creatorId: 43,
-							creator: "冯露露",
-							deleted: 0,
-							updateTime: null,
-							createTime: "2020-02-27 17:33:19",
-							companyName: "上海联合包装装潢",
-							extendedStateStr: null,
-							reportPriceStr: null
-						},
-						{
-							id: 255,
-							supplierId: 417,
-							extendedState: 3,
-							reportPrice: 1,
-							commentPurpose: "太阳LOL",
-							comments: "头像log",
-							creatorId: 2061,
-							creator: "黄庆鸿",
-							deleted: 0,
-							updateTime: "2020-01-19 15:23:16",
-							createTime: "2020-01-18 18:56:41",
-							companyName: "上海联合包装装潢",
-							extendedStateStr: null,
-							reportPriceStr: null
-						},
-						{
-							id: 253,
-							supplierId: 323,
-							extendedState: 4,
-							reportPrice: 3,
-							commentPurpose: "这是拜访目的",
-							comments: "这是采访结果",
-							creatorId: 43,
-							creator: "冯露露",
-							deleted: 0,
-							updateTime: null,
-							createTime: "2020-01-18 17:45:08",
-							companyName: "上海瑞邦纸品包装",
-							extendedStateStr: null,
-							reportPriceStr: null
-						},
-						{
-							id: 251,
-							supplierId: 60,
-							extendedState: 4,
-							reportPrice: 3,
-							commentPurpose: "15464",
-							comments: "宁静和你聊213123\n11\n213213\n\nwew",
-							creatorId: 43,
-							creator: "冯露露",
-							deleted: 0,
-							updateTime: "2020-01-10 19:31:50",
-							createTime: "2020-01-10 19:31:31",
-							companyName: "上海乐盈纸业",
-							extendedStateStr: null,
-							reportPriceStr: null
-						},
-						{
-							id: 250,
-							supplierId: 60,
-							extendedState: 4,
-							reportPrice: 3,
-							commentPurpose: "15464",
-							comments: "宁静和你聊213123\n\n213213\n\nwew",
-							creatorId: 43,
-							creator: "冯露露",
-							deleted: 0,
-							updateTime: null,
-							createTime: "2020-01-10 19:30:35",
-							companyName: "上海乐盈纸业",
-							extendedStateStr: null,
-							reportPriceStr: null
-						},
-						{
-							id: 249,
-							supplierId: 60,
-							extendedState: 4,
-							reportPrice: 3,
-							commentPurpose: "15464",
-							comments: "宁静和你聊\n\nwew",
-							creatorId: 43,
-							creator: "冯露露",
-							deleted: 0,
-							updateTime: "2020-01-10 19:28:41",
-							createTime: "2020-01-10 17:43:13",
-							companyName: "上海乐盈纸业",
-							extendedStateStr: null,
-							reportPriceStr: null
+				let paramsData = {
+					pageNum: that.params.pageNum,
+					pageSize: that.params.pageSize,
+					orderStatus: that.params.orderStatus,
+					startTime: that.params.startTime,
+					endTime: that.params.endTime,
+					orderNo: that.params.searchKey
+				};
+				getOrderList(paramsData)
+					.then(data => {
+						if (data.succeed) {
+							that.list = data.body.list || [];
+							that.page.totalCount = data.body.total;
+						} else {
+							that.$message.warning(data.body.message || that.MSG_UNKNOWN, that);
 						}
-					];
-					this.list = list;
-					that.querying = false;
-					that.loading = false;
-				}, 1000);
-            },
-            confirmOrder(id) {
+					})
+					.catch(err => {
+						that.$message.warning(err.body.message || that.MSG_UNKNOWN, that);
+					})
+					.finally(() => {
+						that.querying = false;
+						that.loading = false;
+					});
+			},
+			// 确认收货
+			receipt(id) {
                 let that = this;
-				that.$confirm(
-					"是否确认收货？",
-					"提示",
-					{
-						confirmButtonText: "确认",
-						cancelButtonText: "取消",
-						customClass: "custom-confirm", // 图标样式
-						confirmButtonClass: "el-button--primary", // 确认按钮样式
-						closeOnClickModal: that.CONFIRM_MODAL_CLOSE, // 是否可以点击空白关闭
-						closeOnPressEscape: that.CONFIRM_ESC_CLOSE, // 是否可以esc关闭
-						showClose: false // 是否显示关闭按钮
-					}
-				).then(() => {
-					// that.loading = true;
-					// that.querying = true;
-					console.log(id);
-					// orderReview({id: id}, () => {
-					//     that.$message.success('已接单', that)
-					//     that.query()
-					//     that.loading = false
-					//     that.querying = false
-					// }, (data) => {
-					//     that.loading = false
-					//     that.querying = false
-					//     that.$alert(data.resultMsg, '温馨提示', {
-					//         confirmButtonText: '知道了'
-					//     })
-					// }, (data) => {
-					//     that.loading = false
-					//     that.querying = false
-					//     that.$alert(data.resultMsg, '温馨提示', {
-					//         confirmButtonText: '知道了'
-					//     })
-					// })
-				}).catch(()=>{});
-            },
-            deteleOrder(id) {
+                let formData = {
+                    orderId: id,
+                    orderStatus: 3
+                }
+				updateOrder(formData)
+					.then(data => {
+						if (data.succeed) {
+                            that.search()
+						} else {
+							that.$message.warning(data.body.message || that.MSG_UNKNOWN, that);
+						}
+					})
+					.catch(err => {
+						that.$message.warning(err.body.message || that.MSG_UNKNOWN, that);
+					})
+					.finally(() => {
+						that.submitting = false;
+					});
+			},
+			deletesOrder(id) {
 				let that = this;
-				that.$confirm(
-					"是否确认删除改订单吗？",
-					"提示",
-					{
-						confirmButtonText: "确认",
-						cancelButtonText: "取消",
-						customClass: "custom-confirm custom-confirm-danger", // 图标样式
-						confirmButtonClass: "el-button--primary", // 确认按钮样式
-						closeOnClickModal: that.CONFIRM_MODAL_CLOSE, // 是否可以点击空白关闭
-						closeOnPressEscape: that.CONFIRM_ESC_CLOSE, // 是否可以esc关闭
-						showClose: false // 是否显示关闭按钮
-					}
-				).then(() => {
-					// that.loading = true;
-					// that.querying = true;
-					console.log(id);
-					// orderReview({id: id}, () => {
-					//     that.$message.success('已接单', that)
-					//     that.query()
-					//     that.loading = false
-					//     that.querying = false
-					// }, (data) => {
-					//     that.loading = false
-					//     that.querying = false
-					//     that.$alert(data.resultMsg, '温馨提示', {
-					//         confirmButtonText: '知道了'
-					//     })
-					// }, (data) => {
-					//     that.loading = false
-					//     that.querying = false
-					//     that.$alert(data.resultMsg, '温馨提示', {
-					//         confirmButtonText: '知道了'
-					//     })
-					// })
-				}).catch(()=>{});
+				that.$confirm("确认删除改订单吗？", "提示", {
+					confirmButtonText: "确认",
+					cancelButtonText: "取消",
+					customClass: "custom-confirm custom-confirm-danger", // 图标样式
+					confirmButtonClass: "el-button--primary", // 确认按钮样式
+					closeOnClickModal: that.CONFIRM_MODAL_CLOSE, // 是否可以点击空白关闭
+					closeOnPressEscape: that.CONFIRM_ESC_CLOSE, // 是否可以esc关闭
+					showClose: false // 是否显示关闭按钮
+				})
+					.then(() => {
+						that.querying = true;
+						deteleOrder({ orderId: id })
+							.then(data => {
+								if (data.succeed) {
+									that.$message.success("删除成功", that);
+									that.query();
+								} else {
+									that.$message.warning(
+										data.body.message || that.MSG_UNKNOWN,
+										that
+									);
+								}
+							})
+							.catch(err => {
+								that.$message.warning(err.body.message || that.MSG_UNKNOWN, that);
+							})
+							.finally(() => {
+								that.querying = false;
+							});
+					})
+					.catch(() => {});
 			}
 		}
 	};

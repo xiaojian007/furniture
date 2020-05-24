@@ -1,10 +1,10 @@
 /**
  * axios
- * @author shlijian@ininin.com
+ * @author lijian
  * @since 2020-02-21
  * @version 1.0.0
  * @description 定义http请求方法
- * @copyright ininin.com
+ * @copyright lijian
  */
 
 /* eslint-disable no-undef */

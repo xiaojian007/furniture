@@ -137,7 +137,7 @@ Page({
           loading: false
         })
         wx.showToast({
-          title: app.globalData.msgUnknown,
+          title: err.message || app.globalData.msgUnknown,
           icon: 'none'
         })
       }

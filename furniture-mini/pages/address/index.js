@@ -5,15 +5,23 @@ Page({
     list: [],
     total: 0,
     default_id: null,
+    addressId: 0
   },
   params: {
     pageNum: 1,
     userId: app.globalData.userInfo.userId,
     pageSize: 10
   },
+  isShopping: 0, // 从结算页面过来
   onLoad: function (options) {
     // 当前页面参数
     this.data.options = options;
+    if (options.isShopping) {
+      this.setData({
+        addressId: options.addressId
+      })
+      this.isShopping = options.isShopping
+    }
   },
   /**
  * 页面上拉触底事件的处理函数
@@ -57,12 +65,13 @@ Page({
     })
     if (show) {
       wx.showLoading({
-        title: '加载中'
+        title: "加载中"
       })
     }
+    that.params.userId = app.globalData.userInfo.userId
     app.request({
       method: 'GET',
-      url: 'receiveAddress/page',
+      url: 'receiveaddress/page',
       data: that.params,
       success: (data) => {
         wx.hideLoading()
@@ -99,7 +108,8 @@ Page({
         })
         wx.showToast({
           title: app.globalData.msgUnknown,
-          icon: 'none'
+          icon: 'none',
+          duration: 1000
         })
       }
     })
@@ -142,7 +152,7 @@ Page({
           wx.showLoading()
           app.request({
             method: 'POST',
-            url: 'receiveAddress/delete',
+            url: 'receiveaddress/delete',
             data: params,
             success: (data) => {
               wx.hideLoading()
@@ -164,7 +174,8 @@ Page({
               })
               wx.showToast({
                 title: app.globalData.msgUnknown,
-                icon: 'none'
+                icon: 'none',
+                duration: 1000
               })
             }
           })
@@ -173,6 +184,23 @@ Page({
         }
       }
     });
+  },
+
+  chooseAddress: function (e) {
+    if (this.data.addressId > 0 && this.isShopping == 1) {
+      let address = e.currentTarget.dataset.value;
+      let pages = getCurrentPages();
+      let prevPage = pages[pages.length - 2];  //上一个页面
+      //直接调用上一个页面的setData()方法，把数据存到上一个页面中去
+      prevPage.setData({
+        address: address
+      })
+      wx.navigateBack({
+        delta: 1,
+      })
+    } else {
+      return
+    }
   }
 
 });

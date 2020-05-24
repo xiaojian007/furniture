@@ -3,7 +3,7 @@
 	<block wx:if="{{list.length}}">
 		<custom-ul class="addres-list">
 			<custom-li wx:for="{{list}}" wx:for-item="item" wx:key="this">
-				<view class="address-header b-f m-top18">
+				<view class="address-header b-f m-top18"  data-value="{{item}}" bindtap="chooseAddress">
 					<view class="flow-header-left pl-12">
 						<view class="flow-checkout-admin">
 							{{item.name}}

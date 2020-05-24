@@ -1,14 +1,14 @@
 /**
  * auth状态
- * @author shlijian@ininin.com
+ * @author lijian
  * @since 2020-02-21
  * @version 1.0.0
  * @description app状态管理
  * * -------------------------
- * @author shlijian@ininin.com * @since 2020-02-11
+ * @author lijian * @since 2020-02-11
  * @version 1.0.1
  * @description 添加
- * @copyright ininin.com
+ * @copyright lijian
  */
 
 /* eslint-disable no-shadow */

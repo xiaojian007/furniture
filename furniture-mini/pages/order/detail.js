@@ -1,4 +1,4 @@
-let App = getApp();
+let app = getApp();
 
 Page({
 
@@ -6,52 +6,104 @@ Page({
    * 页面的初始数据
    */
   data: {
-    order_id: null,
+    orderId: null,
     order: {},
+    receiveAddress: {}
   },
-
+  orderId: null,
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    this.data.order_id = options.order_id;
-    this.getOrderDetail(options.order_id);
+    this.orderId = options.orderId;
   },
 
+  onShow: function() {
+    this.getOrderDetail(this.orderId);
+  },
   /**
    * 获取订单详情
    */
-  getOrderDetail: function (order_id) {
-    let _this = this;
-    App._get('user.order/detail', { order_id }, function (result) {
-      _this.setData(result.data);
-    });
+  getOrderDetail(orderId) {
+    let that = this;
+    wx.showLoading({
+      title: '加载中',
+    })
+    app.request({
+      url: 'order/detail',
+      method: 'POST',
+      data: {orderId: orderId},
+      success: (data) => {
+        let receiveAddress = data.receiveAddress || {}
+        that.setData({
+          order: data || {},
+          receiveAddress
+        })
+        wx.hideLoading()
+      },
+      fail: (err) => {
+        debugger
+        wx.hideLoading()
+        this.setData({
+          loading: false
+        })
+        wx.showToast({
+          title: err.message || app.globalData.msgUnknown,
+          icon: 'none',
+          duration: 1000
+        })
+      }
+    })
   },
 
   /**
    * 跳转到商品详情
    */
-  goodsDetail: function (e) {
-    let goods_id = e.currentTarget.dataset.id;
+  toProductDetail(e) {
+    let productId = app.getEventDataset(e).id
     wx.navigateTo({
-      url: '../goods/index?goods_id=' + goods_id
-    });
+      url: '/pages/goods/index?productId=' + productId,
+    })
   },
 
-  /**
+   /**
    * 取消订单
    */
   cancelOrder: function (e) {
-    let _this = this;
-    let order_id = _this.data.order_id;
+    let that = this;
+    let orderId = app.getEventDataset(e).value;
     wx.showModal({
       title: "提示",
       content: "确认取消订单？",
       success: function (o) {
         if (o.confirm) {
-          App._post_form('user.order/cancel', { order_id }, function (result) {
-            wx.navigateBack();
-          });
+          let params = {
+            orderId: orderId,
+            orderStatus: 4
+          }
+          wx.showLoading({
+            title: '取消中',
+          })
+          app.request({
+            url: 'order/update',
+            method: 'POST',
+            data: params,
+            success: (data) => {
+              wx.hideLoading()
+              that.getOrderList(true)
+            },
+            fail: (err) => {
+              wx.hideLoading()
+              this.setData({
+                loading: false
+              })
+              wx.showToast({
+                title: err.message || app.globalData.msgUnknown,
+                icon: 'none',
+                duration: 1000
+              })
+            }
+          })
         }
       }
     });
@@ -62,11 +114,11 @@ Page({
    */
   payOrder: function (e) {
     let _this = this;
-    let order_id = _this.data.order_id;
+    let orderId = _this.data.orderId;
 
     // 显示loading
     wx.showLoading({ title: '正在处理...', });
-    App._post_form('user.order/pay', { order_id }, function (result) {
+    App._post_form('user.order/pay', { orderId }, function (result) {
       if (result.code === -10) {
         App.showError(result.msg);
         return false;
@@ -79,7 +131,7 @@ Page({
         signType: 'MD5',
         paySign: result.data.paySign,
         success: function (res) {
-          _this.getOrderDetail(order_id);
+          _this.getOrderDetail(orderId);
         },
         fail: function () {
           App.showError('订单未支付');
@@ -93,14 +145,14 @@ Page({
    */
   receipt: function (e) {
     let _this = this;
-    let order_id = _this.data.order_id;
+    let orderId = _this.data.orderId;
     wx.showModal({
       title: "提示",
       content: "确认收到商品？",
       success: function (o) {
         if (o.confirm) {
-          App._post_form('user.order/receipt', { order_id }, function (result) {
-            _this.getOrderDetail(order_id);
+          App._post_form('user.order/receipt', { orderId }, function (result) {
+            _this.getOrderDetail(orderId);
           });
         }
       }

@@ -26,7 +26,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (option) {
-    this.params.name = option.name
+    this.params.name = option.name || ''
 
     let that = this;
     // 设置商品列表高度

@@ -6,11 +6,12 @@ Page({
    * 页面的初始数据
    */
   data: {
-    isLogin: false,
+    isLogin: false, // 是否授权登录
     moblie: '',
     orderCount: {
       payment: 9
     },
+    modalName: '' // 登录弹出
   },
 
   /**
@@ -39,9 +40,9 @@ Page({
    * 获取当前用户信息
    */
   getUserDetail() {
-    let _this = this;
+    let that = this;
     app._get('user.index/detail', {}, result => {
-      _this.setData(result.data);
+      that.setData(result.data);
     });
   },
 
@@ -50,7 +51,7 @@ Page({
    */
   onTargetOrder(e) {
     let that = this;
-    if (app.loginChecking) {
+    if (that.data.isLogin) {
       let urls = {
         all: '/pages/order/index?type=all',
         payment: '/pages/order/index?type=payment',
@@ -59,41 +60,73 @@ Page({
       };
       // 转跳指定的页面
       wx.navigateTo({
-        url: urls[e.currentTarget.dataset.type]
+        url: urls[app.getEventDataset(e).type]
       })
     } else {
-      return false;
+      that.setData({
+        modalName: 'DialogModal1'
+      })
     }
   },
-
+  /**
+   * 我的粉丝导航跳转
+   */
+  toMyFan(e) {
+    let that = this;
+    if (that.data.isLogin) {
+      let type = app.getEventDataset(e).type
+      // 转跳指定的页面
+      wx.navigateTo({
+        url: '/pages/my/fans?type=' + type
+      })
+    } else {
+      that.setData({
+        modalName: 'DialogModal1'
+      })
+    }
+  },
+  //授权弹出显示
   showModal(e) {
     this.setData({
       modalName: e.currentTarget.dataset.target
     })
   },
-
+  //授权弹出关闭
   hideModal(e) {
     this.setData({
       modalName: null
     })
   },
-  // 授权登录
-  bindGetUserInfo() {
-    var that = this;
-    //获取用户信息
-    wx.getUserInfo({
-      success: function (res) {
-        app.updateUserInfo(res.userInfo, (data) => {
-          if (openid.openid) {
-            that.onShow()
-            this.setData({
-              modalName: null
-            })
-          } else {
-            console.log('更新用户信息失败')
-          }
-        })
-      }
-    })
+  // 授权后回调
+  successBack() {
+    this.onShow()
+  },
+
+  // 前往收货地址
+  toAdress(){
+    let that = this;
+    if (that.data.isLogin) {
+      // 转跳指定的页面
+      wx.navigateTo({
+        url: '/pages/address/index'
+      })
+    } else {
+      that.setData({
+        modalName: 'DialogModal1'
+      })
+    }
+  },
+  toVisit(){
+    let that = this;
+    if (that.data.isLogin) {
+      // 转跳指定的页面
+      wx.navigateTo({
+        url: '/pages/my/visit'
+      })
+    } else {
+      that.setData({
+        modalName: 'DialogModal1'
+      })
+    }
   }
 })

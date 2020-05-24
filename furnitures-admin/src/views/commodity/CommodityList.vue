@@ -128,7 +128,7 @@
 							>
 								<template slot-scope="scope">
 									<template v-if="field.prop === 'operation'">
-										<el-button type="text">
+										<el-button type="text" @click="$refs.seeCommdity.add(scope.row.productId)">
 											查看
 										</el-button>
 										<el-button
@@ -196,6 +196,10 @@
 			:treeList="productTreeList"
 			@success="queryCommodityList"
 		></EditCommodity>
+        <SeeCommodity
+			ref="seeCommdity"
+			:treeList="productTreeList"
+		></SeeCommodity>
 	</div>
 </template>
 
@@ -204,6 +208,7 @@
 	import CommodityTypeTree from "./components/CommodityTypeTree";
 	import EditCommodityType from "./components/DialogEditCommodityType";
 	import EditCommodity from "./components/DialogEditCommodity";
+	import SeeCommodity from "./components/DialogEditCommoditySee";
 	import {
 		getProductAndProductType,
 		getProductTypeList,
@@ -216,7 +221,7 @@
 
 	export default {
 		mixins: [listMixin],
-		components: { CommodityTypeTree, EditCommodityType, EditCommodity },
+		components: { CommodityTypeTree, EditCommodityType, EditCommodity, SeeCommodity },
 		data() {
 			return {
 				commodityPublishStatus: [{ value: "", text: "全部" }].concat(
@@ -345,7 +350,7 @@
 					let params = {
 						productId: id,
 						publishStatus: value ? 1 : 0
-					};
+                    };
 					updateFeaturedAndPutShelves(params)
 						.then(data => {
 							if (data.succeed) {

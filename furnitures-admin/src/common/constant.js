@@ -1,10 +1,10 @@
 /**
  * 常量
- * @author shlijian@ininin.com
+ * @author lijian
  * @since 2020-02-21
  * @version 1.0.0
  * @description 常量定义
- * @copyright ininin.com
+ * @copyright lijian
  */
 
 /**
@@ -33,7 +33,7 @@ export const REGULARS = {
 /**
  * 七牛云文件存储地址
  */
-export const BASE_FILE_URL = "//wg.cloud.ininin.com/";
+export const BASE_FILE_URL = "//wg.cloud.lijian/";
 
 /**
  * 翻页pager

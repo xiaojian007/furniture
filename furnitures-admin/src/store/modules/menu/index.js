@@ -1,10 +1,10 @@
 /**
  * 路由菜单定义
- * @author shlijian@ininin.com
+ * @author lijian
  * @since 2020-02-21
  * @version 1.0.0
  * @description 路由菜单定义
- * @copyright ininin.com
+ * @copyright lijian
  */
 /* eslint-disable no-shadow */
 import { SET_SUB_MENU } from "./mutation-types";

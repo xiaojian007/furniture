@@ -4,7 +4,7 @@
  * @since 2020-02-24
  * @version 1.0.0
  * @description vuex状态管理
- * @copyright ininin.com
+ * @copyright lijian
  */
 
 /* eslint-disable no-undef */

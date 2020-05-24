@@ -1,6 +1,6 @@
 <template>
 	<div class="app-home">
-		<div class="text">您好，欢迎使用xxxx系统</div>
+		<div class="text">您好，欢迎使用汀西海岸后台管理平台</div>
 	</div>
 </template>
 

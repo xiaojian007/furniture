@@ -10,7 +10,7 @@ const { get, post } = generateModuleRequest("");
 export const addAndUpdateRole = params => {
 	let url = "/role/save";
 	if (params.roleId > 0) {
-		url = "/product/page";
+		url = "/role/update";
 	}
 	return post(url, params);
 };

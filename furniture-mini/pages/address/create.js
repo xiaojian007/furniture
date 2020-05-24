@@ -43,7 +43,7 @@ Page({
     }
     app.request({
       method: 'POST',
-      url: 'receiveAddress/detail',
+      url: 'receiveaddress/detail',
       data: params,
       success: (data) => {
         wx.hideLoading()
@@ -96,8 +96,8 @@ Page({
       receiverPhone: values.phone,
       isDefault: this.data.defaultAddress ? 1 : 0,
       receiver: values.name,
-      userId: app.globalData.userId,
-      oppenid: app.globalData.oppenid
+      userId: app.globalData.userInfo.userId,
+      openid: app.globalData.openid
     }
     wx.showLoading()
     if (this.data.addressId) {
@@ -105,7 +105,7 @@ Page({
     }
     app.request({
       method: 'POST',
-      url: this.data.addressId ? 'receiveAddress/update' : 'receiveAddress/save',
+      url: this.data.addressId ? 'receiveaddress/update' : 'receiveaddress/save',
       data: params,
       success: (data) => {
         wx.hideLoading()
@@ -171,7 +171,6 @@ Page({
    * 修改地区
    */
   bindRegionChange: function (e) {
-    debugger
     this.setData({
       region: e.detail.value,
       areaId: e.detail.postcode

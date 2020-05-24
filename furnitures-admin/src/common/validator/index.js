@@ -1,10 +1,10 @@
 /**
  * 表单常用验证函数
- * @author shlijian@ininin.com
+ * @author lijian
  * @since 2020-02-21
  * @version 1.0.0
  * @description 表单常用验证函数
- * @copyright ininin.com
+ * @copyright lijian
  */
 
 import { REGULARS } from "@common/constant";

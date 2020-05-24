@@ -11,8 +11,8 @@ Page({
     // 默认展示数据
     hasList: false,
     // 商品列表数据
-    list: [
-    ],
+    list: [],
+    isAuthorize: false, // 是否授权
     // 金额
     totalPrice: 0, // 总价，初始为0
     // 全选状态
@@ -33,10 +33,18 @@ Page({
     pageSize: 10,
     pageNum: 1,
   },
+  onLoad() {
+  },
   onShow() {
-    this.query(false, true)
-    // 价格方法
-    this.count_price();
+    app.loginCheck(this, () => {
+      this.setData({
+        selectAllStatus: false,
+        totalPrice: 0
+      })
+      this.query(false, true)
+      // 价格方法
+      this.countPrice();
+    }, false)
   },
   /**
     * 页面相关事件处理函数--监听用户下拉动作
@@ -113,7 +121,7 @@ Page({
           loading: false
         })
         wx.showToast({
-          title: app.globalData.msgUnknown,
+          title: err.message || app.globalData.msgUnknown,
           icon: 'none'
         })
       }
@@ -145,7 +153,7 @@ Page({
       selectAllStatus: that.data.selectAllStatus
     })
     // 调用计算金额方法
-    that.count_price();
+    that.countPrice();
   },
   // 编辑
   btn_edit: function () {
@@ -208,7 +216,7 @@ Page({
                 });
               } else {
                 // 调用金额渲染数据
-                that.count_price();
+                that.countPrice();
               }
             },
             fail: (err) => {
@@ -217,7 +225,7 @@ Page({
                 loading: false
               })
               wx.showToast({
-                title: app.globalData.msgUnknown,
+                title: err.message || app.globalData.msgUnknown,
                 icon: 'none'
               })
             }
@@ -254,7 +262,7 @@ Page({
       list: list
     });
     // 计算金额方法
-    this.count_price();
+    this.countPrice();
   },
 
   /**
@@ -298,7 +306,7 @@ Page({
           loading: false,
         })
         // 计算金额方法
-        this.count_price();
+        this.countPrice();
       },
       fail: (err) => {
         wx.hideLoading()
@@ -306,7 +314,7 @@ Page({
           loading: false
         })
         wx.showToast({
-          title: app.globalData.msgUnknown,
+          title: err.message || app.globalData.msgUnknown,
           icon: 'none'
         })
       }
@@ -337,13 +345,30 @@ Page({
       list: list
     });
     // 调用计算金额方法
-    this.count_price();
+    this.countPrice();
   },
   // 提交订单
-  btn_submit_order: function () {
+  btnSubmitOrder: function () {
     var that = this;
     console.log(that.data.totalPrice);
-
+    let list = that.data.list || []
+    let choiceList = []
+    list.forEach(item => {
+      if (item.selected) {
+        choiceList.push(item)
+      }
+    })
+    wx.setStorageSync('cartList', choiceList)
+    if (choiceList.length > 0 && that.data.totalPrice > 0) {
+      wx.navigateTo({
+        url: './checkout?totalPrice=' + that.data.totalPrice,
+      })
+    } else {
+      wx.showModal({
+        title: '提示',
+        content: "请至少选中一个商品",
+      })
+    }
     // 调起支付
     // wx.requestPayment(
     //   {
@@ -356,10 +381,6 @@ Page({
     //     'fail': function (res) { },
     //     'complete': function (res) { }
     //   })
-    wx.showModal({
-      title: '提示',
-      content: '合计金额-' + that.data.totalPrice + "暂未开发",
-    })
   },
   // 收藏
   btn_collert: function () {
@@ -371,7 +392,7 @@ Page({
   /**
    * 计算总价
    */
-  count_price() {
+  countPrice() {
     // 获取商品列表数据
     let list = this.data.list;
     // 声明一个变量接收数组列表price
@@ -494,7 +515,7 @@ Page({
           loading: false
         })
         wx.showToast({
-          title: app.globalData.msgUnknown,
+          title: err.message || app.globalData.msgUnknown,
           icon: 'none'
         })
       }

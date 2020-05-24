@@ -2,7 +2,7 @@
 	<div class="app-header">
 		<div class="header-left">
 			<router-link to="/">
-				<span class="slogan">xxx管理系统</span>
+				<span class="slogan">汀西海岸管理平台</span>
 			</router-link>
 		</div>
 		<div class="header-right">

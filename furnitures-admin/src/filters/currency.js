@@ -1,10 +1,10 @@
 /**
  * 货币格式化
- * @author shlijian@ininin.com
+ * @author lijian
  * @since 2020-02-21
  * @version 1.0.0
  * @description 引入js-cookie
- * @copyright ininin.com
+ * @copyright lijian
  */
 
 const digitsRE = /(\d{3})(?=\d)/g;

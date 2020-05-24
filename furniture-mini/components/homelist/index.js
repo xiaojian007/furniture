@@ -17,6 +17,10 @@ Component({
     isHome: {
       type: Boolean,
       value: true
+    },
+    isAuthorize: {
+      type: Boolean,
+      value: false
     }
   },
   /**
@@ -92,32 +96,24 @@ Component({
         return
       }
       console.log(this.data.typeId, this.data.isShow)
-
       this.setData({
         isShow: true
       })
       if (this.data.typeId === 0) {
         this.getFeatured()
+        this.getFeaturedImgDetail()
       } else {
         this.getTypeDetail(this.data.typeId)
         this.getTypeProduct()
       }
-      let imgUrls = [
-        'https://images.unsplash.com/photo-1551334787-21e6bd3ab135?w=640',
-        'https://images.unsplash.com/photo-1551214012-84f95e060dee?w=640',
-        'https://images.unsplash.com/photo-1551446591-142875a901a1?w=640'
-      ]
-      let homeImgUrls = imgUrls
+      // let imgUrls = [
+      //   'https://images.unsplash.com/photo-1551334787-21e6bd3ab135?w=640',
+      //   'https://images.unsplash.com/photo-1551214012-84f95e060dee?w=640',
+      //   'https://images.unsplash.com/photo-1551446591-142875a901a1?w=640'
+      // ]
+      // let homeImgUrls = imgUrls
       console.log('请求数据')
-      this.setData({
-        loading: true
-      })
-      setTimeout(() => {
-        this.setData({
-          homeImgUrls,
-          loading: false
-        })
-      }, 2000)
+      
     },
     // 精选
     getFeatured() {
@@ -153,7 +149,47 @@ Component({
             loading: false
           })
           wx.showToast({
-            title: app.globalData.msgUnknown,
+            title: err.message || app.globalData.msgUnknown,
+            icon: 'none'
+          })
+        }
+      })
+    },
+
+    // 获取轮播图和二级类别
+    getFeaturedImgDetail() {
+      // 精选传值
+      let params = {
+        pageNum: 1,
+        pageSize: 20,
+        dictCode: 'banner_image'
+      }
+      app.request({
+        method: 'GET',
+        url: 'dict/page',
+        data: params,
+        success: (data) => {
+          let homeImgUrls =[]
+          let imgList = data.list || []
+          imgList.forEach(item=>{
+            homeImgUrls.push(item.dictValue)
+          })
+          this.setData({
+            homeImgUrls
+          })
+          wx.hideLoading()
+          wx.stopPullDownRefresh()
+          this.setData({
+            loading: false,
+          })
+        },
+        fail: (err) => {
+          wx.hideLoading()
+          this.setData({
+            loading: false
+          })
+          wx.showToast({
+            title: err.message || app.globalData.msgUnknown,
             icon: 'none'
           })
         }
@@ -188,7 +224,7 @@ Component({
             loading: false
           })
           wx.showToast({
-            title: app.globalData.msgUnknown,
+            title: err.message || app.globalData.msgUnknown,
             icon: 'none'
           })
         }
@@ -230,16 +266,16 @@ Component({
             loading: false
           })
           wx.showToast({
-            title: app.globalData.msgUnknown,
+            title: err.message || app.globalData.msgUnknown,
             icon: 'none'
           })
         }
       })
     },
-    toSearch(e){
+    toSearch(e) {
       let item = app.getEventDataset(e).item
       wx.navigateTo({
-        url: '/pages/search/index?typeSecondId='+item.typeId + '&typeFirstId='+item.parentId,
+        url: '/pages/search/index?typeSecondId=' + item.typeId + '&typeFirstId=' + item.parentId,
       })
     }
   }

@@ -1,11 +1,11 @@
 /**
  * eslint配置
- * @author shlijian@ininin.com
+ * @author lijian
  * @since 2020-02-21
  * @version 1.0.0
  * @description eslint配置
  * https://eslint.org/docs/user-guide/configuring
- * @copyright ininin.com
+ * @copyright lijian
  */
 
 module.exports = {

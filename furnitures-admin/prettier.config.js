@@ -1,10 +1,10 @@
 /**
  * prettier验证插件配置
- * @author shlijian@ininin.com
+ * @author lijian
  * @since 2020-02-21
  * @version 1.0.0
  * @description prettier验证插件配置
- * @copyright ininin.com
+ * @copyright lijian
  */
 
 module.exports = {

@@ -1,10 +1,10 @@
 /**
  * app状态管理
- * @author shlijian@ininin.com
+ * @author lijian
  * @since 2020-02-21
  * @version 1.0.0
  * @description app状态管理
- * @copyright ininin.com
+ * @copyright lijian
  */
 
 import { SET_LATEST_VERSION } from "./mutation-types";

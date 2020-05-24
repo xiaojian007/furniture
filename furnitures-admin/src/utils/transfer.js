@@ -2,7 +2,7 @@
  * 转换处理类
  * @summary 转换处理类
  * @namespace transfer
- * @author shlijian@ininin.com
+ * @author lijian
  * @version 1.1
  * @since 2016/2/22
  * @constructor

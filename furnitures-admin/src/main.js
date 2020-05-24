@@ -1,10 +1,10 @@
 /**
  * 入口文件
- * @author shlijian@ininin.com
+ * @author lijian
  * @since 2020-02-21
  * @version 1.0.0
  * @description 入口文件
- * @copyright ininin.com
+ * @copyright lijian
  */
 
 import Vue from "vue";

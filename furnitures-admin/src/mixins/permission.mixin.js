@@ -1,10 +1,10 @@
 /**
  * 权限通用方法mixins
- * @author shlijian@ininin.com
+ * @author lijian
  * @since 2020-03-03
  * @version 1.0.0
  * @description 权限通用方法mixins
- * @copyright ininin.com
+ * @copyright lijian
  */
 
 import { mapState } from "vuex";

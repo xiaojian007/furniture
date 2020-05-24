@@ -1,0 +1,41 @@
+/* pages/my/about.wxss */
+page{
+  background: #fff !important;
+  padding: 30rpx;
+  width: 100%;
+  box-sizing: border-box;
+}
+.h6{
+  font-size: 34rpx;
+  font-weight: bold;
+  text-align: left;
+}
+.about image{
+  display: block;
+}
+.image1{
+  width: 696rpx;
+  margin:20rpx auto;
+  height: 299rpx;
+}
+.image2{
+  width: 456rpx;
+  height: 519rpx;
+  margin:20rpx auto;
+}
+.image3{
+  width: 696rpx;
+  height: 302rpx;
+  margin:20rpx auto;
+}
+.image4{
+  width: 501rpx;
+  height: 474rpx;
+}
+.content{
+  display: block;
+  font-size: 24rpx;
+  line-height: 30rpx;
+  color: #666;
+  text-indent: 2em;
+}

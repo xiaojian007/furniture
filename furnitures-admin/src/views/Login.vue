@@ -1,7 +1,7 @@
 <template>
 	<div class="login" @keyup.enter="login">
 		<main ref="main">
-			<div class="login-title">欢迎进入xxxx系统</div>
+			<div class="login-title">欢迎进入汀西海岸后台管理平台</div>
 			<div class="login-box">
 				<el-form :model="form" :rules="rules" ref="form">
 					<el-form-item prop="account" class="height50">
@@ -52,7 +52,18 @@
 				},
 				submitting: false,
 				rules: {
-					account: [{ required: true, message: "请输入账号", trigger: "blur" }],
+					account: [
+						{ required: true, message: "请输入账号", trigger: "blur" },
+						{
+							type: "string",
+							pattern: this.RE.mobile,
+							message: "请输入正确的手机号",
+							transform(value) {
+								return String(value).trim();
+							},
+							trigger: "blur"
+						}
+					],
 					password: [{ required: true, message: "请输入登录密码", trigger: "blur" }]
 				}
 			};

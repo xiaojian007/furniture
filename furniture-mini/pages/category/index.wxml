@@ -3,7 +3,7 @@
 	<view class="cu-bar search">
 		<view class="search-form radius">
 			<text class="cuIcon-search"></text>
-			<input type="text" placeholder="搜索" confirm-type="search"></input>
+			<input type="text" placeholder="搜索"  bindconfirm="search"></input>
 		</view>
 	</view>
 	<view class="cate-content dis-flex" wx:if="{{ list.length > 0 }}">
@@ -37,12 +37,12 @@
 						<view class="cate-cont-box">
 							<block wx:if="{{list[curIndex].typeVoList.length}}">
 								<view class="flex-three" data-list="{{index}}" wx:for="{{list[curIndex].typeVoList}}" wx:key="cit">
-									<navigator hover-class="none" url="../category/list?typeId={{item.typeId}}">
+									<view hover-class="none" bindtap="toSearch" data-type-id="{{item.typeId}}">
 										<view class="cate-img">
 											<image mode="" src="{{!item.typeImage ?'//cloud.pdp.ininin.com/FkbnmXWHzzEhSwQrt6UTERWP_f5w': item.typeImage}}"></image>
 										</view>
 										<text class="onelist-hidden">{{item.typeName}}</text>
-									</navigator>
+									</view>
 								</view>
 							</block>
 							<block wx:else>

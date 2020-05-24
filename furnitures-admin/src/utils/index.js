@@ -1,10 +1,10 @@
 /**
  * 通用工具函数
- * @author shlijian@ininin.com
+ * @author lijian
  * @since 2020-02-21
  * @version 1.0.0
  * @description 通用工具函数
- * @copyright ininin.com
+ * @copyright lijian
  */
 
 /**

@@ -9,131 +9,141 @@
 		@close="close"
 	>
 		<div class="form-edit form-edit-table">
-				<div class="title">基础信息</div>
-				<el-row class="form-detail">
-					<el-col :span="12">
-						<div class="el-form-item">
-							<label class="el-form-item__label">订单人:</label>
-							<div class="el-form-item__content">{{ receiptInfo.orderer }}</div>
+			<div class="title">基础信息</div>
+			<el-row class="form-detail">
+				<el-col :span="12">
+					<div class="el-form-item">
+						<label class="el-form-item__label">订购人:</label>
+						<div class="el-form-item__content">
+							{{ orderInfo.receiver }}
 						</div>
-						<div class="el-form-item">
-							<label class="el-form-item__label">订购人手机号:</label>
-							<div class="el-form-item__content">
-								{{ receiptInfo.orderNumber }}
-							</div>
+					</div>
+					<div class="el-form-item">
+						<label class="el-form-item__label">订购人手机号:</label>
+						<div class="el-form-item__content">
+							{{ orderInfo.receiverPhone }}
 						</div>
-						<div class="el-form-item">
-							<label class="el-form-item__label">地址:</label>
-							<div class="el-form-item__content">
-								{{ receiptInfo.address || "-" }}
-							</div>
+					</div>
+					<div class="el-form-item">
+						<label class="el-form-item__label">地址:</label>
+						<div class="el-form-item__content">
+							{{ orderInfo.addressName || "-" }}
 						</div>
-					</el-col>
-					<el-col :span="12">
-						<div class="el-form-item">
-							<label class="el-form-item__label">金额:</label>
-							<div class="el-form-item__content">
-								{{ receiptInfo.totalPrice || "-" }}
-							</div>
+					</div>
+					<div class="el-form-item">
+						<label class="el-form-item__label">备注:</label>
+						<div class="el-form-item__content">
+							{{ orderInfo.memo || "-" }}
 						</div>
-						<div class="el-form-item">
-							<label class="el-form-item__label">物流:</label>
-							<div class="el-form-item__content">
-								{{ receiptInfo.logisticsName || "-" }}
-							</div>
+					</div>
+                    <div class="el-form-item">
+						<label class="el-form-item__label">备注:</label>
+						<div class="el-form-item__content">
+							{{ enumOrderStatus.obj[orderInfo.orderStatus] }}
 						</div>
-						<div class="el-form-item">
-							<label class="el-form-item__label">物流单号:</label>
-							<div class="el-form-item__content">
-								{{ receiptInfo.logisticsNumber || "-" }}
-							</div>
+					</div>
+				</el-col>
+				<el-col :span="12">
+					<div class="el-form-item">
+						<label class="el-form-item__label">应付价格:</label>
+						<div class="el-form-item__content">
+							{{ orderInfo.totalPreAmount || "-" }}
 						</div>
-					</el-col>
-				</el-row>
+					</div>
+					<div class="el-form-item">
+						<label class="el-form-item__label">实付金额:</label>
+						<div class="el-form-item__content">
+							{{ orderInfo.totalRealAmount || "-" }}
+						</div>
+					</div>
+					<div class="el-form-item">
+						<label class="el-form-item__label">物流:</label>
+						<div class="el-form-item__content">
+							{{ orderInfo.deliveryCompany || "-" }}
+						</div>
+					</div>
+					<div class="el-form-item">
+						<label class="el-form-item__label">物流单号:</label>
+						<div class="el-form-item__content">
+							{{ orderInfo.deliverySn || "-" }}
+						</div>
+					</div>
+				</el-col>
+			</el-row>
 
-				<div class="title">订单信息</div>
-				<el-table
-					border
-					:highlight-current-row="true"
-					style="width: 100%"
-					:data="reviewRecordList"
+			<div class="title">订单信息</div>
+			<el-table
+				border
+				:highlight-current-row="true"
+				style="width: 100%"
+				:data="orderItemList"
+			>
+				<el-table-column :resizable="false" prop="serialNumber" align="center" label="序号">
+					<template slot-scope="scope">
+						<div class="tc">{{ scope.$index + 1 }}</div>
+					</template>
+				</el-table-column>
+				<!-- <el-table-column
+					:resizable="false"
+					prop="productName"
+					align="center"
+					label="产品类型"
 				>
-					<el-table-column
-						:resizable="false"
-						prop="serialNumber"
-						align="center"
-						label="序号"
-					>
-					</el-table-column>
-					<el-table-column
-						:resizable="false"
-						prop="productCategories"
-						align="center"
-						label="产品分类"
-					>
-					</el-table-column>
-					<el-table-column
-						:resizable="false"
-						prop="productSeries"
-						align="center"
-						label="系列"
-					>
-					</el-table-column>
-					<el-table-column
-						:resizable="false"
-						prop="productName"
-						align="center"
-						label="产品名称"
-					>
-					</el-table-column>
-					<el-table-column
-						:resizable="false"
-						prop="specification"
-						align="center"
-						label="产品规格"
-					>
-					</el-table-column>
-					<el-table-column
-						:resizable="false"
-						prop="unitPrice"
-						align="center"
-						label="产品单价"
-					>
-					</el-table-column>
-					<el-table-column :resizable="false" prop="quantity" align="center" label="数量">
-					</el-table-column>
-					<el-table-column
-						:resizable="false"
-						prop="totalPrice"
-						align="center"
-						label="总价"
-					>
-					</el-table-column>
-				</el-table>
+				</el-table-column> -->
+				<el-table-column
+					:resizable="false"
+					prop="productName"
+					align="center"
+					label="产品名称"
+				>
+				</el-table-column>
+				<el-table-column
+					:resizable="false"
+					prop="productSkuName"
+					align="center"
+					label="规格"
+				>
+				</el-table-column>
+				<el-table-column :resizable="false" prop="itemPrice" align="center" label="单价">
+				</el-table-column>
+				<el-table-column :resizable="false" prop="itemQuantity" align="center" label="数量">
+				</el-table-column>
+				<el-table-column :resizable="false" prop="itemTotalPrice" align="center" label="总价">
+                    <template slot-scope="scope">
+						<div class="tc">{{ scope.row.itemQuantity*scope.row.itemPrice }}</div>
+					</template>
+				</el-table-column>
+			</el-table>
 		</div>
 		<div slot="footer">
 			<el-button @click="close" size="small" :loading="submitting">关 闭</el-button>
 		</div>
 	</el-dialog>
 </template>
-
 <script>
 	import formMixin from "@mixins/form.mixin";
+	import { getOrderDetail } from "@api/order/order";
+    import { enumOrderStatus } from "@common/enums/index";
 
 	export default {
 		mixins: [formMixin],
 		data() {
 			return {
+                enumOrderStatus,
 				// 收货货信息
-				receiptInfo: {
-					orderer: "", //订单人
-					orderNumber: "", //订单人手机号
-					address: "", // 地址
-					logisticsName: "", // 物流名称
-					logisticsNumber: "", // 物流单号
-					totalPrice: "" // 金额
+				orderInfo: {
+					receiver: "", // 收货人
+                    receiverPhone: "", // 收货人手机号
+                    addressName: "", // 收货地址
+					orderNo: "", //订单号
+					deliveryCompany: "", //物流公司
+					deliverySn: "", //物流单号
+					memo: "", //订单备注
+					orderStatus: "", // 订单状态
+					totalPreAmount: "", //应付总价格
+					totalRealAmount: "" // 实付金额
 				},
-				reviewRecordList: []
+				orderItemList: []
 			};
 		},
 		methods: {
@@ -143,104 +153,34 @@
 			},
 			load(id) {
 				let that = this;
-				setTimeout(() => {
-					console.log(id);
-					that.reviewRecordList = [
-						{
-							serialNumber: 1,
-							productCategories: "热销金宝",
-							productName: "XXXXXX",
-							productSeries: "休息休息系列",
-							specification: "2000*33333",
-							unitPrice: 222,
-							quantity: 1,
-							totalPrice: 222
-						},
-						{
-							serialNumber: 2,
-							productCategories: "热销金宝",
-							productName: "XXXXXX",
-							productSeries: "休息休息系列",
-							specification: "2000*33333",
-							unitPrice: 222,
-							quantity: 1,
-							totalPrice: 222
-						},
-						{
-							serialNumber: 3,
-							productCategories: "热销金宝",
-							productName: "XXXXXX",
-							productSeries: "休息休息系列",
-							specification: "2000*33333",
-							unitPrice: 222,
-							quantity: 1,
-							totalPrice: 222
+				getOrderDetail({ orderId: id })
+					.then(data => {
+                        let detail = data.body || {}
+						if (data.succeed) {
+							that.orderItemList = data.body.orderItemList || [];
+							that.orderInfo = {
+								receiver: detail.receiveAddress.receiver, // 收货人
+                                receiverPhone: detail.receiveAddress.receiverPhone, // 收货人手机号
+                                addressName: detail.receiveAddress.addressName,
+								orderNo: detail.orderNo, //订单号
+								deliveryCompany: detail.deliveryCompany, //物流公司
+								deliverySn: detail.deliverySn, //物流单号
+								memo: detail.memo, //订单备注
+								orderStatus: detail.orderStatus, // 订单状态
+								totalPreAmount: detail.totalPreAmount, //应付总价格
+								totalRealAmount: detail.totalRealAmount // 实付金额
+							};
+							that.visible = true;
+						} else {
+							that.$message.warning(data.body.message || that.MSG_UNKNOWN, that);
 						}
-					];
-
-					that.receiptInfo = {
-						orderer: "李健", //订单人
-						orderNumber: "19988888888", //订单人手机号
-						address: "地球陈点点点", // 地址
-						logisticsName: "顺丰", // 物流名称
-						logisticsNumber: "SF1008610086", // 物流单号
-						totalPrice: "2000000" // 金额
-					};
-
-					that.visible = true;
-				}, 500);
-				// getSigningDetail(
-				// 	{ id: id },
-				// 	data => {
-				// 		that.title = "签收";
-				// 		that.form = {
-				// 			submissionTime: new Date(), // 签收时间
-				// 			shipmentOrderDetailList: [
-				// 				{
-				// 					id: "",
-				// 					submissionQuantity: ""
-				// 				}
-				// 			],
-				// 			certificate: data.certificate || "" //回单图片连接
-				// 		};
-				// 		that.setFormData(that.receiptInfo, Object.assign({}, data));
-				// 		that.reviewRecordList = data.reviewRecord || [];
-				// 		let imageList = [];
-				// 		if (that.form.certificate !== "") {
-				// 			imageList = that.form.certificate.split(",");
-				// 		}
-				// 		that.$nextTick(() => {
-				// 			if (that.$refs.pic) {
-				// 				that.$refs.pic.data = imageList;
-				// 			}
-				// 		});
-				// 		that.visible = true;
-				// 		// 添加form
-				// 		that.shipmentOrderDetailList = data.shipmentOrderDetailList || [];
-				// 		// 设置验证
-				// 		let purchaseOrderList = [];
-				// 		that.shipmentOrderDetailList.forEach(item => {
-				// 			purchaseOrderList.push({
-				// 				id: item.id,
-				// 				submissionQuantity: item.shipQuantity
-				// 			});
-				// 		});
-				// 		that.form.shipmentOrderDetailList = purchaseOrderList;
-				// 		that.setRules();
-				// 	},
-				// 	err => {
-				// 		that.submitting = false;
-				// 		that.$alert(err.resultMsg, "温馨提示", {
-				// 			confirmButtonText: "知道了"
-				// 		});
-				// 	},
-				// 	err => {
-				// 		that.submitting = false;
-				// 		that.$alert(err.resultMsg || that.MSG_UNKNOWN, "温馨提示", {
-				// 			confirmButtonText: "知道了"
-				// 		});
-				// 	}
-				// );
+					})
+					.catch(err => {
+						that.$message.warning(err.body.message || that.MSG_UNKNOWN, that);
+					})
+					.finally(() => {
+						that.submitting = false;
+					});
 			}
 		}
 	};
@@ -277,9 +217,9 @@
 		}
 		/deep/ .el-form-item__content {
 			margin-bottom: 3px;
-        }
-        /deep/ .el-form-item{
-            margin-bottom: 0;
-        }
+		}
+		/deep/ .el-form-item {
+			margin-bottom: 0;
+		}
 	}
 </style>

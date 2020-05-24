@@ -1,60 +1,60 @@
 {
-  "name": "furniture",
-  "version": "0.0.0",
-  "private": true,
-  "scripts": {
-    "serve": "vue-cli-service serve",
-    "build-test": "vue-cli-service build",
-    "build": "vue-cli-service build --mode formal",
-    "lint": "vue-cli-service lint"
-  },
-  "dependencies": {
-    "axios": "^0.19.0",
-    "core-js": "^2.6.5",
-    "crypto-js": "^3.1.9-1",
-    "echarts": "^4.6.0",
-    "element-ui": "^2.13.0",
-    "js-cookie": "^2.2.1",
-    "nprogress": "^0.2.0",
-    "vue": "^2.6.10",
-    "vue-router": "^3.0.3",
-    "vuex": "^3.0.1"
-  },
-  "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.9.0",
-    "@vue/cli-plugin-eslint": "^3.9.0",
-    "@vue/cli-service": "^3.9.0",
-    "@vue/eslint-config-prettier": "^4.0.1",
-    "babel-eslint": "^10.0.1",
-    "eslint": "^5.16.0",
-    "eslint-plugin-vue": "^5.0.0",
-    "image-webpack-loader": "^6.0.0",
-    "less": "^3.11.1",
-    "less-loader": "^5.0.0",
-    "prettier": "^1.19.1",
-    "svg-sprite-loader": "^4.2.1",
-    "vue-template-compiler": "^2.6.10"
-  },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
+    "name": "furniture",
+    "version": "20.5.172220",
+    "private": true,
+    "scripts": {
+        "serve": "vue-cli-service serve",
+        "build-test": "vue-cli-service build",
+        "build": "vue-cli-service build --mode formal",
+        "lint": "vue-cli-service lint"
     },
-    "extends": [
-      "plugin:vue/strongly-recommended",
-      "@vue/prettier"
-    ],
-    "parserOptions": {
-      "parser": "babel-eslint"
-    }
-  },
-  "postcss": {
-    "plugins": {
-      "autoprefixer": {}
-    }
-  },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions"
-  ]
+    "dependencies": {
+        "axios": "^0.19.0",
+        "core-js": "^2.6.5",
+        "crypto-js": "^3.1.9-1",
+        "echarts": "^4.6.0",
+        "element-ui": "^2.13.0",
+        "js-cookie": "^2.2.1",
+        "nprogress": "^0.2.0",
+        "vue": "^2.6.10",
+        "vue-router": "^3.0.3",
+        "vuex": "^3.0.1"
+    },
+    "devDependencies": {
+        "@vue/cli-plugin-babel": "^3.9.0",
+        "@vue/cli-plugin-eslint": "^3.9.0",
+        "@vue/cli-service": "^3.9.0",
+        "@vue/eslint-config-prettier": "^4.0.1",
+        "babel-eslint": "^10.0.1",
+        "eslint": "^5.16.0",
+        "eslint-plugin-vue": "^5.0.0",
+        "image-webpack-loader": "^6.0.0",
+        "less": "^3.11.1",
+        "less-loader": "^5.0.0",
+        "prettier": "^1.19.1",
+        "svg-sprite-loader": "^4.2.1",
+        "vue-template-compiler": "^2.6.10"
+    },
+    "eslintConfig": {
+        "root": true,
+        "env": {
+            "node": true
+        },
+        "extends": [
+            "plugin:vue/strongly-recommended",
+            "@vue/prettier"
+        ],
+        "parserOptions": {
+            "parser": "babel-eslint"
+        }
+    },
+    "postcss": {
+        "plugins": {
+            "autoprefixer": {}
+        }
+    },
+    "browserslist": [
+        "> 1%",
+        "last 2 versions"
+    ]
 }

@@ -94,12 +94,12 @@
 								</template>
 
 								<template v-else-if="field.prop === 'operation'">
-									<!-- <el-button
+									<el-button
 										type="text"
-										@click="$refs.edit.load(scope.row.userId)"
+										@click="$refs.edit.load(scope.row)"
 									>
 										修改
-									</el-button> -->
+									</el-button>
 									<el-button type="text" @click="deleteUser(scope.row.userId)">
 										删除
 									</el-button>

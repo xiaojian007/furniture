@@ -1,10 +1,10 @@
 /**
  * 咨讯
- * @author shlijian@ininin.com
+ * @author lijian
  * @since 2020-02-24
  * @version 1.0.0
  * @description 咨讯路由创建
- * @copyright ininin.com
+ * @copyright lijian
  */
 import permission from "@config/config.permission";
 export default [

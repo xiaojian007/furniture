@@ -4,7 +4,7 @@
 	<block wx:if="{{hasList}}">
 		<!-- 列表 -->
 		<block wx:for="{{list}}" wx:key="index">
-			<view class="shop-item {{item.isTouchMove ? 'touch-move-active' : ''}}" data-index="{{index}}" bindtouchstart="touchstart" bindtouchmove="touchmove">
+			<view class="shop-item {{item.isTouchMove ? 'touch-move-active' : ''}}" data-index="{{index}}" bindtouchstart="touchstart" catchtouchmove="touchmove">
 				<view class="list align-items space-between">
 					<view class="shop-radio">
 						<!-- radio选择IOCN -->
@@ -62,7 +62,7 @@
 					<navigator class="list b-f" hover-class="none" url="../goods/index?productId={{item.productId}}" wx:for="{{productList}}" wx:key="index">
 						<view class="left">
 							<view class="img">
-								<image class="goodsImg" mode="aspectFill" src="{{!item.smallImage ? 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1586600782721&di=98630207a9dd72bf14dd816c5d526888&imgtype=0&src=http%3A%2F%2Fm.tuniucdn.com%2Ffb2%2Ft1%2FG2%2FM00%2FAF%2F3F%2FCii-T1gA04iIcXfZABp5vaXUmGYAADY2wOtpLIAGnnV994_w500_h280_c1_t0.png' : item.smallImage }}"></image>
+								<image class="goodsImg" mode="aspectFill" src="{{!item.smallImage ? '../../image/no-photo.jpeg' : item.smallImage }}"></image>
 							</view>
 						</view>
 						<view class="right">
@@ -89,7 +89,7 @@
 	<!-- else -->
 	<icon wx:else type="circle" color="#999" class="total-select" size='20' bindtap="selectAll" />
 	<!-- 全选标题 -->
-	<text class='sel_count_name'>全选</text>
+	<text class='sel_count_name' bindtap="selectAll">全选</text>
 	<!-- 合计金额 -->
 	<lable class="count_price">
 		<view> <text>不含运费</text></view>
@@ -98,5 +98,5 @@
 		</view>
 	</lable>
 	<!-- 提交订单 -->
-	<label class='submit' bindtap='btn_submit_order'>去结算</label>
+	<label class='submit' bindtap='btnSubmitOrder'>去结算</label>
 </view>

@@ -1,10 +1,10 @@
 /**
  * 图表通用方法mixins
- * @author shlijian@ininin.com
+ * @author lijian
  * @since 2020-02-14
  * @version 1.0.0
  * @description 图表通用方法mixins
- * @copyright ininin.com
+ * @copyright lijian
  */
 
 import echarts from "echarts";

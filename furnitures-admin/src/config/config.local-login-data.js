@@ -1,10 +1,10 @@
 /**
  * 本地用户登录信息
- * @author shlijian@ininin.com
+ * @author lijian
  * @since 2020-02-23
  * @version 1.0.0
  * @description 本地用户登录信息
- * @copyright ininin.com
+ * @copyright lijian
  */
 
 /* eslint-disable no-undef */

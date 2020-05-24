@@ -97,24 +97,24 @@
 	<view class="fan-list m-top20">
 		<view class="order-navbar-header dis-flex">
 			<text class="f-30">我的粉丝</text>
-			<navigator url="/pages/my/fans" hover-class="none" class="dis-flex flex-y-center">
+			<view bindtap="toMyFan" data-type="all" hover-class="none" class="dis-flex flex-y-center">
 				<text class="f-24 col-6">查看所有</text>
 				<text class="iconfont icon-xiangyoujiantou user-orderJtou"></text>
-			</navigator>
+			</view>
 		</view>
 		<view class="weui-flex">
-			<navigator class="weui-flex__item add">
+			<view class="weui-flex__item add" bindtap="toMyFan" data-type="today">
 				<view class="number">100</view>
 				<view class="title">今日新增</view>
-			</navigator>
-			<navigator class="weui-flex__item add">
+			</view>
+			<view class="weui-flex__item add" bindtap="toMyFan" data-type="month">
 				<view class="number">100</view>
 				<view class="title">本月新增</view>
-			</navigator>
-			<navigator class="weui-flex__item add">
+			</view>
+			<view class="weui-flex__item add" bindtap="toMyFan" data-type="all">
 				<view class="number">100</view>
 				<view class="title">全部粉丝</view>
-			</navigator>
+			</view>
 		</view>
 	</view>
 
@@ -123,23 +123,23 @@
 			<text class="f-30">我的粉丝</text>
 		</view>
 		<view class="weui-flex service-item">
-			<navigator hover-class="none" url="/pages/address/index" class="weui-flex__item service">
+			<view bindtap="toAdress" class="weui-flex__item service">
 				<view class="service-icon address"></view>
 				<view class="title">收货地址</view>
-			</navigator>
-			<navigator hover-class="none" class="weui-flex__item service">
+			</view>
+			<view class="weui-flex__item service">
 				<view class="service-icon yuyue"></view>
 				<view class="title">客户预约</view>
-			</navigator>
-			<navigator hover-class="none" class="weui-flex__item service">
+			</view>
+			<view bindtap="toVisit" class="weui-flex__item service">
 				<view class="service-icon visitors"></view>
 				<view class="title">我的访客</view>
-			</navigator>
-			<button open-type="contact" class="weui-flex__item service">
+			</view>
+			<button open-type="contact" hover-class="none" class="weui-flex__item service">
 				<view class="service-icon client"></view>
 				<view class="title">联系客户</view>
 			</button>
-			<navigator hover-class="none" class="weui-flex__item service">
+			<navigator hover-class="none" url="./about" class="weui-flex__item service">
 				<view class="service-icon about"></view>
 				<view class="title">关于我们</view>
 			</navigator>
@@ -149,23 +149,4 @@
 </view>
 
 
-
-<view class="cu-modal {{modalName=='DialogModal1'?'show':''}}">
-	<view class="cu-dialog">
-		<view class="cu-bar bg-white justify-end">
-			<view class="content">Modal标题</view>
-			<view class="action" bindtap="hideModal">
-				<text class="cuIcon-close text-red"></text>
-			</view>
-		</view>
-		<view class="padding-xl">
-			授权登录
-		</view>
-		<view class="cu-bar bg-white justify-end">
-			<view class="action">
-				<button class="cu-btn line-green text-green" bindtap="hideModal">取消</button>
-				<button class="cu-btn bg-green margin-left" open-type="getUserInfo" bindgetuserinfo="bindGetUserInfo">确定</button>
-			</view>
-		</view>
-	</view>
-</view>
+<loginModal is-show="{{modalName=='DialogModal1'}}" bind:cancel="hideModal"  bind:confirm="successBack"></loginModal>

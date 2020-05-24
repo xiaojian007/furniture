@@ -848,8 +848,8 @@ page {
 
 
 .page-empty image {
-  width: 48vw;
-  height: 34.67vw;
+  width: 180rpx;
+  height: 180rpx;
 }
 
 

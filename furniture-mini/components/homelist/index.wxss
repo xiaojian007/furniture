@@ -307,3 +307,7 @@
 .footer-home{
   padding: 0 0 30rpx 0;
 }
+
+.product-type .page-empty{
+  height: 36vh;
+}

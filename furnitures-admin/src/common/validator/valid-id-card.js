@@ -1,10 +1,10 @@
 /**
 * 身份证验证
-* @author shlijian@ininin.com
+* @author lijian
 * @since 2020-02-21
 * @version 1.0.0
 * @description 定义身份证验证的相关函数
-* @copyright ininin.com
+* @copyright lijian
 */
 
 /**

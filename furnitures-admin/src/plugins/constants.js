@@ -4,8 +4,8 @@
  */
 //七牛下载URL
 import baseURL from "@config/config.api";
-const QINIU_DOWNLOAD = "//cloud.pdp.ininin.com/";
-const downloadUrl = '//wg.cloud.ininin.com/'
+const QINIU_DOWNLOAD = "//cloud.pdp.lijian/";
+const downloadUrl = '//wg.cloud.lijian/'
 
 /**
  * 常量

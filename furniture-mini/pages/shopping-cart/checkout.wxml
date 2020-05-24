@@ -1,0 +1,78 @@
+<!--pages/checkout/checkout.wxml-->
+<!-- 顶部彩带 -->
+<view class="address-bg">因质量问题退换货，请联系在线客服</view>
+<view class="address-bg-back"></view>
+<!-- 地址 -->
+<block wx:if="{{address.addressId>0}}">
+	<view class="address-box space-between" bindtap="chooseAddress">
+		<view class="l">
+			<text class="name">{{address.name}}</text>
+			<text class="phone">{{address.phone}}</text>
+			<text class="default" wx:if="{{address.isDefault == 1}}">默认地址</text>
+			<text class="address ">{{address.adress.province + address.adress.city + address.adress.region  + address.adress.detail}}</text>
+		</view>
+		<view class="r">
+			<image src="../../image/rightArrow.png"></image>
+		</view>
+	</view>
+</block>
+<block wx:else>
+	<view class="address-box add-address-box space-between">
+		<view class="l">
+			您还没收货地址！
+		</view>
+		<view class="add-adress" bindtap="chooseAddress">
+			添加地址
+		</view>
+	</view>
+</block>
+<view class="check-product">
+	<view class="check-title">商品清单</view>
+	<view class="product">
+		<view class="item" wx:for="{{productList}}" wx:key="index">
+			<view class="img">
+				<image src="{{item.image}}"></image>
+			</view>
+			<view class="info">
+				<view>
+					<view class="t">
+						<text class="name">{{item.title}}</text>
+					</view>
+					<view class="m">{{item.pro_name}}</view>
+				</view>
+				<view class="prices space-between">
+					<!-- <view class="originPrice" wx:if="{{item.originPrice}}">￥{{item.originPrice}}</view> -->
+					<text class="number">x{{item.num}}</text>
+					<view class="b">￥{{item.price}}</view>
+				</view>
+			</view>
+		</view>
+		<view class="product-order">
+			<view class="weui-cell space-between">
+				<view class="weui-cell__hd"><text class="weui-label">商品总价</text></view>
+				<view class="out-right">¥ {{actualPrice}}</view>
+			</view>
+			<view class="weui-cell space-between">
+				<view class="weui-cell__hd"><text class="weui-label">运费</text></view>
+				<view class="out-right">¥ 0</view>
+			</view>
+			<view class="weui-cell space-between">
+				<view class="weui-cell__hd"><text class="weui-label">订单备注</text></view>
+				<view class="out-right">
+					<input class="weui-input" value="{{memo}}" bindinput="orderMemo" placeholder="请输入您需要备注的信息" />
+				</view>
+			</view>
+			<view class="weui-cell space-between">
+				<view class="weui-cell__hd"><text class="weui-label">订单金额</text></view>
+				<view class="out-right">
+					<text class="cal">共{{allTotal}}件</text>, 小计：<text class="price">	¥ {{actualPrice + expressPrice}}</text>
+				</view>
+			</view>
+		</view>
+	</view>
+</view>
+
+<view class="bottom">
+	<view class="l">实付: ￥{{actualPrice}}</view>
+	<view class="r {{agree ? '' : 'disabled'}}" hover-class="{{agree ? 'active' : ''}}" bindtap="submitOrder">去付款</view>
+</view>

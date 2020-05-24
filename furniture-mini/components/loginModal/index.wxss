@@ -1,0 +1,43 @@
+/* components/loginModal/index.wxss */
+@import "/app.wxss";
+
+
+
+.cu-dialog{
+  width: 480rpx;
+}
+
+.padding-xl{
+  background: #fff;
+  padding: 40rpx 0;
+}
+.padding-xl image{
+  width: 330rpx;
+  height: 338rpx;
+}
+.login-bottom{
+  min-height: auto;
+}
+.login-bottom .action{
+  width: 100%;
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+.login-bottom .action:first-child{
+  margin: 0;
+}
+.login-bottom .action button{
+  flex: 1;
+  margin: 0;
+  border: 0;
+  height: 80rpx;
+  border-radius: 0;
+}
+.login-bottom .action button::after{
+  display: none;
+}
+
+.text-red{
+  color: #333;
+}

@@ -1,3 +1,4 @@
+let app = getApp();
 Component({
   properties: {
     //属性值可以在组件使用时指定
@@ -7,6 +8,10 @@ Component({
       observer(newVal, oldVal) {
         newVal && this.drawPic()
       }
+    },
+    isType: {
+      type: String,
+      value: 'product'
     },
     detail: {
       type: Object,
@@ -29,7 +34,6 @@ Component({
       })
     },
     drawPic() {
-      
       if (this.data.sharePath) { //如果已经绘制过了本地保存有图片不需要重新绘制
         this.setData({
           visible: true
@@ -40,7 +44,54 @@ Component({
       wx.showLoading({
         title: '生成中'
       })
-      let detail = this.data.detail || {}
+
+      let detail = {}
+      let params = {
+        userId: app.globalData.userInfo.userId,
+        path: '/pages/index/index'
+      }
+      let isType = this.data.isType
+      if (isType == 'product') {
+        detail = this.data.detail || {}
+        params.path = '/pages/goods/index?productId=' + detail.productId
+      } else if (isType == 'find') {
+        detail = this.data.detail || {}
+        params.path = '/pages/goods/index?productId=' + detail.productId
+      }
+      app.request({
+        method: 'GET',
+        url: 'wechat/createQrCode',
+        data: params,
+        success: (data) => {
+          if (data) {
+            if (isType == 'product') {
+              this.drawPicProduct(detail, data.body)
+            } else if (isType == 'find') {
+              this.drawPicFind(detail, data.body)
+            }
+          } else {
+            wx.showToast({
+              title: '分享图片获取失败！',
+              icon: 'none',
+              duration: 1000
+            })
+          }
+        },
+        fail: (err) => {
+          wx.hideLoading()
+          this.setData({
+            loading: false
+          })
+          wx.showToast({
+            title: app.globalData.msgUnknown,
+            icon: 'none',
+            duration: 1000
+          })
+        }
+      })
+    },
+    // 生成商品分享图片
+    drawPicProduct(detail, url) {
       this.setData({
         imgDraw: {
           width: '750rpx',
@@ -61,7 +112,7 @@ Component({
             },
             {
               type: 'image',
-              url: wx.getStorageSync('avatarUrl') || 'https://qiniu-image.qtshe.com/default-avatar20170707.png',
+              url: app.globalData.userInfo.avatarUrl || 'https://qiniu-image.qtshe.com/default-avatar20170707.png',
               css: {
                 top: '1004rpx',
                 left: '125rpx',
@@ -72,7 +123,7 @@ Component({
             },
             {
               type: 'text',
-              text: '¥ '+detail.price,
+              text: '¥ ' + detail.price,
               css: {
                 top: '877rpx',
                 fontSize: '34rpx',
@@ -106,7 +157,75 @@ Component({
             },
             {
               type: 'image',
-              url: 'https://qiniu-image.qtshe.com/20190605index.jpg', // 二维码
+              url: url || 'https://cloud.pack.ininin.com/0e73483adb24bbec07070ffaa6f741a0', // 二维码
+              css: {
+                top: '1010rpx',
+                right: '67rpx',
+                width: '120rpx',
+                height: '120rpx'
+              }
+            }
+          ]
+        }
+      })
+    },
+    // 生成法相详情图片
+    drawPicFind(detail, url) {
+      this.setData({
+        imgDraw: {
+          width: '750rpx',
+          height: '1324rpx',
+          background: 'http://cloud.pack.ininin.com/1ce12d663a9ce4ae1b6eb2bd614f8a44',
+          views: [
+            {
+              type: 'image',
+              url: detail.articleImage ? detail.articleImage : 'https://qiniu-image.qtshe.com/1560248372315_467.jpg',
+              css: {
+                top: '205rpx',
+                left: '125rpx',
+                right: '67rpx',
+                width: '558rpx',
+                height: '561rpx',
+                borderRadius: '2rpx'
+              },
+            },
+            {
+              type: 'image',
+              url: app.globalData.userInfo.avatarUrl || 'https://qiniu-image.qtshe.com/default-avatar20170707.png',
+              css: {
+                top: '1004rpx',
+                left: '125rpx',
+                width: '46rpx',
+                height: '46rpx',
+                borderRadius: '46rpx'
+              }
+            },
+            {
+              type: 'text',
+              text: detail.articleTitle ? detail.articleTitle : `汀·西海岸/Capture One16919实木双...`,
+              css: {
+                top: '806rpx',
+                left: '125rpx',
+                align: 'left',
+                fontSize: '28rpx',
+                color: '#333333'
+              }
+            },
+            {
+              type: 'text',
+              text: `汀·西海岸微商城`,
+              css: {
+                top: '1028rpx',
+                left: '205rpx',
+                maxLines: 1,
+                align: 'left',
+                fontSize: '20rpx',
+                color: '#fff'
+              }
+            },
+            {
+              type: 'image',
+              url: url || 'https://cloud.pack.ininin.com/0e73483adb24bbec07070ffaa6f741a0', // 二维码
               css: {
                 top: '1010rpx',
                 right: '67rpx',
@@ -125,7 +244,6 @@ Component({
       })
     },
     onImgOK(e) {
-      console.log(e.detail.path)
       wx.hideLoading()
       this.setData({
         sharePath: e.detail.path,

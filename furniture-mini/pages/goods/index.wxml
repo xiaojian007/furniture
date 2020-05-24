@@ -27,8 +27,8 @@
 			<view class="share" bindtap="createShareImage">分享</view>
 		</view>
 		<view bindtap="onChangeShowState" data-target="bottomModal" class="cont-box b-f goods-property-box m-top20">
-			<text class="col-3 f-30">已选</text>
-			<text class="col-3 f-30 pl-12">{{goods_num}} 个</text>
+			<text class="col-3 f-30">请选择</text>
+			<!-- <text class="col-3 f-30 pl-12">{{goods_num}} 个</text> -->
 			<view class="goods-property-jianTou">
 				<text class="iconfont icon-xiangyoujiantou user-orderJtou-1 {{showView?'user-orderJtou-2':''}}"></text>
 			</view>
@@ -86,7 +86,7 @@
 		<!-- 底部操作栏 -->
 		<view class="footer-fixed f-30">
 			<!-- 首页 -->
-			<view class="goods-fixed-icon dis-flex flex-x-center flex-y-center">
+			<view class="goods-fixed-icon dis-flex flex-x-center flex-y-center" bindtap="toHome">
 				<text class="iconfont icon-home"></text>
 			</view>
 			<!-- 在线客服 -->
@@ -122,4 +122,6 @@
 
 
 <!-- 分享 -->
-<share-box isCanDraw="{{isCanDraw}}" detail="{{detail}}" bind:initData="createShareImage" />
+<shareBox is-type="product" isCanDraw="{{isCanDraw}}" detail="{{detail}}" />
+<!-- 登录授权 -->
+<loginModal is-show="{{shareLoginModal=='DialogModal1'}}" bind:cancel="hideLogin"  bind:confirm="successBack" />

@@ -1,5 +1,7 @@
 {
-  "usingComponents": {},
+  "usingComponents": {
+    "shareBox": "/components/shareBox/index"
+  },
   "backgroundColor": "#fff",
   "navigationBarTitleText": "资讯详情"
 }

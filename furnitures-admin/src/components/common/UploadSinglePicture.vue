@@ -53,7 +53,7 @@
 		watch: {
 			data() {
 				let that = this;
-				that.url = that.data || "";
+                that.url = that.data || "";
 				that.$emit("change", that.getKey(), that.getKey(true));
 			}
 		},

@@ -1,10 +1,10 @@
 /**
  * 权限验证相关的工具函数
- * @author shlijian@ininin.com
+ * @author lijian
  * @since 2020-03-12
  * @version 1.0.0
  * @description 权限验证相关的工具函数
- * @copyright ininin.com
+ * @copyright lijian
  */
 
 /**

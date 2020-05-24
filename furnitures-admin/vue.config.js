@@ -1,10 +1,10 @@
 /**
  * vue项目配置文件
- * @author shlijian@ininin.com
+ * @author lijian
  * @since 2020-02-21
  * @version 1.0.0
  * @description vue项目配置文件
- * @copyright ininin.com
+ * @copyright lijian
  */
 
 /* eslint-disable no-undef */
@@ -37,7 +37,8 @@ if (env === "production") {
 }
 
 module.exports = {
-    publicPath: '',
+	publicPath: process.env.VUE_APP_API_MODE === "dev" ? "/txhan/" : "/",
+	productionSourceMap: false, // 生产环境是否生成 sourceMap 文件
 	chainWebpack: config => {
 		config.resolve.alias.set("@", path.resolve(__dirname, "src"));
 		config.resolve.alias.set("@config", path.resolve(__dirname, "src/config"));

@@ -1,10 +1,10 @@
 /**
  * 加密类
- * @author shlijian@ininin.com
+ * @author lijian
  * @since 2020-02-21
  * @version 1.0.0
  * @description 加密相关的公共方法
- * @copyright ininin.com
+ * @copyright lijian
  */
 
 import CryptoJS from "crypto-js";

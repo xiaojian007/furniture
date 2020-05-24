@@ -3,7 +3,9 @@
 page {
   background: #fff;
 }
-
+.search{
+  background: #fff;
+}
 /* 搜索框 */
 
 .index-search-box {

@@ -1,10 +1,10 @@
 /**
 * 浏览器工具类
-* @author shlijian@ininin.com
+* @author lijian
 * @since 2020-02-21
 * @version 1.0.0
 * @description 获取浏览器相关信息的工具函数
-* @copyright ininin.com
+* @copyright lijian
 */
 
 

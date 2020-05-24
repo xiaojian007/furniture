@@ -1,7 +1,7 @@
 /* pages/news/detail.wxss */
 
 page {
-  background: #fff;
+  background: #fff !important;
 }
 
 .container {

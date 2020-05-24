@@ -1,25 +1,23 @@
 <import src="/templates/loading.wxml" />
 <view class="weui-panel weui-panel_access">
 	<view class="weui-panel__bd">
-		<view wx:for="{{list}}" wx:key="index" class="news-item" bindtap="openDetail" data-news-id="{{item.foundId}}">
+		<view wx:for="{{list}}" wx:key="index" class="news-item" bindtap="openDetail" data-id="{{item.vrId}}">
 			<view class="weui-media-box">
-				<view wx:if="{{item.picKey}}" class="weui-media-box__hd">
+				<view class="weui-media-box__hd">
 					<view class="news-img">
-						<image class="weui-media-box__thumb" mode="aspectFill" src="{{QINIU_DOWNLOAD+item.picKey+thumbnail}}" />
+						<image class="weui-media-box__thumb" mode="aspectFit" src="{{item.vrImage}}" />
 					</view>
-				</view>
-				<view class="weui-media-box__bd">
-					{{item.foundType===0 ? item.content : item.info}}
 				</view>
 			</view>
 			<view class="weui-flex">
 				<view class="weui-flex__item">
-					<view class="news-date">{{item.recordTime}}</view>
+					<view class="news-date">{{item.vrTitle}}</view>
+					<view class="news-time">{{item.updateTime}}</view>
 				</view>
 			</view>
 		</view>
 	</view>
 	<view class="weui-panel__ft">
-		<template is="loading" data="{{list: list, total: total, text: '资讯'}}" />
+		<template is="loading" data="{{list: list, total: total, text: 'VI全景～'}}" />
 	</view>
 </view>

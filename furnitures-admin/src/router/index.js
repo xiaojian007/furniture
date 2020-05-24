@@ -1,10 +1,10 @@
 /**
  * 路由定义
- * @author shlijian@ininin.com
+ * @author lijian
  * @since 2020-02-21
  * @version 1.0.0
  * @description 路由定义
- * @copyright ininin.com
+ * @copyright lijian
  */
 
 import Vue from "vue";
@@ -49,9 +49,9 @@ router.beforeEach((to, from, next) => {
 	// 设置标题
 	let title = "";
 	if (to.meta) {
-		title = to.meta.title || "纸业销售统计";
+		title = to.meta.title || "汀西海岸后台管理平台";
 	} else {
-		title = "纸业销售统计";
+		title = "汀西海岸后台管理平台";
 	}
 	document.title = title;
 	// 判断是否有token

@@ -1,7 +1,7 @@
 <template>
     <footer class="app-foot">
         <!--<a href="http://www.miitbeian.gov.cn/" target="_blank">粤ICP备13078924号</a> |-->
-        Copyright © {{endYear}} 云印技术（深圳）有限公司 ininin.com 版权所有
+        Copyright © {{endYear}} 云印技术（深圳）有限公司 lijian 版权所有
         <!--| <a href="#" @click="$refs.agreement.load(true)">用户服务协议</a>-->
         <!--<ComUserAgreement ref="agreement"></ComUserAgreement>-->
     </footer>

@@ -11,3 +11,10 @@
 	</view>
 </view>
 <image bindtap='share' src='../../image/act-share.png' class='primary'></image>
+
+
+<!-- 分享 -->
+<shareBox is-type="find" isCanDraw="{{isCanDraw}}" detail="{{detail}}" />
+<!-- 登录授权 -->
+<loginModal is-show="{{modalName=='DialogModal1'}}" bind:cancel="hideModal"  bind:confirm="successBack"></loginModal>
+ 

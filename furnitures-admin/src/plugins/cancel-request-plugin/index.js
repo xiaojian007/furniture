@@ -1,10 +1,10 @@
 /**
  * 定义取消请求插件
- * @author shlijian@ininin.com
+ * @author lijian
  * @since 2020-02-21
  * @version 1.0.0
  * @description 定义取消请求插件，到处use方法
- * @copyright ininin.com
+ * @copyright lijian
  */
 
 import axios from "axios";

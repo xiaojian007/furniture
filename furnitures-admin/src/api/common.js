@@ -11,9 +11,9 @@ const { get, request } = generateModuleRequest("");
 // console.log()
 // debugger
 export const downloadExcel = (params, success, failure, error) => {
-	//success('//alpha.wq.ininin.com/order/requirement_order/1002/download_quotation2order', params)
+	//success('//alpha.wq.lijian/order/requirement_order/1002/download_quotation2order', params)
 	//success(http.defaults.baseURL + params.downloadUrl, params)
-	//params.url = '//alpha.wq.ininin.com/order/requirement_order/1002/download_quotation2order'
+	//params.url = '//alpha.wq.lijian/order/requirement_order/1002/download_quotation2order'
 	// 发送post请求
 	request({
 		method: params.method || "post",

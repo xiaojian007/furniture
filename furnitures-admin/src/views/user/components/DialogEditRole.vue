@@ -24,7 +24,7 @@
 			<el-form-item label="角色描述：" size="small" prop="roleCode">
 				<el-input v-model="form.roleCode" placeholder="请输入角色描述"></el-input>
 			</el-form-item>
-			<el-form-item label="可用权限：" size="small">
+			<!-- <el-form-item label="可用权限：" size="small">
 				<el-tree
 					:data="treeData"
 					show-checkbox
@@ -36,7 +36,7 @@
 					:props="defaultProps"
 				>
 				</el-tree>
-			</el-form-item>
+			</el-form-item> -->
 		</el-form>
 		<div slot="footer">
 			<el-button size="small" @click="close">关闭</el-button>
@@ -134,12 +134,13 @@
 				this.visible = false;
 				this.submitting = false;
 			},
-			load(id = 0) {
+			load(row = {}) {
 				this.visible = true;
-				if (id > 0) {
+				if (row.roleId > 0) {
                     this.title = "修改角色";
-                    this.form.roleId = id;
-					this.query(); // 获取角色信息
+                    this.form.roleId = row.roleId;
+                    this.form.roleName = row.roleName;
+                    this.form.roleCode = row.roleCode;
 				} else {
 					this.title = "新增角色";
 				}
@@ -184,8 +185,7 @@
 						console.log("Failure of form validation!!");
 					}
 				});
-			},
-			query() {}
+			}
 		}
 	};
 </script>

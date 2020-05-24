@@ -1,10 +1,10 @@
 /**
  * 引入图标组件
- * @author shlijian@ininin.com
+ * @author lijian
  * @since 2020-02-21
  * @version 1.0.0
  * @description 引入图标组件
- * @copyright ininin.com
+ * @copyright lijian
  */
 
 /* eslint-disable no-undef */

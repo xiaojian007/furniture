@@ -1,6 +1,6 @@
 /**
  * 地址格式化
- * @author shlijian@ininin.com
+ * @author lijian
  * @since 2020-02-21
  * @param {String} value 地址
  * @param {Number} level 显示级别

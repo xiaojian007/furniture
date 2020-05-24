@@ -1,21 +1,20 @@
 /**
  * 全局actions
- * @author shlijian@ininin.com
+ * @author lijian
  * @since 2020-02-21
  * @version 1.0.0
  * @description 全局actions
- * @copyright ininin.com
+ * @copyright lijian
  */
 
 import Cookies from "js-cookie";
 import { SET_TOKEN, SET_MENU_PERMISSIONS, SET_BTN_PERMISSIONS } from "@store-m/auth/mutation-types";
 import { SET_USERINFO } from "@store-m/user/mutation-types";
 import { SET_SUB_MENU } from "@store-m/menu/mutation-types";
-// import loginPath from "@config/config.login";
 import { SET_LATEST_VERSION } from "@store-m/app/mutation-types";
 import { deBase64, enBase64, md5 } from "@utils/crypto";
-const COOKIE_ID = md5("ininin.com"); // 云印token
-const USERINFO = "pdp.ininin.com"; // 用户信息+token
+const COOKIE_ID = md5("lijian"); // 云印token
+const USERINFO = "pdp.lijian"; // 用户信息+token
 /**
  * 设置最新版本
  * @param {Object} param0

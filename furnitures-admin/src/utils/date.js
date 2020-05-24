@@ -1,10 +1,10 @@
 /**
  * 时间相关的通用函数
- * @author szyeliming@ininin.com
+ * @author szyeliming@lijian
  * @since 2020-02-12
  * @version 1.0.0
  * @description 时间相关的通用函数
- * @copyright ininin.com
+ * @copyright lijian
  */
 
 import { zeroPadding } from "./index";

@@ -1,10 +1,10 @@
 /**
  * 定义取消请求插件需要使用的动态vuex状态
- * @author shlijian@ininin.com
+ * @author lijian
  * @since 2020-02-21
  * @version 1.0.0
  * @description 定义取消请求插件需要使用的动态vuex状态
- * @copyright ininin.com
+ * @copyright lijian
  */
 
 /* eslint-disable no-shadow */

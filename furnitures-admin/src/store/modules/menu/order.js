@@ -1,10 +1,10 @@
 /**
  * 订单板块路由
- * @author shlijian@ininin.com
+ * @author lijian
  * @since 2020-02-24
  * @version 1.0.0
  * @description 订单板块路由创建
- * @copyright ininin.com
+ * @copyright lijian
  */
 import permission from "@config/config.permission";
 export default [
@@ -14,17 +14,6 @@ export default [
 		component: () => import(/* webpackChunkName: "order-list" */ "@views/order/OrderList.vue"),
 		meta: {
             label: "订单列表",
-            icon: "icon-visitList",
-            auth: [permission.VALUE_CHAIN_LOOK]
-		}
-	},
-	{
-		path: "distribution-list",
-        name: "distribution-list",
-		component: () =>
-			import(/* webpackChunkName: "distribution-list" */ "@views/order/DistributionList.vue"),
-		meta: {
-			label: "退货列表",
             icon: "icon-visitList",
             auth: [permission.VALUE_CHAIN_LOOK]
 		}

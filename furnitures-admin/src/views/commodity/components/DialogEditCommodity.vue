@@ -374,27 +374,33 @@
 					let updateCalcSkuList = [];
 					// sku修改
 					calcSkuList.forEach(updateSku => {
-						this.modifyCalcSkuList.forEach(skuItem => {
+						let skuItem = {};
+						for (let i = 0; i < this.modifyCalcSkuList.length; i++) {
 							if (
-								updateSku.attributeNameList === skuItem.attributeNameList &&
-								updateSku.attributeIds === skuItem.attributeIds
+								updateSku.attributeNameList === this.modifyCalcSkuList[i].attributeNameList &&
+								updateSku.attributeIds === this.modifyCalcSkuList[i].attributeIds
 							) {
-								updateCalcSkuList.push({
-									attributeNameList: skuItem.attributeNameList, // 名称
-									attributeIds: skuItem.attributeIds, // id
-									attributePrice: skuItem.attributePrice, //价格
-									attributeStock: skuItem.attributeStock // 库存
-								});
-							} else {
-								updateCalcSkuList.push({
-									attributeNameList: updateSku.attributeNameList, // 名称
-									attributeIds: updateSku.attributeIds, // id
-									attributePrice: updateSku.attributePrice, //价格
-									attributeStock: updateSku.attributeStock // 库存
-								});
+								skuItem = this.modifyCalcSkuList[i];
 							}
-						});
+                        }
+                        console.log(skuItem)
+						if (skuItem.attributeIds) {
+							updateCalcSkuList.push({
+								attributeNameList: skuItem.attributeNameList, // 名称
+								attributeIds: skuItem.attributeIds, // id
+								attributePrice: skuItem.attributePrice, //价格
+								attributeStock: skuItem.attributeStock // 库存
+							});
+						} else {
+							updateCalcSkuList.push({
+								attributeNameList: updateSku.attributeNameList, // 名称
+								attributeIds: updateSku.attributeIds, // id
+								attributePrice: updateSku.attributePrice, //价格
+								attributeStock: updateSku.attributeStock // 库存
+							});
+						}
 					});
+					console.log(this.calcSkuList, updateCalcSkuList);
 					this.calcSkuList = updateCalcSkuList;
 				} else {
 					// 新增
@@ -524,7 +530,7 @@
 							detail: that.form.detail, // 想想
 							isPerfect: that.form.isPerfect || 0,
 							name: that.form.name,
-							originalPrice: that.form.originalPrice,
+							originalPrice: that.toDecimal(that.form.originalPrice),
 							productImage: that.form.uploadImage.join(","),
 							publishStatus: that.form.publishStatus || 0,
 							shortName: that.form.shortName,
@@ -538,7 +544,7 @@
 							let skuAttributeItem = {
 								attributeIds: item.attributeIds,
 								attributeNameList: item.attributeNameList,
-								attributePrice: item.attributePrice,
+								attributePrice: that.toDecimal(item.attributePrice),
 								attributeStock: item.attributeStock
 							};
 							priceList.push(Number(item.attributePrice));
@@ -654,7 +660,7 @@
 								that.skuTypeList = that.setDetailData(skuTypeArr);
 								let commodityTypeList = res[0].body || [];
 								that.commodityTypeList = commodityTypeList;
-                                that.visible = true;
+								that.visible = true;
 							} else {
 								that.$message.warning("获取商品详情失败，请联系管理员", that);
 							}

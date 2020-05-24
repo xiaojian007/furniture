@@ -70,7 +70,7 @@
 								<template v-else-if="field.prop === 'operation'">
 									<el-button
 										type="text"
-										@click="$refs.editRole.load(scope.row.roleId)"
+										@click="$refs.editRole.load(scope.row)"
 									>
 										修改
 									</el-button>

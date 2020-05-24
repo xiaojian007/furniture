@@ -93,13 +93,6 @@
 				},
 				{
 					"id": -1,
-					"name": "pages/shopping-cart/index",
-					"pathName": "pages/shopping-cart/index",
-					"query": "",
-					"scene": null
-				},
-				{
-					"id": -1,
 					"name": "pages/shopping-cart/shopping",
 					"pathName": "pages/shopping-cart/shopping",
 					"query": "",
@@ -180,6 +173,41 @@
 					"name": "pages/category/list",
 					"pathName": "pages/category/list",
 					"query": "name=商品",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/shopping-cart/shopping",
+					"pathName": "pages/shopping-cart/shopping",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": 18,
+					"name": "pages/home/index",
+					"pathName": "pages/home/index",
+					"query": "home=2&ddd=2&userId=2",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/order/index",
+					"pathName": "pages/order/index",
+					"query": "home=2&ddd=2&userId=2",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/order/detail",
+					"pathName": "pages/order/detail",
+					"query": "orderId=11",
+					"scene": null
+				},
+				{
+					"id": 21,
+					"name": "pages/order/detail",
+					"pathName": "pages/order/detail",
+					"query": "orderId=11",
 					"scene": null
 				}
 			]

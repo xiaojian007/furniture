@@ -28,7 +28,7 @@
 			}
 		},
 		created() {
-			version.autoUpdateVersion();
+            version.autoUpdateVersion();
 		},
 		mounted() {},
 		methods: {}

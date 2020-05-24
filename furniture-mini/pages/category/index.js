@@ -7,7 +7,7 @@ Page({
     scrollHeight: 0,
 
     // 一级分类：指针
-    curNav: true,
+    curNav: 0,
     curIndex: 0,
 
     // 分类列表
@@ -68,6 +68,7 @@ Page({
         })
         let typeList = []
         let list = data || []
+        let curNav = 0;
         list.forEach((item) => {
           let typeItem = {
             bannerImageList: item.bannerImage ? item.bannerImage.split(',') : [],
@@ -77,9 +78,10 @@ Page({
           }
           typeList.push(typeItem)
         })
+        curNav = list[0].typeId;
         that.setData({
           list: typeList,
-          curNav: list.length > 0 ? list[0].category_id : true,
+          curNav,
           notcont: !list.length
         });
       },
@@ -89,7 +91,7 @@ Page({
           loading: false
         })
         wx.showToast({
-          title: app.globalData.msgUnknown,
+          title: err.message || app.globalData.msgUnknown,
           icon: 'none'
         })
       }
@@ -106,6 +108,27 @@ Page({
       curNav,
       curIndex,
       scrollTop: 0
+    });
+  },
+  toSearch(e) {
+    let typeId = app.getEventDataset(e).typeId;
+    let typeFirstId = this.data.curNav;
+    wx.navigateTo({
+      url: '/pages/search/index?typeSecondId=' + typeId + '&typeFirstId=' + typeFirstId,
+    })
+  },
+  
+  /**
+   * 搜索
+   */
+
+  search(e) {
+    let name = e.detail.value
+    if (name == '') {
+      return
+    }
+    wx.navigateTo({
+      url: '/pages/category/list?name=' + name
     });
   }
 

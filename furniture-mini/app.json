@@ -14,9 +14,13 @@
     "pages/vi/detail",
     "pages/vi/index",
     "pages/shopping-cart/shopping",
+    "pages/shopping-cart/pay-result",
+    "pages/shopping-cart/checkout",
     "pages/my/fans",
     "pages/find/search",
-    "pages/search/index"
+    "pages/search/index",
+    "pages/my/visit",
+    "pages/my/about"
   ],
   "window": {
     "navigationBarBackgroundColor": "#ffffff",
@@ -26,7 +30,8 @@
     "navigationBarTextStyle": "black"
   },
   "usingComponents": {
-    "shortcut": "/components/shortcut/shortcut"
+    "shortcut": "/components/shortcut/shortcut",
+    "loginModal": "/components/loginModal/index"
   },
   "tabBar": {
     "color": "#666666",

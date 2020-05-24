@@ -2,7 +2,7 @@
 	<el-dialog
 		:id="domId"
 		:title="title"
-		width="480px"
+		width="600px"
 		:visible.sync="visible"
 		:close-on-click-modal="DIALOG_MODAL_CLOSE"
 		:close-on-press-escape="DIALOG_ESC_CLOSE"
@@ -18,17 +18,31 @@
 			@submit.native.prevent
 			label-width="95px"
 		>
-			<el-form-item label="文章标题：" size="small" prop="roleName">
-				<el-input v-model="form.roleName" placeholder="请输入角色名称"></el-input>
+			<el-form-item label="VR标题：" size="small" prop="vrTitle">
+				<el-input v-model="form.vrTitle" placeholder="请输入VR标题"></el-input>
 			</el-form-item>
-			<el-form-item label="详细链接：" size="small" prop="remark">
-				<el-input v-model="form.remark" placeholder="请输入角色描述"></el-input>
+			<el-form-item label="是否发布:" size="small">
+				<el-select v-model="form.vrStatus" placeholder="默认不发布" style="width: 100%">
+					<el-option
+						v-for="item in enumCommodityPerfectStatus.arr"
+						:key="item.value"
+						:label="item.text"
+						:value="item.value"
+					>
+					</el-option>
+				</el-select>
 			</el-form-item>
-			<el-form-item label="封面图片：" size="small">
+			<el-form-item label="封面图片：" size="small" prop="vrImage">
 				<ComUploadSinglePicture
-					@change="changePic(key, url)"
-					@imagePreview="imagePreview"
+					:styleBox="true"
+					ref="commodityTypeSinglePic"
+					@change="changeSinglePicture"
 				></ComUploadSinglePicture>
+			</el-form-item>
+
+			<!-- 富文本 -->
+			<el-form-item label="VR链接:" size="small" prop="vrLink">
+				<el-input v-model="form.vrLink" placeholder="请输入VR标题"></el-input>
 			</el-form-item>
 		</el-form>
 		<div slot="footer">
@@ -43,31 +57,38 @@
 
 <script>
 	import formMixin from "@mixins/form.mixin";
+	import Tinymce from "@com/tinymce";
+	import { enumCommodityPerfectStatus } from "@common/enums/index";
+	import { addAndUpdateVr, getVrDetail } from "@api/information/vr";
 
 	export default {
 		mixins: [formMixin],
+		components: { Tinymce },
 		data() {
 			return {
+				enumCommodityPerfectStatus,
 				form: {
-					roleId: "", //角色id
-					roleName: "", //角色名称
-					remark: "" //角色描述
+					vrId: "", //id
+					vrTitle: "", // 标题
+					vrStatus: 0, // 文章状态 0：未发布 1:已发布
+					vrImage: "", //图片
+					vrLink: ""
 				},
 				params: {
 					roleId: ""
 				},
 				rules: {
-					roleName: [
+					vrTitle: [
 						{
 							required: true,
-							message: "不能为空",
+							message: "文章标题不能为空",
 							trigger: "blur"
 						}
 					],
-					remark: [
+					vrImage: [
 						{
 							required: true,
-							message: "不能为空",
+							message: "请上传图片",
 							trigger: "blur"
 						}
 					]
@@ -77,34 +98,104 @@
 		methods: {
 			close() {
 				this.reset();
+				if (this.$refs.commodityTypeSinglePic) {
+					this.$refs.commodityTypeSinglePic.data = "";
+				}
 				this.visible = false;
 				this.submitting = false;
 			},
-			load(id = 0) {
-				this.visible = true;
-				if (id > 0) {
-					this.title = "修改角色";
-					this.query(); // 获取角色信息
+			load(vrId = 0) {
+				if (vrId > 0) {
+					this.form.vrId = vrId;
+					this.title = "修改VR";
+					this.query();
 				} else {
-					this.title = "新增角色";
+					this.title = "新增VR";
+					this.visible = true;
+					this.$nextTick(() => {
+						this.$nextTick(() => {
+							if (this.$refs.commodityTypeSinglePic) {
+								this.$refs.commodityTypeSinglePic.data = "";
+							}
+						});
+						if (this.$refs.content) {
+							this.$refs.content.initFormTinymce();
+						}
+					});
 				}
 			},
 			submit() {
 				let that = this;
 				that.$refs.form.validate(valid => {
 					if (valid) {
-						console.log(valid);
-						that.visible = false;
-						that.$message.success("提交成功", that);
-						that.$emit("success");
+						that.submitting = true;
+						let formData = {
+							vrImage: that.form.vrImage,
+							vrLink: that.form.vrLink,
+							vrTitle: that.form.vrTitle,
+							vrStatus: that.form.vrStatus
+						};
+						if (that.form.vrId > 0) {
+							formData["vrId"] = that.form.vrId;
+						}
+						addAndUpdateVr(formData)
+							.then(data => {
+								if (data.succeed) {
+									that.visible = false;
+									that.$message.success(
+										that.form.vrId > 0 ? "修改成功" : "添加成功",
+										that
+									);
+									that.close();
+									that.$emit("success");
+									that.visible = false;
+								} else {
+									that.$message.warning(
+										data.body.message || that.MSG_UNKNOWN,
+										that
+									);
+								}
+							})
+							.catch(err => {
+								that.$message.warning(err.body.message || that.MSG_UNKNOWN, that);
+							})
+							.finally(() => {
+								that.submitting = false;
+							});
 					} else {
 						console.log("Failure of form validation!!");
 					}
 				});
 			},
-			query() {},
-			changePic(key, url) {
-				console.log(key, url);
+			query() {
+				let that = this;
+				that.$nextTick(() => {
+					getVrDetail({ vrId: that.form.vrId })
+						.then(data => {
+							if (data.succeed) {
+								that.setFormData(that.form, data.body);
+								that.$nextTick(() => {
+									if (that.$refs.commodityTypeSinglePic) {
+										that.$refs.commodityTypeSinglePic.data =
+											that.form.vrImage || "";
+									}
+								});
+								that.visible = true;
+							} else {
+								that.$message.warning(data.body.message || that.MSG_UNKNOWN, that);
+							}
+						})
+						.catch(err => {
+							that.$message.warning(err.body.message || that.MSG_UNKNOWN, that);
+						})
+						.finally(() => {
+							that.submitting = false;
+						});
+				});
+			},
+			changeSinglePicture(key, value) {
+				console.log(key, value);
+				this.form.vrImage = value;
 			}
 		}
 	};

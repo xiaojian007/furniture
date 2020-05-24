@@ -1,10 +1,10 @@
 /**
  * 订单板块路由
- * @author shlijian@ininin.com
+ * @author lijian
  * @since 2020-02-24
  * @version 1.0.0
  * @description 订单板块路由创建
- * @copyright ininin.com
+ * @copyright lijian
  */
 import permission from "@config/config.permission";
 export default [
@@ -27,15 +27,15 @@ export default [
             icon: "user",
             auth: [permission.VALUE_CHAIN_LOOK]
 		}
-	},
-	{
-		path: "applets-list",
-		name: "applets-list",
-		component: () => import(/* webpackChunkName: "applets-list" */ "@views/user/AppletsList.vue"),
-		meta: {
-			label: "小程序用户",
-			icon: "mini-product",
-            auth: [permission.VALUE_CHAIN_LOOK]
-		}
 	}
+	// {
+	// 	path: "applets-list",
+	// 	name: "applets-list",
+	// 	component: () => import(/* webpackChunkName: "applets-list" */ "@views/user/AppletsList.vue"),
+	// 	meta: {
+	// 		label: "小程序用户",
+	// 		icon: "mini-product",
+    //         auth: [permission.VALUE_CHAIN_LOOK]
+	// 	}
+	// }
 ];

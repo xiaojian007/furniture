@@ -3,6 +3,6 @@
   "usingComponents": {
     "shortcut": "/components/shortcut/shortcut",
     "skulist": "/components/skulist/sku",
-    "share-box": "/components/shareBox/index"
+    "shareBox": "/components/shareBox/index"
   }
 }

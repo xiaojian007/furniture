@@ -10,6 +10,9 @@ Page({
    * 页面的初始数据
    */
   data: {
+    modalName: '', // 登录弹出
+    
+    isCanDraw: false, // 分享
     articleId: '',
     detail: {},
     hasInvitCode: false
@@ -63,22 +66,6 @@ Page({
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () { },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function (res) {
-    app.shareRecord()
-    const code = app.getInviteCode()
-    app.isShowNewPage = true
-    const articleId = this.data.articleId
-    console.log('/pages/news/detail?invitCode=' + code + '&articleId=' + articleId)
-    return {
-      title: this.data.detail.title || '发现详情',
-      imageUrl: app.globalData.QINIU_DOWNLOAD + app.globalData.SHARE_IMAGE,
-      path: '/pages/news/detail?invitCode=' + code + '&articleId=' + articleId
-    }
-  },
 
   /**
    * 网页向小程序 postMessage 时，会在特定时机（小程序后退、组件销毁、分享）触发并收到消息。e.detail = { data }
@@ -137,5 +124,39 @@ Page({
     wx.switchTab({
       url: '/pages/news/index'
     })
-  }
+  },
+
+  // 分享
+  share() {
+    let that = this
+    app.authSettingCheck((boolean) => {
+      if (boolean) {
+        that.setData({
+          isCanDraw: !that.data.isCanDraw
+        })
+      } else {
+        that.setData({
+          modalName: 'DialogModal1'
+        })
+      }
+    })
+  },
+  // 显示弹出
+  showModal(e) {
+    this.setData({
+      modalName: e.currentTarget.dataset.target
+    })
+  },
+  // 关闭弹出
+  hideModal(e) {
+    this.setData({
+      modalName: null
+    })
+  },
+  // 授权手回调
+  successBack() {
+    this.onShow()
+  },
+  //调用弹出生成分享图片
+  createShareImage(){}
 })

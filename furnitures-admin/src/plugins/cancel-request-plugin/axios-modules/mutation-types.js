@@ -1,10 +1,10 @@
 /**
  * mutation变量
- * @author shlijian@ininin.com
+ * @author lijian
  * @since 2020-02-21
  * @version 1.0.0
  * @description 取消请求插件动态vuex状态的 mutation变量
- * @copyright ininin.com
+ * @copyright lijian
  */
 
 // 更新当前路由

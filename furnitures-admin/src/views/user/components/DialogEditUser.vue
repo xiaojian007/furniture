@@ -21,8 +21,8 @@
 			<el-form-item label="用户姓名：" size="small" prop="userName">
 				<el-input v-model="form.userName" placeholder="请输入用户姓名"></el-input>
 			</el-form-item>
-			<el-form-item label="用户账号：" size="small" prop="remark">
-				<el-input v-model="form.remark" placeholder="请输入用户手机号"></el-input>
+			<el-form-item label="用户账号：" size="small" prop="mobile">
+				<el-input v-model="form.mobile" placeholder="请输入用户手机号"></el-input>
 			</el-form-item>
 			<!-- <el-form-item label="邮箱：" size="small">
 				<el-input v-model="form.remark" placeholder="请输入用户邮箱"></el-input>
@@ -80,10 +80,19 @@
 							trigger: "blur"
 						}
 					],
-					remark: [
+					mobile: [
 						{
 							required: true,
 							message: "不能为空",
+							trigger: "blur"
+                        },
+                        {
+							type: "string",
+							pattern: this.RE.mobile,
+							message: "请输入正确的手机号",
+							transform(value) {
+								return String(value).trim();
+							},
 							trigger: "blur"
 						}
 					],
@@ -103,12 +112,14 @@
 				this.visible = false;
 				this.submitting = false;
 			},
-			load(id = 0) {
+			load(row = {}) {
 				this.visible = true;
-				if (id > 0) {
+				if (row.userId > 0) {
                     this.title = "修改用户";
-                    this.form.userId = id;
-					this.query(); // 获取用户信息
+                    this.form.userId = row.userId;
+                    this.form.mobile = row.mobile;
+                    this.form.roleId = row.roleId;
+                    this.form.userName = row.userName;
 				} else {
 					this.title = "新增用户";
 				}
@@ -121,12 +132,14 @@
 						let formData = {
                             roleId: that.form.roleId, //角色id
                             mobile: that.form.mobile,
-							userName: that.form.userName
+                            userName: that.form.userName,
+                            userType: 1,
+                            password: '123456'
 						};
 						if (that.form.userId > 0) {
 							formData["userId"] = that.form.userId;
 						}
-                        addAndUpdateUser({userInfoDto: formData})
+                        addAndUpdateUser(formData)
 							.then(data => {
 								if (data.succeed) {
 									that.visible = false;
@@ -153,8 +166,7 @@
 						console.log("Failure of form validation!!");
 					}
 				});
-			},
-			query() {}
+			}
 		}
 	};
 </script>

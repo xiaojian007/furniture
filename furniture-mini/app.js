@@ -19,8 +19,12 @@ const util = require('utils/util.js')
 App({
   loginChecking: false, //登录检查完毕
   isShowNewPage: false, //是否是弹出页面
+  parentUserId: 0,
   onLaunch: function (options) {
     // this.clearAuth() // 清除缓存
+    if (options.query.userId) {
+      this.parentUserId = options.query.userId
+    }
     console.log('app.onLaunch', options)
   },
   /**
@@ -89,7 +93,7 @@ App({
     this.loginChecking = true
     data = data || {}
     this.globalData.token = data.openid || ''
-    this.setFormData(this.globalData.userInfo, data)
+    // this.setFormData(this.globalData.userInfo, data)
     this.globalData.userInfo.userId = data.userId || ''
     this.globalData.userInfo.openId = data.openid || ''
     this.setStorage(this.globalData.STORAGE_KEY_TOKEN, data)
@@ -132,14 +136,12 @@ App({
       options.success = function (res) {
         if (res.data.code === '200') {
           opts.success && opts.success(res.data.body)
-        } else if (res.data.resultCode == 1003) {
+        } else if (res.data.code === '404') {
           that.setAuth()
           that.setStorage(that.globalData.STORAGE_KEY_TOKEN, () => {
             opts.fail && opts.fail(res.data)
           })
-        } else if (res.data.message && res.data.status === 400 && res.data.message.indexOf('X_OPERATOR_ID') > -1) {
-          that.setAuth()
-        } else if (res.data.resultCode == 1006) {
+        } else if (res.data.code === '500') {
           opts.fail && opts.fail(res.data)
         } else {
           opts.fail && opts.fail(res.data)
@@ -161,7 +163,7 @@ App({
    * 登录检查
    * @param {pageObj} 组件页面的this
    * @param {callback} 回调函数
-   * @param {isUser} 是否需要更新用户信息
+   * @param {isUser} 是否从分享进来的
    * 登录检查
    */
   loginCheck(pageObj, callback, isUser = true) {
@@ -262,6 +264,10 @@ App({
                 openid: data.openid,
                 userId: data.userId
               }
+              // 是否是分享进来的
+              if(this.parentUserId !== 0) {
+                this.userGrade(data.userId)
+              }
               this.setAuth(loginData)
               wx.hideLoading()
               console.log('登录成功', data)
@@ -284,6 +290,25 @@ App({
         callback({})
       }
     })
+  },
+  /**
+   * 分享进入绑定登记
+   */
+  userGrade(childUserId) {
+    this.request({
+      method: 'POST',
+      url: 'usergrade/save',
+      data: {
+        childUserId: childUserId,
+        parentUserId: this.parentUserId
+      },
+      success: (data) => {
+        console.log(data)
+      },
+      fail: (err) => {
+        console.log('登录失败', err)
+      }
+    }, false)
   },
   /**
    * 更新用户信息
@@ -424,10 +449,11 @@ App({
       country: "",
       gender: 0,
       language: "",
-      nickName: "@小贱",
-      province: "上海市",
+      nickName: "",
+      province: "",
       unionid: "",
       moblie: ''
-    }
+    },
+    msgUnknown: '网络不稳定，请稍后重试！'
   }
 })

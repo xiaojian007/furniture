@@ -8,9 +8,6 @@ Page({
    * 页面的初始数据
    */
   data: {
-    H5_URL: app.globalData.H5_URL,
-    QINIU_DOWNLOAD: app.globalData.QINIU_DOWNLOAD,
-    thumbnail: '?',
     list: []
   },
 
@@ -19,6 +16,7 @@ Page({
    */
   params: {
     pageNum: 1,
+    articleTitle: '',
     pageSize: 15
   },
 
@@ -76,34 +74,13 @@ Page({
   },
 
   /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-    app.shareRecord()
-    const code = app.getInviteCode()
-    app.isShowNewPage = true
-    return {
-      title: '微供资讯创造价值',
-      imageUrl: app.globalData.QINIU_DOWNLOAD + app.globalData.SHARE_IMAGE,
-      path: '/pages/find/index?invitCode=' + code
-    }
-  },
-
-  /**
-   * 点击 tab 时触发
-   */
-  onTabItemTap: function () {
-    this.getList()
-  },
-
-  /**
    * 打开详情
    */
   openDetail: function (e) {
     this.showDetail = true
     let dataset = app.getEventDataset(e)
     wx.navigateTo({
-      url: '/pages/find/detail?newsId=' + dataset.newsId
+      url: './detail?id=' + dataset.id
     })
   },
 
@@ -136,20 +113,17 @@ Page({
       })
     }
     app.request({
-      url: app.globalData.API_NEWS_URL + 'message/article/not_login_article',
+      url: 'vrnews/page',
       data: that.params,
       method: 'GET',
       success(res) {
         wx.hideLoading()
         wx.stopPullDownRefresh()
         let list = res.list || []
-        list.forEach(item => {
-          item.tags = util.jsonParse(item.tag) || []
-        })
         that.setData({
           loading: false,
           list: nextPage ? [...that.data.list, ...list] : list,
-          total: res.totalCount || 0
+          total: res.total || 0
         })
       },
       fail(err) {
