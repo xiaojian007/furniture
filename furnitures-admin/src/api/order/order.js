@@ -20,7 +20,7 @@ export const getOrderList = params => {
 	return get("/order/page", params);
 };
 /**
- * 获取订单列表
+ * 获取订单详情
  * @param {Object} params 参数
  * @returns {Promise} 返回一个promise
  */

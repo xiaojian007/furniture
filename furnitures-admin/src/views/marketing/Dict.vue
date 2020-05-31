@@ -70,6 +70,9 @@
 									<el-button type="text" @click="deleteInfo(scope.row.dictId)">
 										删除
 									</el-button>
+									<el-button type="text" @click="updateInfo(scope.row)">
+										置顶
+									</el-button>
 								</template>
 								<template v-else-if="field.prop === 'dictValue'">
 									<el-image
@@ -114,7 +117,7 @@
 <script>
 	import listMixin from "@mixins/list.mixin";
 	import EditInfo from "./components/DialogEditDict";
-	import { deteleDict, getDictList } from "@api/marketing/index";
+	import { deteleDict, getDictList, updateDict } from "@api/marketing/index";
 
 	export default {
 		mixins: [listMixin],
@@ -202,8 +205,8 @@
 				that.loading = true;
 				let paramsData = {
 					pageNum: that.params.pageNum,
-                    pageSize: that.params.pageSize,
-                    dictCode: 'banner_image'
+					pageSize: that.params.pageSize,
+					dictCode: "banner_image"
 				};
 				getDictList(paramsData)
 					.then(data => {
@@ -250,6 +253,30 @@
 							that.querying = false;
 						});
 				});
+			},
+			updateInfo(row) {
+				let that = this;
+				let params = {
+					dictCode: row.dictCode,
+                    dictKey: row.dictKey,
+                    dictId: row.dictId,
+					dictValue: row.dictValue
+				};
+				updateDict(params)
+					.then(data => {
+						if (data.succeed) {
+							that.$message.success("已置顶", that);
+							that.query();
+						} else {
+							that.$message.warning(data.body.message || that.MSG_UNKNOWN, that);
+						}
+					})
+					.catch(err => {
+						that.$message.warning(err.body.message || that.MSG_UNKNOWN, that);
+					})
+					.finally(() => {
+						that.querying = false;
+					});
 			}
 		}
 	};

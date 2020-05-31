@@ -14,7 +14,7 @@ import order from "./order"; // 订单
 import user from "./user"; // 用户
 import information from "./information"; // 咨讯
 import commodity from "./commodity"; // 商品
-import reservation from "./information"; // 预约
+import reservation from "./reservation"; // 预约
 import commission from "./commission"; // 佣金
 import marketing from "./marketing"; // 营销
 const state = {

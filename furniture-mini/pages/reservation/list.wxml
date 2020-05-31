@@ -1,0 +1,18 @@
+<!--pages/my/fans.wxml-->
+<view class="fans">
+	<view class="fans-top">
+		<view class="fans-number">{{total}}</view>
+		<view class="fans-title">我的预约</view>
+	</view>
+	<scroll-view class="fans-list">
+		<view class="fans-item" wx:for="{{list}}" wx:key='index'>
+			<view class="fans-img">
+				<image mode="aspectFill" src="{{item.childUserImage || 'http://47.101.209.229/photo/1590413719258.png'}}"></image>
+			</view>
+			<view class="fans-name">
+				<view>{{item.subscribeNickName}}</view>
+				<view>{{item.mobile}}</view>
+			</view>
+		</view>
+	</scroll-view>
+</view>

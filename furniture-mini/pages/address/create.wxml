@@ -41,7 +41,7 @@
 					<text class="f-30">详细地址</text>
 				</view>
 				<view class="right-cont flex-box">
-					<input name="detail" placeholder="请填写道理/小区地址/门牌号/单元室" type="text" value="{{detail}}"></input>
+					<input name="detail" placeholder="请填写街道/小区地址/门牌号/单元室" type="text" value="{{detail}}"></input>
 				</view>
 			</view>
 		</view>

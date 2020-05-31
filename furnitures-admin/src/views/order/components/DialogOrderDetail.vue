@@ -36,12 +36,6 @@
 							{{ orderInfo.memo || "-" }}
 						</div>
 					</div>
-                    <div class="el-form-item">
-						<label class="el-form-item__label">备注:</label>
-						<div class="el-form-item__content">
-							{{ enumOrderStatus.obj[orderInfo.orderStatus] }}
-						</div>
-					</div>
 				</el-col>
 				<el-col :span="12">
 					<div class="el-form-item">
@@ -57,6 +51,12 @@
 						</div>
 					</div>
 					<div class="el-form-item">
+						<label class="el-form-item__label">发货时间:</label>
+						<div class="el-form-item__content">
+							{{ orderInfo.deliveryTime || "-" }}
+						</div>
+					</div>
+                    <div class="el-form-item">
 						<label class="el-form-item__label">物流:</label>
 						<div class="el-form-item__content">
 							{{ orderInfo.deliveryCompany || "-" }}
@@ -135,7 +135,8 @@
 					receiver: "", // 收货人
                     receiverPhone: "", // 收货人手机号
                     addressName: "", // 收货地址
-					orderNo: "", //订单号
+                    orderNo: "", //订单号
+                    deliveryTime: "", // 发货时间
 					deliveryCompany: "", //物流公司
 					deliverySn: "", //物流单号
 					memo: "", //订单备注
@@ -165,6 +166,7 @@
 								orderNo: detail.orderNo, //订单号
 								deliveryCompany: detail.deliveryCompany, //物流公司
 								deliverySn: detail.deliverySn, //物流单号
+                                deliveryTime: detail.deliveryTime, // 发货
 								memo: detail.memo, //订单备注
 								orderStatus: detail.orderStatus, // 订单状态
 								totalPreAmount: detail.totalPreAmount, //应付总价格

@@ -3,17 +3,23 @@
   top: 120vh;
 }
 
-.sku-pop.cu-modal.show{
+
+.container{
+  background: #f3f3f3;
+}
+
+.sku-pop.cu-modal.show {
   top: 0;
 }
 
-.sku-pop .cu-dialog{
+.sku-pop .cu-dialog {
   z-index: 2;
 }
 
 .slide-image {
   background: #fff;
 }
+
 .banner-box {
   height: 750rpx;
   border-bottom: 1rpx solid #e4e4e4;
@@ -349,19 +355,20 @@
 }
 
 
-.detail-img{
+.detail-img {
   width: 100%;
 }
-.detail-img image{
+
+.detail-img image {
   width: 100%;
 }
 
 /* 分享按钮 */
-.container .cont-box{
+.container .cont-box {
   position: relative;
 }
 
-.container .cont-box .share{
+.container .cont-box .share {
   position: absolute;
   right: 20rpx;
   top: 20rpx;

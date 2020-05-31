@@ -8,17 +8,17 @@
  */
 import permission from "@config/config.permission";
 export default [
-	{
-		path: "marketing-list",
-		name: "marketing-list",
-		component: () =>
-			import(/* webpackChunkName: "marketing-list" */ "@views/marketing/MiniPhoto.vue"),
-		meta: {
-			label: "小程序精选",
-			icon: "role",
-			auth: [permission.VALUE_CHAIN_LOOK]
-		}
-    },
+	// {
+	// 	path: "marketing-list",
+	// 	name: "marketing-list",
+	// 	component: () =>
+	// 		import(/* webpackChunkName: "marketing-list" */ "@views/marketing/MiniPhoto.vue"),
+	// 	meta: {
+	// 		label: "小程序精选",
+	// 		icon: "role",
+	// 		auth: [permission.VALUE_CHAIN_LOOK]
+	// 	}
+    // },
     {
 		path: "dict-list",
 		name: "dict-list",

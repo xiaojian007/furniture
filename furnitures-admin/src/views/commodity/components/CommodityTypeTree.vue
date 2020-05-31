@@ -226,7 +226,9 @@
 
 		& .el-tree {
 			color: #333;
-			font-size: 14px;
+            font-size: 14px;
+            height: 600px;
+            overflow: auto;
 			background: transparent;
 		}
 

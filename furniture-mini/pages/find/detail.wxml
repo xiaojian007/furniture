@@ -5,10 +5,10 @@
 	<view class="content p20">
 		<template is="wxParse" data="{{wxParseData:article.nodes}}" />
 	</view>
-	<view class="footer weui-flex space-between p20">
+	<!-- <view class="footer weui-flex space-between p20">
 		<view class="date">{{detail.updateTime}}</view>
 		<view class="source">来源：汀西海岸微商城</view>
-	</view>
+	</view> -->
 </view>
 <image bindtap='share' src='../../image/act-share.png' class='primary'></image>
 

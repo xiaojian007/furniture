@@ -27,5 +27,15 @@ export default [
 			icon: "role",
             auth: [permission.VALUE_CHAIN_LOOK]
 		}
+	},
+    {
+		path: "aout",
+		name: "aout",
+		component: () => import(/* webpackChunkName: "info-list" */ "@views/information/About.vue"),
+		meta: {
+			label: "关于我们",
+			icon: "role",
+            auth: [permission.VALUE_CHAIN_LOOK]
+		}
 	}
 ];

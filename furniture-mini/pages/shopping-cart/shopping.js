@@ -39,7 +39,8 @@ Page({
     app.loginCheck(this, () => {
       this.setData({
         selectAllStatus: false,
-        totalPrice: 0
+        totalPrice: 0,
+        productList: []
       })
       this.query(false, true)
       // 价格方法
@@ -344,8 +345,43 @@ Page({
     this.setData({
       list: list
     });
-    // 调用计算金额方法
-    this.countPrice();
+    let goodDetail = this.data.list[index]
+    wx.showLoading()
+    let params = {
+      userId: app.globalData.userInfo.userId,
+      productId: goodDetail.productId,
+      shopId: goodDetail.shopId,
+      productName: goodDetail.title,
+      productSkuId: goodDetail.id,
+      productSkuIds: goodDetail.productSkuIds,
+      productSkuName: goodDetail.pro_name,
+      price: goodDetail.price,
+      quantity: num
+    }
+    app.request({
+      method: 'POST',
+      url: 'ordershopcart/update',
+      data: params,
+      success: (data) => {
+        wx.hideLoading()
+        wx.stopPullDownRefresh()
+        this.setData({
+          loading: false,
+        })
+        // 计算金额方法
+        this.countPrice();
+      },
+      fail: (err) => {
+        wx.hideLoading()
+        this.setData({
+          loading: false
+        })
+        wx.showToast({
+          title: err.message || app.globalData.msgUnknown,
+          icon: 'none'
+        })
+      }
+    })
   },
   // 提交订单
   btnSubmitOrder: function () {

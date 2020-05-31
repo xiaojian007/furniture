@@ -11,7 +11,8 @@ export default [
 	{
 		path: "",
         name: "logistics-distribution",
-		component: () => import(/* webpackChunkName: "logistics-distribution" */ "@views/logistics-distribution"),
+		component: () => import(/* webpackChunkName: "logistics-distribution" */ "@views/Home.vue"),
+		// component: () => import(/* webpackChunkName: "logistics-distribution" */ "@views/logistics-distribution"),
 		meta: {
             label: "首页",
             icon: "icon-visitList",

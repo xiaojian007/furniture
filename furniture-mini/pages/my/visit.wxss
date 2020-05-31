@@ -32,6 +32,8 @@
 .fans .fans-list{
   margin: 0 30rpx 30rpx;
   background: #fff;
+  min-height: calc(100vh - 214rpx);
+  box-sizing: border-box;
   padding: 50rpx 20rpx;
 }
 .fans .fans-item .fans-img{

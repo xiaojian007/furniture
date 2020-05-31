@@ -24,14 +24,14 @@
 					<el-form-item label="商品标题:" size="small" prop="name">
 						<el-input
 							v-model="form.name"
-							maxlength="20"
+							maxlength="40"
 							placeholder="请输入商品标题"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="商品简称:" size="small" prop="shortName">
 						<el-input
 							v-model="form.shortName"
-							maxlength="10"
+							maxlength="20"
 							placeholder="请输入商品简称"
 						></el-input>
 					</el-form-item>
@@ -191,7 +191,8 @@
 									<el-input
 										size="small"
 										class="dialog-input-center"
-										maxlength="4"
+                                        type="number"
+										maxlength="20"
 										v-model="scope.row.attributePrice"
 									></el-input>
 								</template>
@@ -206,7 +207,8 @@
 									<el-input
 										size="small"
 										class="dialog-input-center"
-										maxlength="4"
+										maxlength="10"
+                                        type="number"
 										v-model="scope.row.attributeStock"
 									></el-input>
 								</template>
@@ -377,13 +379,14 @@
 						let skuItem = {};
 						for (let i = 0; i < this.modifyCalcSkuList.length; i++) {
 							if (
-								updateSku.attributeNameList === this.modifyCalcSkuList[i].attributeNameList &&
+								updateSku.attributeNameList ===
+									this.modifyCalcSkuList[i].attributeNameList &&
 								updateSku.attributeIds === this.modifyCalcSkuList[i].attributeIds
 							) {
 								skuItem = this.modifyCalcSkuList[i];
 							}
-                        }
-                        console.log(skuItem)
+						}
+						console.log(skuItem);
 						if (skuItem.attributeIds) {
 							updateCalcSkuList.push({
 								attributeNameList: skuItem.attributeNameList, // 名称
@@ -502,7 +505,6 @@
 			},
 			submit() {
 				let that = this;
-				console.log(this.form);
 				that.$refs.form.validate(valid => {
 					if (valid) {
 						let typeFirstId = that.form.typeId[0];
@@ -559,6 +561,7 @@
 						if (that.form.productId > 0) {
 							formData["productId"] = that.form.productId;
 						}
+                        console.log('formDataformDataformData',formData);
 						addAndUpdateProduct(formData)
 							.then(data => {
 								if (data.succeed) {

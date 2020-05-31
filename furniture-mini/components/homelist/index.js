@@ -29,7 +29,7 @@ Component({
   data: {
     loading: false,
     topNumber: 0,
-    isShow: false,
+    isShow: false, // 是否已加载
     params: {
       pageNum: 0,
       pageSize: 10
@@ -91,9 +91,11 @@ Component({
       }
       this.getTypeProduct()
     },
-    query() {
-      if (this.data.isShow) {
-        return
+    query(bool = false) { // bool true 首页下拉刷新的时候
+      if (!bool) {
+        if (this.data.isShow) {
+          return
+        }
       }
       console.log(this.data.typeId, this.data.isShow)
       this.setData({
@@ -106,14 +108,8 @@ Component({
         this.getTypeDetail(this.data.typeId)
         this.getTypeProduct()
       }
-      // let imgUrls = [
-      //   'https://images.unsplash.com/photo-1551334787-21e6bd3ab135?w=640',
-      //   'https://images.unsplash.com/photo-1551214012-84f95e060dee?w=640',
-      //   'https://images.unsplash.com/photo-1551446591-142875a901a1?w=640'
-      // ]
-      // let homeImgUrls = imgUrls
       console.log('请求数据')
-      
+
     },
     // 精选
     getFeatured() {
@@ -169,9 +165,9 @@ Component({
         url: 'dict/page',
         data: params,
         success: (data) => {
-          let homeImgUrls =[]
+          let homeImgUrls = []
           let imgList = data.list || []
-          imgList.forEach(item=>{
+          imgList.forEach(item => {
             homeImgUrls.push(item.dictValue)
           })
           this.setData({
@@ -237,6 +233,12 @@ Component({
         return
       } else {
         pageNum += 1
+        this.setData({
+          params: {
+            pageNum: pageNum,
+            pageSize: this.data.params.pageSize
+          }
+        })
       }
       let params = {
         typeFirstId: this.data.typeId,

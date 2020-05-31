@@ -81,6 +81,9 @@
 								<template v-if="field.prop === 'orderTime'">
 									<div v-html="formatDateOutput(scope.row[field.prop])"></div>
 								</template>
+                                <template v-else-if="field.prop === 'updateTime'">
+									<div v-html="formatDateOutput(scope.row[field.prop])"></div>
+								</template>
 								<template v-else-if="field.prop === 'orderStatus'">
 									{{ enumOrderStatus.obj[scope.row[field.prop]] }}
 								</template>
@@ -98,13 +101,13 @@
 									>
 										发货
 									</el-button>
-									<el-button
+									<!-- <el-button
 										v-if="scope.row.orderStatus == 2"
 										type="text"
 										@click="receipt(scope.row.orderId)"
 									>
 										确认收货
-									</el-button>
+									</el-button> -->
 									<el-button type="text" @click="deletesOrder(scope.row.orderId)">
 										删除
 									</el-button>
@@ -229,6 +232,13 @@
 						prop: "deliveryCompany",
 						align: "center",
 						label: "物流公司"
+                    },
+                    {
+						show: true,
+						prop: "deliveryTime",
+						align: "center",
+						label: "发货时间",
+						width: 120
 					},
 					{
 						show: true,

@@ -187,7 +187,7 @@ Page({
   },
 
   chooseAddress: function (e) {
-    if (this.data.addressId > 0 && this.isShopping == 1) {
+    if (this.isShopping == 1) {
       let address = e.currentTarget.dataset.value;
       let pages = getCurrentPages();
       let prevPage = pages[pages.length - 2];  //上一个页面

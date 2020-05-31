@@ -85,12 +85,12 @@ Page({
             title: '取消中',
           })
           app.request({
-            url: 'order/update',
+            url: 'order/cancel',
             method: 'POST',
             data: params,
             success: (data) => {
               wx.hideLoading()
-              that.getOrderList(true)
+              that.onShow()
             },
             fail: (err) => {
               wx.hideLoading()
@@ -109,55 +109,169 @@ Page({
     });
   },
 
-  /**
+ /**
    * 发起付款
    */
-  payOrder: function (e) {
-    let _this = this;
-    let orderId = _this.data.orderId;
-
-    // 显示loading
-    wx.showLoading({ title: '正在处理...', });
-    App._post_form('user.order/pay', { orderId }, function (result) {
-      if (result.code === -10) {
-        App.showError(result.msg);
-        return false;
-      }
-      // 发起微信支付
-      wx.requestPayment({
-        timeStamp: result.data.timeStamp,
-        nonceStr: result.data.nonceStr,
-        package: 'prepay_id=' + result.data.prepay_id,
-        signType: 'MD5',
-        paySign: result.data.paySign,
-        success: function (res) {
-          _this.getOrderDetail(orderId);
-        },
-        fail: function () {
-          App.showError('订单未支付');
-        },
-      });
-    });
+  payOrder(e) {
+    let orderItem = app.getEventDataset(e).value
+    this.generateOrder(orderItem.totalRealAmount, orderItem.orderId, orderItem.orderNo)
   },
 
-  /**
-   * 确认收货
-   */
-  receipt: function (e) {
-    let _this = this;
-    let orderId = _this.data.orderId;
+
+  // 生成商户订单
+  generateOrder(totalPrice, orderId, orderNo) {
+    let that = this
+    let params = {
+      totalFee: totalPrice,
+      openId: app.globalData.userInfo.openId,
+      orderId: orderId,
+      orderNo: orderNo
+    }
+    app.request({
+      method: 'POST',
+      url: 'wechat/pay',
+      data: params,
+      success: (data) => {
+        wx.hideLoading()
+        let pay = data
+        if (data) {
+          //发起支付
+          let packages = pay.package
+          let paySign = pay.sign
+          let nonceStr = pay.nonceStr
+          let timeStamp = pay.timeStamp
+          let signType = pay.signType
+          let param = {
+            timeStamp: timeStamp,
+            package: packages,
+            paySign: paySign,
+            signType: signType,
+            nonceStr: nonceStr
+          }
+          that.payMoney(param, orderId)
+        } else {
+          wx.showToast({
+            title: '支付失败，请稍后重试！',
+            icon: 'none',
+            duration: 1000
+          })
+        }
+      },
+      fail: (err) => {
+        wx.hideLoading()
+        this.setData({
+          loading: false
+        })
+        wx.showToast({
+          title: err.message || app.globalData.msgUnknown,
+          icon: 'none',
+          duration: 1000
+        })
+      }
+    })
+  },
+  payMoney(param, orderId) {
+    // 调起支付
+    wx.requestPayment({
+      timeStamp: param.timeStamp,
+      nonceStr: param.nonceStr,
+      package: param.package,
+      signType: param.signType,
+      paySign: param.paySign,
+      success: (res) => {
+        this.payOK(orderId)
+      },
+      fail: (res) => {
+        wx.showLoading({
+          title: '支付失败！',
+        })
+      },
+      complete: (res) => {
+       }
+    })
+  },
+  // 支付完成后修改订单状态
+  payOK(orderId) {
+    let that = this;
+    let params = {
+      orderId: orderId,
+      orderStatus: 1
+    }
+    wx.showLoading({
+      title: '取消中',
+    })
+    app.request({
+      url: 'order/update',
+      method: 'POST',
+      data: params,
+      success: (data) => {
+        wx.hideLoading()
+        wx.showToast({
+          title: '支付成功！',
+          icon: 'success'
+        })
+        that.onShow()
+      },
+      fail: (err) => {
+        wx.hideLoading()
+        this.setData({
+          loading: false
+        })
+        wx.showToast({
+          title: err.message || app.globalData.msgUnknown,
+          icon: 'none',
+          duration: 1000
+        })
+      }
+    })
+  },
+
+  // 确认收货
+  confirmReceive(e) {
+    let that = this;
+    let orderId = app.getEventDataset(e).value;
     wx.showModal({
       title: "提示",
-      content: "确认收到商品？",
+      content: "是否确认收货？",
       success: function (o) {
         if (o.confirm) {
-          App._post_form('user.order/receipt', { orderId }, function (result) {
-            _this.getOrderDetail(orderId);
-          });
+          let params = {
+            orderId: orderId,
+            orderStatus: 3
+          }
+          wx.showLoading({
+            title: '确认中',
+          })
+          app.request({
+            url: 'order/update',
+            method: 'POST',
+            data: params,
+            success: (data) => {
+              wx.hideLoading()
+              that.onShow()
+            },
+            fail: (err) => {
+              wx.hideLoading()
+              this.setData({
+                loading: false
+              })
+              wx.showToast({
+                title: err.message || app.globalData.msgUnknown,
+                icon: 'none',
+                duration: 1000
+              })
+            }
+          })
         }
       }
     });
   },
 
+  //回首页
+  goHome(e) {
+    wx.switchTab({
+      url: '/pages/home/index'
+    })
+  }
 
 });

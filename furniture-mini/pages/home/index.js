@@ -85,7 +85,9 @@ Page({
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-
+    wx.showNavigationBarLoading()  //在标题栏中显示加载
+    this.selectComponent("#homeList0").query(true)
+    this.onLoad()
   },
 
   /**
@@ -95,12 +97,6 @@ Page({
 
   },
 
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-
-  },
   // 获取滚动条当前位置
   scrollToupper(e) {
     let scrollTop = e.detail.detail.scrollTop
@@ -122,7 +118,7 @@ Page({
   // 预约
   goReservation() {
     wx.navigateTo({
-      url: '/pages/shopping-cart/index',
+      url: '/pages/reservation/index',
     })
   },
   /**

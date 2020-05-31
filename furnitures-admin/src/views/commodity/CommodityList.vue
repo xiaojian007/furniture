@@ -128,7 +128,10 @@
 							>
 								<template slot-scope="scope">
 									<template v-if="field.prop === 'operation'">
-										<el-button type="text" @click="$refs.seeCommdity.add(scope.row.productId)">
+										<el-button
+											type="text"
+											@click="$refs.seeCommdity.add(scope.row.productId)"
+										>
 											查看
 										</el-button>
 										<el-button
@@ -196,10 +199,7 @@
 			:treeList="productTreeList"
 			@success="queryCommodityList"
 		></EditCommodity>
-        <SeeCommodity
-			ref="seeCommdity"
-			:treeList="productTreeList"
-		></SeeCommodity>
+		<SeeCommodity ref="seeCommdity" :treeList="productTreeList"></SeeCommodity>
 	</div>
 </template>
 
@@ -350,7 +350,7 @@
 					let params = {
 						productId: id,
 						publishStatus: value ? 1 : 0
-                    };
+					};
 					updateFeaturedAndPutShelves(params)
 						.then(data => {
 							if (data.succeed) {
@@ -456,7 +456,7 @@
 					this.params.typeFirstId = data.data.parentId;
 					this.params.typeSecondId = data.data.id;
 				} else {
-					this.params.typeFirstId = data.data.id == 0 ? '' : data.data.id;
+					this.params.typeFirstId = data.data.id == 0 ? "" : data.data.id;
 				}
 				this.params.pageNum = 1;
 				this.queryCommodityList();
@@ -478,8 +478,8 @@
 			// 删除产品类别
 			handleDelTree(nodeData, node) {
 				let that = this;
-				console.log(node);
-				if (nodeData.children.length > 0) {
+				console.log(nodeData, node);
+				if (node.childNodes.length > 0) {
 					that.$message.warning("需要先删除本产品下的类型，再删除该类型！");
 					return false;
 				} else {
@@ -501,13 +501,13 @@
 										that.queryCommodityTree();
 									} else {
 										that.$message.warning(
-											data.body.message || "删除失败！",
+											data.message || "删除失败！",
 											that
 										);
 									}
 								})
 								.catch(err => {
-									that.$message.warning(err.body.message || "删除失败！", that);
+									that.$message.warning(err.message || "删除失败！", that);
 								})
 								.finally(() => {
 									that.querying = false;
@@ -571,15 +571,16 @@
 			},
 			// 产品类型数据重组
 			getTreeList(array) {
-				let that = this;
-				let productTreeList = [];
-				array.forEach(item => {
+                let that = this;
+                let productTreeList = [];
+                let list = array;
+				list.forEach(item => {
 					let productTreeItem = {
 						parentId: 0,
 						typeLevel: 1,
 						id: item.typeId,
 						label: item.typeName
-					};
+                    };
 					let productTreeChild = [];
 					item.typeVoList.forEach(itemChild => {
 						productTreeChild.push({
@@ -601,24 +602,24 @@
 						typeLevel: 0,
 						parentId: 0
 					}
-				];
+                ];
 			},
 			// 获取产品tree
 			queryCommodityTree() {
 				let that = this;
 				that.queryingTree = true;
 
-				getProductTypeList({})
+				getProductTypeList({hasSecond: true})
 					.then(data => {
 						if (data.succeed) {
-							let list = data.body || [];
+                            let list = data.body || [];
 							that.getTreeList(list);
 						} else {
-							that.$message.warning(data.body.message || that.MSG_UNKNOWN, that);
+							that.$message.warning(data.message || that.MSG_UNKNOWN, that);
 						}
 					})
 					.catch(err => {
-						that.$message.warning(err.body.message || that.MSG_UNKNOWN, that);
+						that.$message.warning(err.message || that.MSG_UNKNOWN, that);
 					})
 					.finally(() => {
 						that.queryingTree = false;

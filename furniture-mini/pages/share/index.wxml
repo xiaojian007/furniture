@@ -1,0 +1,5 @@
+<!--pages/share/index.wxml-->
+<view class="share">
+  <view class="name">汀 · 西海岸微商城-{{name}}</view>
+  <view>注册时间：{{time}}</view>
+</view>

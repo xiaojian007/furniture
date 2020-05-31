@@ -20,7 +20,11 @@
     "pages/find/search",
     "pages/search/index",
     "pages/my/visit",
-    "pages/my/about"
+    "pages/my/about",
+    "pages/reservation/index",
+    "pages/share/index",
+    "pages/invite/index",
+    "pages/reservation/list"
   ],
   "window": {
     "navigationBarBackgroundColor": "#ffffff",

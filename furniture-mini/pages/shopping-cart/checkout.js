@@ -19,10 +19,9 @@ Page({
     productList: [
     ],
     memo: '', //备注
-    agree: true,
     allTotal: 0 // 一共多少件
   },
-
+  orderNo: '', // 订单号，支付用
   /**
    * 生命周期函数--监听页面加载
    */
@@ -195,11 +194,6 @@ Page({
       }
     })
   },
-  changeAgree: function (e) {
-    this.setData({
-      agree: e.detail
-    })
-  },
   chooseAddress: function () {
     wx.navigateTo({
       url: '/pages/address/index?addressId=' + this.data.address.addressId + '&isShopping=1',
@@ -214,11 +208,12 @@ Page({
   // 去付款
   submitOrder: function () {
     let that = this
-    if (!this.data.agree) {
-      return;
-    }
+   
     let actualPrice = that.data.actualPrice;
     let addressId = that.data.address.addressId;
+    if (!addressId) {
+      return;
+    }
     let memo = that.data.memo || '';
     let shopIds = [];
     that.data.productList.forEach(item => {
@@ -240,9 +235,10 @@ Page({
       data: params,
       success: (data) => {
         wx.hideLoading()
+        that.orderNo = data || ''
         wx.showModal({
           title: '提示',
-          content: '已下单成功，请确认金额后点击支付',
+          content: '下单成功，请点击确认进行支付',
           showCancel: true,
           success: function (res) {
             if (res.confirm) {
@@ -280,6 +276,7 @@ Page({
     let that = this
     let params = {
       totalFee: totalPrice,
+      orderNo: that.orderNo,
       openId: app.globalData.userInfo.openId
     }
     app.request({

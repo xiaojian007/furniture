@@ -1,3 +1,2 @@
 <!--pages/vi/detail.wxml-->
 <web-view src="{{detail.vrLink || 'http://www.bbdmhome.com/pano/work/showView-4132.html'}}"></web-view>
-<!-- <web-view src="http://www.bbdmhome.com/pano/work/showView-4132.html"></web-view> -->

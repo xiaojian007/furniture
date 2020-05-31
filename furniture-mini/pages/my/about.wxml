@@ -1,15 +1,12 @@
-<!--pages/my/about.wxml-->
-<view class="about">
-  <text class="h6">雅格丽木家具海安有限公司</text>
-  <image class="image1" src="../../image/about1.jpg"></image>
-	<text class="content">公司，始于1996年，成立于2004年，是一家集全屋家具生产制造、设计研发、营销服务以及家居文化研究、投资贸易为一体的现代化综合性中国全实木家具企业。</text>
-	<text class="content">至臻细节、至精用材，雅格丽木在向消费者传达着一种流行的生活情趣，它满足了人们心灵深处时常在呼唤的反朴情结，自然就得到了众多都市新贵的万般宠爱。经过市场的考验，雅格丽木的团队把雅格丽木打磨的更加精致、更加娇媚。公司旗下拥有“汀•西海岸”系列——全球新美式家居开创者、“汀•西海岸”二代米娅系列——当代时尚休闲美式家居品牌、“汀·HOUSE”系列---轻奢美式青年家居品牌、“君士坦丁”系列——全球雅致法式家居开创品牌、“忆·兰亭”新中式系列等；</text>
-	<text class="content"> 企业现拥有现代化的生产基地12万平米，拥有套房家具生产的机械设备，引进美国高档家具油漆生产流水线、德国数控加工中心。</text>
-  <image class="image2" src="../../image/about2.jpg"></image>
-	<text class="content">2016年11月开始动工的雅格丽木工业园占地273亩，二、三、四辅助车间2018年投入使用，成为了华东地区乃至全国的纯实木家居制造企业。</text>
-	<text class="content">企业现有员工700余名，技术人员160余人，先后在全国范围内开设200余家专卖店，是华东地区负盛名的生产民用全实木家具的著名企业。销量连续8年位居华东实木家具企业前3，连续3年位居华东实木家具企业第一！美誉度连续10年位居华东实木家具企业第一。</text>
-  <text class="content">企业幕后有一支国际化的服务团队，有知名的外籍设计师，更重要的是他们认为追求休闲、回归自然、是一种还原真我的生活态度，因此为消费者提供一种反朴归真的时尚，既是我们的责任，也是我们的荣耀。</text>
-	<text class="content">汀西家居已在北京、上海、苏州、杭州、乐从、成都、重庆、西安、南京、武汉等125座城市开设了300多家专卖店。累计服务超过十万户家庭。在今天，越来越多的消费者选择汀·西海岸家居，因为货正价实、因为表里如一。</text>
-  <image class="image3" src="../../image/about3.jpg"></image>
-  <image class="image4" src="../../image/about4.jpg"></image>
+<!--pages/news/detail.wxml-->
+<import src="../../wxParse/wxParse.wxml" />
+<view class="container panel-fixed">
+	<!-- <view class="title p20 bold-text f16">{{detail.articleTitle}}</view> -->
+	<view class="content p20">
+		<template is="wxParse" data="{{wxParseData:article.nodes}}" />
+	</view>
+	<!-- <view class="footer weui-flex space-between p20">
+		<view class="date">{{detail.updateTime}}</view>
+		<view class="source">来源：汀西海岸微商城</view>
+	</view> -->
 </view>

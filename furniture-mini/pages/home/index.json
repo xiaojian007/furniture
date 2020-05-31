@@ -1,5 +1,6 @@
 {
   "usingComponents": {
     "homelist": "/components/homelist/index"
-  }
+  },
+  "enablePullDownRefresh": true
 }

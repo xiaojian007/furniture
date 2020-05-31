@@ -93,7 +93,7 @@ App({
     this.loginChecking = true
     data = data || {}
     this.globalData.token = data.openid || ''
-    // this.setFormData(this.globalData.userInfo, data)
+    this.setFormData(this.globalData.userInfo, data)
     this.globalData.userInfo.userId = data.userId || ''
     this.globalData.userInfo.openId = data.openid || ''
     this.setStorage(this.globalData.STORAGE_KEY_TOKEN, data)
@@ -330,6 +330,12 @@ App({
       url: 'wechat/saveUserInfo',
       data: params,
       success: (data) => {
+        // this.globalData.userInfo.avatarUrl = data.avatarUrl || ''
+        // this.globalData.userInfo.city = data.city || ''
+        // this.globalData.userInfo.province = data.province || ''
+        // this.globalData.userInfo.country = data.country || ''
+        // this.globalData.userInfo.nickName = data.nickName || ''
+        // this.globalData.userInfo.language = data.language || ''
         wx.hideLoading()
         this.setAuth(data)
         console.log('修改成功', data)

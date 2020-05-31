@@ -24,5 +24,8 @@
 		overflow: hidden;
 		align-items: center;
 		justify-content: center;
-	}
+    }
+    .text{
+        font-size: 36px;
+    }
 </style>

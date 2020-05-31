@@ -74,5 +74,5 @@
 
 <view class="bottom">
 	<view class="l">实付: ￥{{actualPrice}}</view>
-	<view class="r {{agree ? '' : 'disabled'}}" hover-class="{{agree ? 'active' : ''}}" bindtap="submitOrder">去付款</view>
+	<view class="r {{address.addressId ? '' : 'disabled'}}" hover-class="{{address.addressId ? 'active' : ''}}" bindtap="submitOrder">去付款</view>
 </view>

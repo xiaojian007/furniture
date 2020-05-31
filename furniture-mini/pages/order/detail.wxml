@@ -47,7 +47,7 @@
 		<view class="key">物流公司：</view>
 		<view class="value">{{order.deliveryCompany || '-'}}</view>
 	</view>
-	<view wx:if="{{order.orderStatus == 2 && order.orderStatus == 3}}"  class="wrap">
+	<view wx:if="{{order.orderStatus == 2 && order.orderStatus == 3}}" class="wrap">
 		<view class="key">物流单号：</view>
 		<view class="value">{{order.deliverySn|| '-'}}</view>
 	</view>
@@ -58,7 +58,7 @@
 </view>
 
 <view class="price-detail">
-<view class="wrap">
+	<view class="wrap">
 		<view class="key">下单时间：</view>
 		<view class="value">{{order.orderTime}}</view>
 	</view>
@@ -74,11 +74,13 @@
 		<view class="key">运费：</view>
 		<view class="value">￥{{order.expressPrice || 0}}</view>
 	</view>
-	<view class="wrap red-wrap">
-		<view class="key red" wx:if="{{order.orderStatus<=1}}">应付合计：</view>
-		<view class="key red" wx:if="{{order.orderStatus>=2}}">实付：</view>
-		<view class="value red">￥{{order.totalRealAmount}}</view>
-	</view>
+	<block wx:if="{{order.orderStatus!==4}}">
+		<view class="wrap red-wrap">
+			<view class="key red" wx:if="{{order.orderStatus<=1}}">应付合计：</view>
+			<view class="key red" wx:if="{{order.orderStatus>=2}}">实付：</view>
+			<view class="value red">￥{{order.totalRealAmount}}</view>
+		</view>
+	</block>
 </view>
 
 <view class="service">
@@ -100,7 +102,8 @@
 	<view wx:if="{{order.orderStatus!=0}}"></view>
 	<view class="btns">
 		<button data-value="{{order.orderId}}" wx:if="{{order.orderStatus==0}}" size="small" class="btn btn-cancel" bindtap="cancelOrder">取消订单</button>
-		<button data-value="{{order}}" wx:if="{{order.orderStatus==2}}" size="small" class="btn" bindtap="confirmReceive">确认收货</button>
-		<button data-value="{{order}}" wx:if="{{order.orderStatus==3 | order.orderStatus==4}}" size="small" class="btn" bindtap="buyAgain">再次购买</button>
+		<button data-value="{{order.orderId}}" wx:if="{{order.orderStatus==2}}" size="small" class="btn" bindtap="confirmReceive">确认收货</button>
+		<button data-value="{{order}}" wx:if="{{order.orderStatus==0}}" size="small" class="btn" bindtap="payOrder">去付款</button>
+		<button data-value="{{order}}" wx:if="{{order.orderStatus==3 | order.orderStatus==4}}" size="small" class="btn" bindtap="goHome">回首页</button>
 	</view>
 </view>

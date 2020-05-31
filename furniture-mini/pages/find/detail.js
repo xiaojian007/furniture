@@ -11,7 +11,6 @@ Page({
    */
   data: {
     modalName: '', // 登录弹出
-    
     isCanDraw: false, // 分享
     articleId: '',
     detail: {},
@@ -112,8 +111,11 @@ Page({
 
       },
       fail: err => {
-        console.log('资讯详情报错原因:', err)
         wx.hideLoading()
+        wx.showToast({
+          title: err.message || '系统繁忙',
+          icon: 'none'
+        })
       }
     }, false)
   },

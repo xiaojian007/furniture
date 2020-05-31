@@ -27,15 +27,15 @@ export default [
             icon: "user",
             auth: [permission.VALUE_CHAIN_LOOK]
 		}
+	},
+	{
+		path: "operation-log",
+		name: "operation-log",
+		component: () => import(/* webpackChunkName: "operation-log" */ "@views/user/OperationLog.vue"),
+		meta: {
+			label: "操作日志",
+			icon: "mini-product",
+            auth: [permission.VALUE_CHAIN_LOOK]
+		}
 	}
-	// {
-	// 	path: "applets-list",
-	// 	name: "applets-list",
-	// 	component: () => import(/* webpackChunkName: "applets-list" */ "@views/user/AppletsList.vue"),
-	// 	meta: {
-	// 		label: "小程序用户",
-	// 		icon: "mini-product",
-    //         auth: [permission.VALUE_CHAIN_LOOK]
-	// 	}
-	// }
 ];

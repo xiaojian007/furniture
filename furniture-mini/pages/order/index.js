@@ -153,7 +153,7 @@ Page({
             title: '取消中',
           })
           app.request({
-            url: 'order/update',
+            url: 'order/cancel',
             method: 'POST',
             data: params,
             success: (data) => {
@@ -182,16 +182,17 @@ Page({
    */
   payOrder(e) {
     let orderItem = app.getEventDataset(e).value
-    this.generateOrder(orderItem.totalRealAmount, orderItem.orderId)
+    this.generateOrder(orderItem.totalRealAmount, orderItem.orderId, orderItem.orderNo)
   },
 
 
   // 生成商户订单
-  generateOrder(totalPrice, orderId) {
+  generateOrder(totalPrice, orderId, orderNo) {
     let that = this
     let params = {
       totalFee: totalPrice,
       openId: app.globalData.userInfo.openId,
+      orderNo: orderNo,
       orderId: orderId
     }
     app.request({
@@ -246,7 +247,7 @@ Page({
       signType: param.signType,
       paySign: param.paySign,
       success: (res) => {
-        this.payOK(orderId)
+        that.getOrderList(false)
       },
       fail: (res) => {
         wx.showModal({
@@ -255,7 +256,6 @@ Page({
         })
       },
       complete: (res) => {
-        debugger
        }
     })
   },

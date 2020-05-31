@@ -1,0 +1,9 @@
+<!--pages/invite/index.wxml-->
+<view class="inivite">
+  <image class="bg" mode="widthFix" src="http://47.101.209.229/photo/share_bg.jpg"></image>
+  <image class="qrcode" src="{{qrImage}}"></image>
+  <view class="my-info">
+    <image class="avatarUrl" src="{{avatarUrl}}"></image>
+    <text>汀·西海岸微商城——{{name}}</text>
+  </view>
+</view>

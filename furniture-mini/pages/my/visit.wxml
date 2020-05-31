@@ -1,15 +1,15 @@
 <!--pages/my/fans.wxml-->
 <view class="fans">
 	<view class="fans-top">
-		<view class="fans-number">999</view>
-		<view class="fans-title">我的粉丝</view>
+		<view class="fans-number">{{total}}</view>
+		<view class="fans-title">我的访客</view>
 	</view>
 	<view class="fans-list">
-		<view class="fans-item" wx:for="{{[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]}}">
+		<view class="fans-item" wx:for="{{list}}" wx:key='index'>
 			<view class="fans-img">
-				<image mode="aspectFill" src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1586600782721&di=98630207a9dd72bf14dd816c5d526888&imgtype=0&src=http%3A%2F%2Fm.tuniucdn.com%2Ffb2%2Ft1%2FG2%2FM00%2FAF%2F3F%2FCii-T1gA04iIcXfZABp5vaXUmGYAADY2wOtpLIAGnnV994_w500_h280_c1_t0.png"></image>
+				<image mode="aspectFill" src="{{item.childUserImage}}"></image>
 			</view>
-			<view class="fans-name">会员昵称</view>
+			<view class="fans-name">{{item.childUserName}}</view>
 		</view>
 	</view>
 </view>

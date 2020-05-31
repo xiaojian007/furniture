@@ -13,7 +13,7 @@ export default [
 		name: "resere-list",
 		component: () => import(/* webpackChunkName: "resere-list" */ "@views/reservation/index.vue"),
 		meta: {
-			label: "预约列表",
+			label: "客户列表",
 			icon: "role",
             auth: [permission.VALUE_CHAIN_LOOK]
 		}

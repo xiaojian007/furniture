@@ -18,7 +18,7 @@
 		<swiper class="tab-content" current="{{currentTab}}" duration="500" bindchange="switchTab" style="height:{{winHeight}}rpx">
 			<swiper-item wx:for="{{tabList}}" wx:key="index">
 				<!-- 公共轮播 -->
-				<homelist bind:scrollToupper="scrollToupper" is-authorize="{{isAuthorize}}" is-home="{{index===0}}" type-id="{{index}}" id="homeList{{index}}"></homelist>
+				<homelist bind:scrollToupper="scrollToupper" is-authorize="{{isAuthorize}}" is-home="{{index===0}}" type-id="{{item.id}}" id="homeList{{index}}"></homelist>
 			</swiper-item>
 		</swiper>
 	</view>

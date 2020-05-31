@@ -134,7 +134,7 @@ Page({
         })
         console.log('资讯列表报错原因:', err)
         wx.showToast({
-          title: err.resultMsg || '系统繁忙',
+          title: err.message || '系统繁忙',
           icon: 'none'
         })
       }

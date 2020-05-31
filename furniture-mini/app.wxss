@@ -194,7 +194,7 @@ page {
 .widget-goTop {
   position: fixed;
   bottom: 150rpx;
-  z-index: 20;
+  z-index: 1112;
   right: 24rpx;
   height: 80rpx;
   width: 80rpx;
@@ -823,15 +823,17 @@ page {
 .wxParse-img {
   display: block;
   width: 100%;
-  margin: 0 auto;
+  margin: 10rpx auto;
 }
 
 .wxParse-inline {
   font-size: 28rpx;
-  text-indent: 2em;
+  text-indent: 1em;
   /* text-align: center; */
 }
-
+.wxParse-p{
+  margin-bottom: 20rpx;
+}
 .wxParse-div {
   overflow: hidden;
 }

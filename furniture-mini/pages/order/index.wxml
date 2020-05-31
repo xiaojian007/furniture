@@ -45,7 +45,7 @@
 						</view>
 					</view>
 					<view class="money">
-						<text>订单金额： <text class="text">￥ {{item.totalRealAmount | 0}}</text></text>
+						<text>订单金额： <text class="text">￥ {{item.totalRealAmount}}</text></text>
 					</view>
 					<view class="foot">
 						<view class="order-time">{{item.orderTime}}</view>
@@ -54,7 +54,7 @@
 							<button data-value="{{item.orderId}}" wx:if="{{item.orderStatus==0}}" size="small" class="btn btn-cancel" bindtap="cancelOrder">取消订单</button>
 							<button data-value="{{item}}" wx:if="{{item.orderStatus==0}}" size="small" class="btn" bindtap="payOrder">去付款</button>
 							<button data-value="{{item.orderId}}" wx:if="{{item.orderStatus==2}}" size="small" class="btn" bindtap="confirmReceive">确认收货</button>
-							<button data-value="{{item}}" wx:if="{{item.orderStatus==3 | item.orderStatus==4}}" size="small" class="btn" bindtap="buyAgain">再次购买</button>
+							<!-- <button data-value="{{item}}" wx:if="{{item.orderStatus==3 | item.orderStatus==4}}" size="small" class="btn" bindtap="buyAgain">再次购买</button> -->
 						</view>
 					</view>
 				</view>

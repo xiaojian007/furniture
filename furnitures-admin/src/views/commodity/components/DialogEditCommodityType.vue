@@ -116,15 +116,13 @@
 				that.$refs.form.validate(valid => {
 					if (valid) {
 						let formData = {
-							bannerImage:
-								"//n.sinaimg.cn/news/1_img/upload/cf3881ab/67/w1000h667/20200408/66a8-iryninw4454635.jpg,//n.sinaimg.cn/news/1_img/upload/cf3881ab/67/w1000h667/20200408/66a8-iryninw4454635.jpg",
+                            bannerImage: that.form.bannerImage ? that.form.bannerImage.join(',') : '',
+                            typeImage: that.form.typeImage,
 							parentId: that.form.parentId,
 							showHome: 0, // 首页是否展示 0:否 1:是
-							typeImage:
-								"//n.sinaimg.cn/news/1_img/upload/cf3881ab/67/w1000h667/20200408/66a8-iryninw4454635.jpg", // 分类图片
 							typeLevel: that.form.typeLevel,
 							typeName: that.form.typeName
-						};
+                        };
 						if (that.form.typeId) {
 							formData["typeId"] = that.form.typeId;
 						}

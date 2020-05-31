@@ -103,7 +103,7 @@ Page({
   },
 
   // 前往收货地址
-  toAdress(){
+  toAdress() {
     let that = this;
     if (that.data.isLogin) {
       // 转跳指定的页面
@@ -116,12 +116,40 @@ Page({
       })
     }
   },
-  toVisit(){
+  toVisit() {
     let that = this;
     if (that.data.isLogin) {
       // 转跳指定的页面
       wx.navigateTo({
         url: '/pages/my/visit'
+      })
+    } else {
+      that.setData({
+        modalName: 'DialogModal1'
+      })
+    }
+  },
+  // 预约
+  toReservation() {
+    let that = this;
+    if (that.data.isLogin) {
+      // 转跳指定的页面
+      wx.navigateTo({
+        url: '/pages/reservation/list',
+      })
+    } else {
+      that.setData({
+        modalName: 'DialogModal1'
+      })
+    }
+  },
+  // 会员权益
+  toVip() {
+    let that = this;
+    if (that.data.isLogin) {
+      // 转跳指定的页面
+      wx.navigateTo({
+        url: '/pages/share/index',
       })
     } else {
       that.setData({

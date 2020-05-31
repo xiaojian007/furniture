@@ -6,9 +6,7 @@
 
 <script>
 	import plugins from "./plugins";
-    import basePath from "@config/config.path";
-    console.log(basePath)
-    debugger
+	import basePath from "@config/config.path";
 	import toolbar from "./toolbar";
 	import fontFormats from "./fontFormats";
 	import axios from "axios";
@@ -110,7 +108,8 @@
 					// theme_url: '/static/tinymce4.7.5/theme/modern/theme.min.js',
 					// skin_url: '/static/tinymce4.7.5/skins/skin.min.css',
 					// content_css: '/static/tinymce4.7.5/skins/content.min.css',
-					selector: `#${this.tinymceId}`,
+                    selector: `#${this.tinymceId}`,
+                    convert_urls: false, //把ngnix线上的相对位置改为绝对位置
 					height: this.height,
 					object_resizing: false,
 					plugins,
@@ -176,8 +175,8 @@
 					.post("//47.101.209.229:8080/upload/image", formData)
 					.then(response => {
 						if (response.data && response.data.code === "200") {
-							const hash = response.data.body;
-                            const url = hash;
+							const url = response.data.body;
+							console.log(url);
 							success(url);
 						} else {
 							console.log(response.data.message);

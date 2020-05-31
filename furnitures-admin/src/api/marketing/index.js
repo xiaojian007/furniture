@@ -15,6 +15,10 @@ export const addAndUpdateDict = params => {
 	return post(url, params);
 };
 
+export const updateDict = params => {
+	return post('/dict/update', params);
+};
+
 /**
  * 获取数据列表
  * @param {Object} params 参数

@@ -28,10 +28,10 @@
 					<navigator url="/pages/order/index?type=all" class="weui-flex__item vi vi2" hover-class="none">
 						<text class="type-text">我的订单</text>
 					</navigator>
-					<navigator class="weui-flex__item vi vi3" hover-class="none">
+					<navigator url="/pages/share/index" class="weui-flex__item vi vi3" hover-class="none">
 						<text class="type-text"t>分享赚钱</text>
 					</navigator>
-					<navigator class="weui-flex__item vi vi4" hover-class="none">
+					<navigator url="/pages/invite/index" class="weui-flex__item vi vi4" hover-class="none">
 						<text class="type-text">会员邀请</text>
 					</navigator>
 				</view>

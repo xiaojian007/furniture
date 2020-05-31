@@ -1,0 +1,41 @@
+/* pages/invite/index.wxss */
+.inivite{
+  background-repeat: no-repeat;
+  background-color: #000;
+  background-size: contain;
+  height: 100vh;
+  position: relative;
+}
+.inivite .bg{
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  z-index: 1;
+  width: 100%;
+}
+.inivite .qrcode{
+  width: 14vw;
+  height: 14vw;
+  position: absolute;
+  left: 100rpx;
+  bottom: 234rpx;
+  z-index: 2;
+  
+}
+
+.inivite .my-info{
+  position: absolute;
+  top: 140rpx;
+  z-index: 3;
+  left: 80rpx;
+  display: flex;
+  align-items: center;
+  font-size: 24rpx;
+  color: #fff;
+}
+.my-info image{
+  width: 80rpx;
+  height: 80rpx;
+  margin-right: 20rpx;
+  border-radius: 50%;
+}

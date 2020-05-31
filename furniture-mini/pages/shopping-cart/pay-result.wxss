@@ -58,3 +58,29 @@ page{
   line-height: 32px !important;
   height: 34px !important;
 }
+.btns {
+  display: flex;
+  justify-content: flex-end;
+}
+
+
+.btn.btn-cancel {
+  border: 2rpx solid #3B7CF0;
+  color: #3B7CF0;
+  background: none;
+}
+
+.btn {
+  margin-left: 20rpx;
+  background: #3B7CF0;
+  font-size: 28rpx;
+  width: 180rpx;
+  height: 56rpx;
+  line-height: 56rpx;
+  border-radius: 56rpx;
+  color: #fff;
+}
+
+.btn::after {
+  display: none;
+}

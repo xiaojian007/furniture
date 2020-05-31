@@ -36,7 +36,7 @@
 				</view>
 			</view>
 
-			<view class="interests">会员权益
+			<view bindtap="toVip" class="interests">会员权益
 				<text class="iconfont icon-xiangyoujiantou user-orderJtou"></text>
 			</view>
 		</view>
@@ -120,16 +120,12 @@
 
 	<view class="fan-list service-list m-top20">
 		<view class="order-navbar-header dis-flex">
-			<text class="f-30">我的粉丝</text>
+			<text class="f-30">我的服务</text>
 		</view>
 		<view class="weui-flex service-item">
 			<view bindtap="toAdress" class="weui-flex__item service">
 				<view class="service-icon address"></view>
 				<view class="title">收货地址</view>
-			</view>
-			<view class="weui-flex__item service">
-				<view class="service-icon yuyue"></view>
-				<view class="title">客户预约</view>
 			</view>
 			<view bindtap="toVisit" class="weui-flex__item service">
 				<view class="service-icon visitors"></view>

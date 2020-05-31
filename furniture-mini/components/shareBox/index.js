@@ -65,9 +65,9 @@ Component({
         success: (data) => {
           if (data) {
             if (isType == 'product') {
-              this.drawPicProduct(detail, data.body)
+              this.drawPicProduct(detail, data)
             } else if (isType == 'find') {
-              this.drawPicFind(detail, data.body)
+              this.drawPicFind(detail, data)
             }
           } else {
             wx.showToast({
@@ -92,6 +92,7 @@ Component({
     },
     // 生成商品分享图片
     drawPicProduct(detail, url) {
+      console.log(app.globalData.userInfo)
       this.setData({
         imgDraw: {
           width: '750rpx',
@@ -169,7 +170,7 @@ Component({
         }
       })
     },
-    // 生成法相详情图片
+    // 生成发现详情图片
     drawPicFind(detail, url) {
       this.setData({
         imgDraw: {
@@ -202,7 +203,7 @@ Component({
             },
             {
               type: 'text',
-              text: detail.articleTitle ? detail.articleTitle : `汀·西海岸/Capture One16919实木双...`,
+              text: detail.articleTitle ? detail.articleTitle : `详情`,
               css: {
                 top: '806rpx',
                 left: '125rpx',
@@ -227,8 +228,8 @@ Component({
               type: 'image',
               url: url || 'https://cloud.pack.ininin.com/0e73483adb24bbec07070ffaa6f741a0', // 二维码
               css: {
-                top: '1010rpx',
-                right: '67rpx',
+                top: '860rpx',
+                left: '125rpx',
                 width: '120rpx',
                 height: '120rpx'
               }

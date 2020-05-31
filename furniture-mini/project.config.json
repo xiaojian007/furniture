@@ -209,6 +209,26 @@
 					"pathName": "pages/order/detail",
 					"query": "orderId=11",
 					"scene": null
+				},
+				{
+					"id": 22,
+					"name": "pages/shopping-cart/pay-result",
+					"pathName": "pages/shopping-cart/pay-result",
+					"query": "status=0",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/my/fans",
+					"pathName": "pages/my/fans",
+					"query": "status=0",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/reservation/list",
+					"pathName": "pages/reservation/list",
+					"scene": null
 				}
 			]
 		}

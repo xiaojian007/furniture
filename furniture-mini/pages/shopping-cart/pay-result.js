@@ -5,7 +5,7 @@ Page({
    * 页面的初始数据
    */
   data: {
-    status: 1
+    status: 0
   },
 
   /**
@@ -69,7 +69,7 @@ Page({
   },
   showOrder: function () {
     wx.navigateTo({
-      url: '/pages/order/detail',
+      url: '/pages/order/index',
     })
   },
   hangOut: function () {

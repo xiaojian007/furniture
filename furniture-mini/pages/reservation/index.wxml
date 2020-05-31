@@ -1,0 +1,27 @@
+<view class="reserver">
+	<form bindsubmit="formSubmit" class="reservation">
+		<view class="weui-form__control-area">
+			<view class="weui-cells__group weui-cells__group_form">
+				<view class="weui-cells weui-cells_form">
+					<view class="weui-cell">
+						<view class="weui-cell__hd cuIcon-friendaddfill lg text-gray"><label class="weui-label"></label></view>
+						<view class="weui-cell__bd">
+							<input name='name' class="weui-input" placeholder="请填写昵称" />
+						</view>
+					</view>
+					<view class="weui-cell">
+						<view class="weui-cell__hd cuIcon-mobilefill lg text-gray"><label class="weui-label"></label></view>
+						<view class="weui-cell__bd">
+							<input name='phone' class="weui-input" placeholder="请填写电话号码" type="number" />
+						</view>
+					</view>
+				</view>
+			</view>
+		</view>
+		<view class="btns">
+			<button formType="submit" class="btn">提交</button>
+		</view>
+		<view class="title">注册成为会员轻松赚取佣金</view>
+
+	</form>
+</view>
