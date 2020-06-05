@@ -10,6 +10,7 @@ Page({
    * 页面的初始数据
    */
   data: {
+    discountNum: 1, // 折扣数 默认为1 全额 9折为0.9
     floorShow: false, // 返回顶部是否显示
     isShow: false, // 轮播切换是否已经从第一条切换
     winHeight: "", //窗口高度
@@ -24,7 +25,6 @@ Page({
     tabList: [],
     isAuthorize: false // 是否授权
   },
-
   /**
    * 生命周期函数--监听页面加载
    */
@@ -49,6 +49,7 @@ Page({
           isAuthorize: bool
         })
         this.query()
+        this.getUser()
       })
     }, false)
   },
@@ -223,5 +224,23 @@ Page({
         currentTab: cur
       })
     }
+  },
+  getUser() {
+    app.request({
+      url: 'wechat/saveUserInfo',
+      method: 'POST',
+      data: {
+        userId: app.globalData.userInfo.userId,
+        openid: app.globalData.token
+      },
+      success: ((data) => {
+        let discountNum = data.discountNum
+        // let discountNum = 9
+        this.setData({ discountNum })
+      }),
+      fail: ((err) => {
+        console.log('获取用户折扣失败', err)
+      })
+    })
   }
 })

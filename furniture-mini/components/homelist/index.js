@@ -21,6 +21,10 @@ Component({
     isAuthorize: {
       type: Boolean,
       value: false
+    },
+    discount: {
+      type: Number | String,
+      value: 1
     }
   },
   /**
@@ -132,7 +136,25 @@ Component({
           this.setData({
             loading: false,
           })
-          let list = data.list || []
+          let dataList = data.list || []
+          let list = []
+          dataList.forEach((item)=>{
+            let discount = ''
+            let rate =  util.calculator.div(this.data.discount, 10)
+            if(item.price){
+              let priceList = item.price.split('-')
+              discount = util.calculator.mul(priceList[0], rate) + "-" +util.calculator.mul(priceList[1], rate)
+            }
+            list.push({
+              productId: item.productId,
+              smallImage: item.smallImage,
+              name: item.name,
+              typeSecondName: item.typeSecondName,
+              price: item.price,
+              sale: item.sale,
+              discount: discount
+            })
+          })
           let total = data.total || 0
           this.setData({
             total,
@@ -255,7 +277,25 @@ Component({
           this.setData({
             loading: false,
           })
-          let list = data.list || []
+          let dataList = data.list || []
+          let list = []
+          dataList.forEach((item)=>{
+            let discount = ''
+            let rate =  util.calculator.div(this.data.discount, 10)
+            if(item.price){
+              let priceList = item.price.split('-')
+              discount = util.calculator.mul(priceList[0], rate) + "-" +util.calculator.mul(priceList[1], rate)
+            }
+            list.push({
+              productId: item.productId,
+              smallImage: item.smallImage,
+              name: item.name,
+              typeSecondName: item.typeSecondName,
+              price: item.price,
+              sale: item.sale,
+              discount: discount
+            })
+          })
           let total = data.total || 0
           this.setData({
             total,

@@ -73,6 +73,7 @@
 					<navigator class="list b-f" hover-class="none" url="../goods/index?productId={{item.productId}}" wx:for="{{list}}" wx:key="index">
 						<view class="left">
 							<view class="img">
+								<view wx:if="{{discount!==1}}" class="discount">佣金{{item.discount}}元</view>
 								<image class="goodsImg" mode="aspectFill" src="{{!item.smallImage ? '../../image/no-photo.jpeg' : item.smallImage }}"></image>
 							</view>
 						</view>
@@ -153,6 +154,7 @@
 					<navigator class="list b-f" hover-class="none" url="../goods/index?productId={{item.productId}}" wx:for="{{list}}" wx:key="index">
 						<view class="left">
 							<view class="img">
+								<view wx:if="{{discount!==1}}" class="discount">佣金{{item.discount}}元</view>
 								<image class="goodsImg" mode="aspectFill" src="{{!item.smallImage ? '../../image/no-photo.jpeg' : item.smallImage }}"></image>
 							</view>
 						</view>

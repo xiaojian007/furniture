@@ -416,9 +416,9 @@ input {
 
 .category-list .list .left,
 .category-list .right {
+  position: relative;
   width: 100%;
 }
-
 .category-list .list .left .img image {
   width: 98%;
   height: 325rpx;
@@ -426,6 +426,19 @@ input {
   box-shadow: 4rpx 4rpx 2rpx rgba(0, 0, 0, 0.1);
   display: block;
 }
+.category-list .list .left .img .discount{
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  z-index: 2;
+  display: inline-block;
+  font-size: 20rpx;
+  padding: 4rpx 6rpx;
+  background: #EC6941;
+  text-align: center;
+  color: #fff;
+}
+
 
 .category-list .right .cont {
   padding: 10rpx 0 28rpx;

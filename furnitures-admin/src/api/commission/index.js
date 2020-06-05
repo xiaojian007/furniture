@@ -3,18 +3,19 @@ import { generateModuleRequest } from "../utils";
 const { get, post } = generateModuleRequest("");
 
 /**
- * 获取预约列表
+ * 修改
  * @param {Object} params 参数
  * @returns {Promise} 返回一个promise
  */
-export const getSubscribeList = params => {
-	return get("/subscribe/page", params);
+export const updateDiscountcash = params => {
+	return post('/userdiscountcash/update', params);
 };
+
 /**
- * 修改预约状态
+ * 获取列表
  * @param {Object} params 参数
  * @returns {Promise} 返回一个promise
  */
-export const updateSubscribe = params => {
-	return post("/subscribe/update", params);
+export const getDiscountcashList = params => {
+	return get("/userdiscountcash/page", params);
 };

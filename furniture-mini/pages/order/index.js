@@ -216,7 +216,7 @@ Page({
             signType: signType,
             nonceStr: nonceStr
           }
-          that.payMoney(param, orderId)
+          that.payMoney(param, orderNo)
         } else {
           wx.showToast({
             title: '支付失败，请稍后重试！',
@@ -238,7 +238,7 @@ Page({
       }
     })
   },
-  payMoney(param, orderId) {
+  payMoney(param, orderNo) {
     // 调起支付
     wx.requestPayment({
       timeStamp: param.timeStamp,
@@ -247,7 +247,7 @@ Page({
       signType: param.signType,
       paySign: param.paySign,
       success: (res) => {
-        that.getOrderList(false)
+        that.payOK(orderNo);
       },
       fail: (res) => {
         wx.showModal({
@@ -260,21 +260,22 @@ Page({
     })
   },
   // 支付完成后修改订单状态
-  payOK(orderId) {
+  payOK(orderNo) {
     let that = this;
     let params = {
       orderId: orderId,
-      orderStatus: 1
+      orderNo: orderNo
     }
     wx.showLoading({
       title: '取消中',
     })
     app.request({
-      url: 'order/update',
+      url: 'order/payCallBack',
       method: 'POST',
       data: params,
       success: (data) => {
         wx.hideLoading()
+        console.log('datadatadatadatadata',params,data)
         wx.showToast({
           title: '支付成功！',
           icon: 'success'

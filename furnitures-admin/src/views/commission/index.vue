@@ -48,8 +48,6 @@
 		</div>
 		<div class="list-result">
 			<div class="list-buttons">
-				<el-button type="primary" size="small" :loading="querying">添加 </el-button>
-
 				<el-button @click="query" size="small" :loading="querying">刷新</el-button>
 			</div>
 			<div class="list-table">
@@ -81,13 +79,27 @@
 								<template v-if="field.prop === 'createTime'">
 									<div v-html="formatDateOutput(scope.row[field.prop])"></div>
 								</template>
+								<template v-else-if="field.prop === 'status'">
+									<template v-if="scope.row.status == 0">未审核</template>
+									<template v-else-if="scope.row.status == 1">已发放</template>
+									<template v-else-if="scope.row.status == 2">拒绝发放</template>
+									<template v-else>未知状态</template>
+								</template>
 								<template v-else-if="field.prop === 'operation'">
-									<el-button type="text">
-										查看
-									</el-button>
-									<el-button type="text">
-										发放
-									</el-button>
+									<template v-if="scope.row.status == 0">
+										<el-button
+											type="text"
+											@click="updateDiscount(scope.row.id, true)"
+										>
+											发放
+										</el-button>
+										<el-button
+											type="text"
+											@click="updateDiscount(scope.row.id, false)"
+										>
+											拒绝
+										</el-button>
+									</template>
 								</template>
 								<template v-else>
 									{{ scope.row[field.prop] | nullValue }}
@@ -119,7 +131,7 @@
 
 <script>
 	import listMixin from "@mixins/list.mixin";
-
+	import { updateDiscountcash, getDiscountcashList } from "@api/commission/index";
 	export default {
 		mixins: [listMixin],
 		data() {
@@ -145,23 +157,43 @@
 					},
 					{
 						show: true,
-						prop: "creator",
+						prop: "name",
 						align: "center",
 						label: "用户姓名",
 						width: 80
 					},
 					{
 						show: true,
-						prop: "creatorId",
+						prop: "mobile",
 						align: "center",
 						label: "电话号码",
 						width: 80
 					},
 					{
 						show: true,
-						prop: "reportPrice",
+						prop: "bankName",
 						align: "center",
-						label: "体现金额",
+						label: "开户银行",
+						width: 80
+                    },
+                    {
+						show: true,
+						prop: "status",
+						align: "center",
+						label: "发放状态"
+					},
+					{
+						show: true,
+						prop: "bankCardNo",
+						align: "center",
+						label: "银行卡号",
+						width: 80
+					},
+					{
+						show: true,
+						prop: "amount",
+						align: "center",
+						label: "提现金额",
 						width: 80
 					},
 					{
@@ -211,173 +243,65 @@
 				let that = this;
 				that.querying = true;
 				that.loading = true;
-				setTimeout(() => {
-					let list = [
-						{
-							id: 270,
-							supplierId: 60,
-							extendedState: 3,
-							reportPrice: 3,
-							commentPurpose: "测试",
-							comments: "测",
-							creatorId: 2061,
-							creator: "黄庆鸿",
-							deleted: 0,
-							updateTime: null,
-							createTime: "2020-03-10 11:26:07",
-							companyName: "上海乐盈纸业",
-							extendedStateStr: null,
-							reportPriceStr: null
-						},
-						{
-							id: 268,
-							supplierId: 1124,
-							extendedState: 5,
-							reportPrice: 3,
-							commentPurpose: "同时咯啦咯",
-							comments: "统计咯聚咯某家了",
-							creatorId: 2061,
-							creator: "黄庆鸿",
-							deleted: 0,
-							updateTime: null,
-							createTime: "2020-03-09 14:17:57",
-							companyName: "岳阳立华包装材料科技",
-							extendedStateStr: null,
-							reportPriceStr: null
-						},
-						{
-							id: 258,
-							supplierId: 417,
-							extendedState: 3,
-							reportPrice: 3,
-							commentPurpose: "sd2222",
-							comments: "df222\n34\n34\n3\n434\n34",
-							creatorId: 43,
-							creator: "冯露露",
-							deleted: 0,
-							updateTime: "2020-02-27 17:39:53",
-							createTime: "2020-02-27 17:39:42",
-							companyName: "上海联合包装装潢",
-							extendedStateStr: null,
-							reportPriceStr: null
-						},
-						{
-							id: 257,
-							supplierId: 417,
-							extendedState: 3,
-							reportPrice: 3,
-							commentPurpose: "sdas",
-							comments: "sad",
-							creatorId: 43,
-							creator: "冯露露",
-							deleted: 0,
-							updateTime: null,
-							createTime: "2020-02-27 17:36:26",
-							companyName: "上海联合包装装潢",
-							extendedStateStr: null,
-							reportPriceStr: null
-						},
-						{
-							id: 256,
-							supplierId: 417,
-							extendedState: 4,
-							reportPrice: 3,
-							commentPurpose: "拜访目的",
-							comments: "拜访结果",
-							creatorId: 43,
-							creator: "冯露露",
-							deleted: 0,
-							updateTime: null,
-							createTime: "2020-02-27 17:33:19",
-							companyName: "上海联合包装装潢",
-							extendedStateStr: null,
-							reportPriceStr: null
-						},
-						{
-							id: 255,
-							supplierId: 417,
-							extendedState: 3,
-							reportPrice: 1,
-							commentPurpose: "太阳LOL",
-							comments: "头像log",
-							creatorId: 2061,
-							creator: "黄庆鸿",
-							deleted: 0,
-							updateTime: "2020-01-19 15:23:16",
-							createTime: "2020-01-18 18:56:41",
-							companyName: "上海联合包装装潢",
-							extendedStateStr: null,
-							reportPriceStr: null
-						},
-						{
-							id: 253,
-							supplierId: 323,
-							extendedState: 4,
-							reportPrice: 3,
-							commentPurpose: "这是拜访目的",
-							comments: "这是采访结果",
-							creatorId: 43,
-							creator: "冯露露",
-							deleted: 0,
-							updateTime: null,
-							createTime: "2020-01-18 17:45:08",
-							companyName: "上海瑞邦纸品包装",
-							extendedStateStr: null,
-							reportPriceStr: null
-						},
-						{
-							id: 251,
-							supplierId: 60,
-							extendedState: 4,
-							reportPrice: 3,
-							commentPurpose: "15464",
-							comments: "宁静和你聊213123\n11\n213213\n\nwew",
-							creatorId: 43,
-							creator: "冯露露",
-							deleted: 0,
-							updateTime: "2020-01-10 19:31:50",
-							createTime: "2020-01-10 19:31:31",
-							companyName: "上海乐盈纸业",
-							extendedStateStr: null,
-							reportPriceStr: null
-						},
-						{
-							id: 250,
-							supplierId: 60,
-							extendedState: 4,
-							reportPrice: 3,
-							commentPurpose: "15464",
-							comments: "宁静和你聊213123\n\n213213\n\nwew",
-							creatorId: 43,
-							creator: "冯露露",
-							deleted: 0,
-							updateTime: null,
-							createTime: "2020-01-10 19:30:35",
-							companyName: "上海乐盈纸业",
-							extendedStateStr: null,
-							reportPriceStr: null
-						},
-						{
-							id: 249,
-							supplierId: 60,
-							extendedState: 4,
-							reportPrice: 3,
-							commentPurpose: "15464",
-							comments: "宁静和你聊\n\nwew",
-							creatorId: 43,
-							creator: "冯露露",
-							deleted: 0,
-							updateTime: "2020-01-10 19:28:41",
-							createTime: "2020-01-10 17:43:13",
-							companyName: "上海乐盈纸业",
-							extendedStateStr: null,
-							reportPriceStr: null
+				let paramsData = {
+					pageNum: that.params.pageNum,
+					pageSize: that.params.pageSize,
+					startTime: that.params.startTime,
+					endTime: that.params.endTime,
+					name: that.params.searchKey
+				};
+				getDiscountcashList(paramsData)
+					.then(data => {
+						if (data.succeed) {
+                            that.list = data.body.list || [];
+							that.page.totalCount = data.body.total;
+						} else {
+							that.$message.warning(data.body.message || that.MSG_UNKNOWN, that);
 						}
-					];
-					this.list = list;
-					that.querying = false;
-					that.loading = false;
-				}, 1000);
+					})
+					.catch(err => {
+						that.$message.warning(err.body.message || that.MSG_UNKNOWN, that);
+					})
+					.finally(() => {
+						that.querying = false;
+						that.loading = false;
+					});
+			},
+			updateDiscount(id, bool) {
+				let that = this;
+				let value = bool ? "发放" : "不发放";
+				let status = bool ? 1 : 2;
+				that.$confirm("确认" + value + "吗？", "提示", {
+					confirmButtonText: "确认",
+					cancelButtonText: "取消",
+					customClass: "custom-confirm custom-confirm-danger", // 图标样式
+					confirmButtonClass: "el-button--primary", // 确认按钮样式
+					closeOnClickModal: that.CONFIRM_MODAL_CLOSE, // 是否可以点击空白关闭
+					closeOnPressEscape: that.CONFIRM_ESC_CLOSE, // 是否可以esc关闭
+					showClose: false // 是否显示关闭按钮
+				})
+					.then(() => {
+						that.querying = true;
+						updateDiscountcash({ id: id, status: status })
+							.then(data => {
+								if (data.succeed) {
+									that.$message.success("删除成功", that);
+									that.query();
+								} else {
+									that.$message.warning(
+										data.body.message || that.MSG_UNKNOWN,
+										that
+									);
+								}
+							})
+							.catch(err => {
+								that.$message.warning(err.body.message || that.MSG_UNKNOWN, that);
+							})
+							.finally(() => {
+								that.querying = false;
+							});
+					})
+					.catch(() => {});
 			}
 		}
 	};

@@ -64,13 +64,31 @@
 								<template v-if="field.prop === 'createTime'">
 									<div v-html="formatDateOutput(scope.row[field.prop])"></div>
 								</template>
-								<template v-else-if="field.prop === 'orderStatus'">
-									{{ enumOrderStatus.obj[scope.row[field.prop]] }}
+								<template v-else-if="field.prop === 'status'">
+									<template v-if="scope.row.status == 0">未审核</template>
+									<template v-else-if="scope.row.status == 1">审核通过</template>
+									<template v-else-if="scope.row.status == 2"
+										>审核不通过</template
+									>
+									<template v-else>未知状态</template>
 								</template>
 								<template v-else-if="field.prop === 'operation'">
-									<el-button type="text" @click="deletesReservation(scope.row.subscribeId)">
-										删除
-									</el-button>
+									<template
+										v-if="scope.row.status == 0"
+									>
+										<el-button
+											type="text"
+											@click="updateReservation(scope.row.subscribeId, true)"
+										>
+											通过
+										</el-button>
+										<el-button
+											type="text"
+											@click="updateReservation(scope.row.subscribeId, false)"
+										>
+											不通过
+										</el-button>
+									</template>
 								</template>
 								<template v-else>
 									{{ scope.row[field.prop] | nullValue }}
@@ -102,7 +120,7 @@
 
 <script>
 	import listMixin from "@mixins/list.mixin";
-	import { getSubscribeList, deteleSubscribe } from "@api/reservation/index";
+	import { getSubscribeList, updateSubscribe } from "@api/reservation/index";
 	export default {
 		mixins: [listMixin],
 		data() {
@@ -135,13 +153,20 @@
 						prop: "mobile",
 						align: "center",
 						label: "手机号"
-                    },
-                    {
+					},
+					{
+						show: true,
+						prop: "status",
+						align: "center",
+						label: "审核状态"
+					},
+
+					{
 						show: true,
 						prop: "createTime",
 						align: "center",
 						label: "时间"
-                    },
+					},
 					{
 						show: true,
 						prop: "operation",
@@ -204,9 +229,11 @@
 						that.loading = false;
 					});
 			},
-			deletesReservation(id) {
+			updateReservation(id, bool) {
 				let that = this;
-				that.$confirm("确认该条预约吗？", "提示", {
+				let value = bool ? "通过审核" : "不通过审核";
+				let status = bool ? 1 : 2;
+				that.$confirm("确认" + value + "吗？", "提示", {
 					confirmButtonText: "确认",
 					cancelButtonText: "取消",
 					customClass: "custom-confirm custom-confirm-danger", // 图标样式
@@ -217,7 +244,7 @@
 				})
 					.then(() => {
 						that.querying = true;
-						deteleSubscribe({ subscribeId: id })
+						updateSubscribe({ subscribeId: id, status: status })
 							.then(data => {
 								if (data.succeed) {
 									that.$message.success("删除成功", that);

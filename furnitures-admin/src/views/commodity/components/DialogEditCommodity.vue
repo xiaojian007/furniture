@@ -191,7 +191,7 @@
 									<el-input
 										size="small"
 										class="dialog-input-center"
-                                        type="number"
+										type="number"
 										maxlength="20"
 										v-model="scope.row.attributePrice"
 									></el-input>
@@ -208,7 +208,7 @@
 										size="small"
 										class="dialog-input-center"
 										maxlength="10"
-                                        type="number"
+										type="number"
 										v-model="scope.row.attributeStock"
 									></el-input>
 								</template>
@@ -320,19 +320,21 @@
 				let item = this.form.checkBoxSkuAttr;
 				let checkedSkuList = []; // 选中的数组集合
 				this.skuTypeList.forEach(skuTypeItem => {
-					skuTypeItem.child.forEach(skuItem => {
-						let hasSku = item.some(checkedId => {
-							return checkedId === skuItem.id;
-						});
-						if (hasSku) {
-							checkedSkuList.push({
-								id: skuItem.id,
-								name: skuItem.name,
-								parentId: skuTypeItem.id,
-								parentName: skuTypeItem.name
+					if (skuTypeItem.child) {
+						skuTypeItem.child.forEach(skuItem => {
+							let hasSku = item.some(checkedId => {
+								return checkedId === skuItem.id;
 							});
-						}
-					});
+							if (hasSku) {
+								checkedSkuList.push({
+									id: skuItem.id,
+									name: skuItem.name,
+									parentId: skuTypeItem.id,
+									parentName: skuTypeItem.name
+								});
+							}
+						});
+					}
 				});
 				this.checkedSkuList = checkedSkuList;
 				// 选中的数据进行类型分类
@@ -378,11 +380,15 @@
 					calcSkuList.forEach(updateSku => {
 						let skuItem = {};
 						for (let i = 0; i < this.modifyCalcSkuList.length; i++) {
-							if (
-								updateSku.attributeNameList ===
-									this.modifyCalcSkuList[i].attributeNameList &&
-								updateSku.attributeIds === this.modifyCalcSkuList[i].attributeIds
-							) {
+							// 判断名称和sku名称都存在
+							// if (
+							// 	updateSku.attributeNameList ===
+							// 		this.modifyCalcSkuList[i].attributeNameList &&
+							// 	updateSku.attributeIds === this.modifyCalcSkuList[i].attributeIds
+							// ) {
+							// 	skuItem = this.modifyCalcSkuList[i];
+							// }
+							if (updateSku.attributeIds === this.modifyCalcSkuList[i].attributeIds) {
 								skuItem = this.modifyCalcSkuList[i];
 							}
 						}
@@ -561,7 +567,7 @@
 						if (that.form.productId > 0) {
 							formData["productId"] = that.form.productId;
 						}
-                        console.log('formDataformDataformData',formData);
+						console.log("formDataformDataformData", formData);
 						addAndUpdateProduct(formData)
 							.then(data => {
 								if (data.succeed) {

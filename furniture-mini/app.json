@@ -24,7 +24,9 @@
     "pages/reservation/index",
     "pages/share/index",
     "pages/invite/index",
-    "pages/reservation/list"
+    "pages/reservation/list",
+    "pages/commission/myWallet",
+    "pages/commission/reflect"
   ],
   "window": {
     "navigationBarBackgroundColor": "#ffffff",

@@ -185,21 +185,18 @@ App({
         })
         if (isUser) {
           that.request({
-            url: 'tools/user_info/info',
-            method: 'GET',
+            url: 'wechat/saveUserInfo',
+            method: 'POST',
             data: {
               userId: that.globalData.userInfo.userId,
               openid: that.globalData.token
             },
             success: ((res) => {
-              data = {
-                token: res.openid,
-                openid: res.openid,
-                userId: res.userId
-              }
+              data = res
               setUserInfo()
             }),
             fail: ((err) => {
+              debugger
               console.log('获取用户信息报错原因', err)
             })
           })
@@ -455,6 +452,7 @@ App({
       country: "",
       gender: 0,
       language: "",
+      discountNum: 0,
       nickName: "",
       province: "",
       unionid: "",

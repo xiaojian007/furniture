@@ -7,6 +7,7 @@ Page({
    */
   data: {
     isLogin: false, // 是否授权登录
+    isFirstProxy: 1, // 二级代理
     moblie: '',
     orderCount: {
       payment: 9
@@ -30,6 +31,7 @@ Page({
       app.authSettingCheck((boolean) => {
         that.setData({
           isLogin: boolean,
+          isFirstProxy: app.globalData.userInfo.discountNum,
           moblie: app.globalData.userInfo.moblie || ''
         })
       })
@@ -148,13 +150,26 @@ Page({
     let that = this;
     if (that.data.isLogin) {
       // 转跳指定的页面
-      wx.navigateTo({
-        url: '/pages/share/index',
-      })
+      if(that.data.isFirstProxy == 1) {
+        wx.navigateTo({
+          url: '/pages/reservation/index',
+        })
+      } else {
+        wx.navigateTo({
+          url: '/pages/share/index',
+        })
+      }
+      
     } else {
       that.setData({
         modalName: 'DialogModal1'
       })
     }
+  },
+  // 我的钱包
+  myWallet() {
+    wx.navigateTo({
+      url: '/pages/commission/myWallet',
+    })
   }
 })

@@ -36,7 +36,8 @@
 
 <script>
 	import formMixin from "@mixins/form.mixin";
-	import { updateOrder } from "@api/order/order";
+    import { updateOrder } from "@api/order/order";
+    import {format} from "@utils/date"
 
 	export default {
 		mixins: [formMixin],
@@ -88,6 +89,7 @@
 						let formData = {
 							deliveryCompany: that.form.deliveryCompany, //角色id
                             deliverySn: that.form.deliverySn,
+                            deliveryTime: format(new Date(), 'yyyy-mm-dd hh:ii:ss'),
                             orderStatus: 2
 						};
 						if (that.form.orderId > 0) {

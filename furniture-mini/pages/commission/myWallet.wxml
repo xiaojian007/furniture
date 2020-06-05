@@ -1,0 +1,31 @@
+<!--pages/my/fans.wxml-->
+<view class="fans">
+	<view class="fans-top">
+		<view class="fans-title">收益钱包</view>
+		<view class="fans-number">可提总金额</view>
+		<view class="fans-money"><span>¥</span>{{totalAmount-ongoingAmount}}</view>
+		<navigator url="/pages/commission/reflect" class="fans-btn">提现</navigator>
+	</view>
+	<view class="my-come">
+		<view class="my-bottom in-come">
+			<view class="number">{{grandAmount}}</view>
+			<view class="title">已提收益</view>
+		</view>
+		<view class="my-bottom wallet">
+			<view class="number">{{ongoingAmount}}</view>
+			<view class="title">待发放收益</view>
+		</view>
+		<view class="my-bottom grand-come">
+			<view class="number">{{totalAmount}}</view>
+			<view class="title">累计收益</view>
+		</view>
+	</view>
+	<view class="all-wallet">
+		<view class="text-wallet">我的钱包</view>
+		<view class="all">总金额</view>
+		<view class="money">
+			<text class="money-first">¥</text>
+			<text>{{totalAmount}}</text>
+		</view>
+	</view>
+</view>

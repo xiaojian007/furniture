@@ -81,7 +81,7 @@
 								<template v-if="field.prop === 'orderTime'">
 									<div v-html="formatDateOutput(scope.row[field.prop])"></div>
 								</template>
-                                <template v-else-if="field.prop === 'updateTime'">
+                                <template v-else-if="field.prop === 'deliveryTime'">
 									<div v-html="formatDateOutput(scope.row[field.prop])"></div>
 								</template>
 								<template v-else-if="field.prop === 'orderStatus'">
