@@ -117,7 +117,7 @@
 
 	<view class="sku-pop cu-modal bottom-modal {{modalName=='bottomModal'?'show':''}}" bindtap="hideModal">
 		<view class="cu-dialog" catchtap>
-			<skulist isShowSku="{{isShowSku}}" detail="{{detail}}"></skulist>
+			<skulist isShowSku="{{isShowSku}}" bind:addSuccessBack="hideModal" detail="{{detail}}"></skulist>
 		</view>
 	</view>
 </view>

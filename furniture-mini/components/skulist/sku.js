@@ -231,6 +231,9 @@ Component({
               title: '已加入购物车',
               duration: 1000
             })
+            setTimeout(() => {
+              this.triggerEvent('addSuccessBack')
+            }, 1000)
           },
           fail: (err) => {
             wx.hideLoading()

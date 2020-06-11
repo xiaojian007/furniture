@@ -14,6 +14,7 @@ Page({
    */
   params: {
     pageNum: 1,
+    type: 3,
     pageSize: 10,
     parentUserId: 0
   },
@@ -21,7 +22,9 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-
+    if (options.type) {
+      this.params.type = options.type
+    }
   },
 
   /**
@@ -70,11 +73,11 @@ Page({
   onReachBottom: function () {
     this.getList(true)
   },
- /**
-   * 获取列表
-   * @param {Boolean} nextPage 是否为查询下一页
-   * @param {Boolean} show 是否为show加载
-   */
+  /**
+    * 获取列表
+    * @param {Boolean} nextPage 是否为查询下一页
+    * @param {Boolean} show 是否为show加载
+    */
   getList: function (nextPage = false, show = false) {
     let that = this
     if (that.data.loading) return

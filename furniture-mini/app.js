@@ -1,9 +1,8 @@
 //测试
 // const API_URL = 'http://192.168.1.103:8080/'
-//const H5_URL = ''
 //正式
-const API_URL = 'http://47.101.209.229:8080/'
-const H5_URL = ''
+const API_URL = 'https://www.txhajj.com/'
+// const API_URL = 'http://47.101.209.229:8080/'
 /**
  * tabBar页面路径列表 (用于链接跳转时判断)
  * tabBarLinks为常量, 无需修改
@@ -25,6 +24,7 @@ App({
     if (options.query.userId) {
       this.parentUserId = options.query.userId
     }
+    console.log('parentUserIdparentUserIdparentUserId', this.parentUserId)
     console.log('app.onLaunch', options)
   },
   /**
@@ -247,6 +247,7 @@ App({
     wx.login({
       success: (res) => {
         if (res.code) {
+          console.log('codecodecodecode', res.code)
           this.request({
             method: 'POST',
             url: 'wechat/getOpenId',
@@ -262,7 +263,8 @@ App({
                 userId: data.userId
               }
               // 是否是分享进来的
-              if(this.parentUserId !== 0) {
+              console.log('parentUserIdparentUserIdparentUserId', this.parentUserId)
+              if (this.parentUserId !== 0) {
                 this.userGrade(data.userId)
               }
               this.setAuth(loginData)
@@ -452,7 +454,7 @@ App({
       country: "",
       gender: 0,
       language: "",
-      discountNum: 0,
+      discountNum: 1,
       nickName: "",
       province: "",
       unionid: "",

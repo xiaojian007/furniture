@@ -38,23 +38,12 @@ Component({
       pageNum: 0,
       pageSize: 10
     },
-    productYuewu: [{
-      id: 1,
-      name: '汀·西海岸系列'
-    }, {
-      id: 2,
-      name: '汀·西米娅系列'
-    }, {
-      id: 3,
-      name: '汀·HOUSE系列'
-    }, {
-      id: 4,
-      name: '全屋定制'
-    }], // 悦物数据
     typeList: [], // 二级类别
     list: [], // 类型页商品数据
     total: 20, // 总条数
     home: [], // 首页商品数据
+    tabList: [], // 首页悦物
+    recommendList: [], // 首页专题推荐
     imgUrls: [], // 类型页轮播图
     homeImgUrls: [], // 首页轮播
     autoplay: true,
@@ -107,6 +96,8 @@ Component({
       })
       if (this.data.typeId === 0) {
         this.getFeatured()
+        this.getFirstList()
+        this.getFirstTypeList()
         this.getFeaturedImgDetail()
       } else {
         this.getTypeDetail(this.data.typeId)
@@ -138,12 +129,12 @@ Component({
           })
           let dataList = data.list || []
           let list = []
-          dataList.forEach((item)=>{
+          dataList.forEach((item) => {
             let discount = ''
-            let rate =  util.calculator.div(this.data.discount, 10)
-            if(item.price){
+            let rate = util.calculator.div(this.data.discount, 10)
+            if (item.price) {
               let priceList = item.price.split('-')
-              discount = util.calculator.mul(priceList[0], rate) + "-" +util.calculator.mul(priceList[1], rate)
+              discount = util.calculator.mul(priceList[0], rate) + "-" + util.calculator.mul(priceList[1], rate)
             }
             list.push({
               productId: item.productId,
@@ -159,6 +150,86 @@ Component({
           this.setData({
             total,
             list: [...list, ...this.data.list]
+          })
+        },
+        fail: (err) => {
+          wx.hideLoading()
+          this.setData({
+            loading: false
+          })
+          wx.showToast({
+            title: err.message || app.globalData.msgUnknown,
+            icon: 'none'
+          })
+        }
+      })
+    },
+
+    // 专题推荐下面三个板块
+    getFirstTypeList() {
+      let params = {
+        pageNum: 1,
+        pageSize: 20,
+        dictCode: 'recommend'
+      }
+      app.request({
+        method: 'GET',
+        url: 'dict/page',
+        data: params,
+        success: (data) => {
+          let recommendList = []
+          let list = data.list || []
+          list.forEach(item => {
+            let type = JSON.parse(item.dictValue);
+            let typeSecondId = type.typeSecondId
+            let typeFirstId = type.typeFirstId
+            recommendList.push({
+              image: item.dictValueExtra1,
+              typeFirstId: typeFirstId,
+              typeSecondId: typeSecondId
+            })
+          })
+          this.setData({
+            recommendList
+          })
+        },
+        fail: (err) => {
+          wx.hideLoading()
+          this.setData({
+            loading: false
+          })
+          wx.showToast({
+            title: err.message || app.globalData.msgUnknown,
+            icon: 'none'
+          })
+        }
+      })
+    },
+    // 获取一级列表  悦物使用
+    getFirstList() {
+      let params = {
+        hasSecond: false
+      }
+      app.request({
+        method: 'GET',
+        url: 'producttype/list',
+        data: params,
+        success: (data) => {
+          wx.hideLoading()
+          wx.stopPullDownRefresh()
+          this.setData({
+            loading: false,
+          })
+          let list = data || []
+          let tabList = []
+          list.forEach((item) => {
+            tabList.push({
+              id: item.typeId,
+              name: item.typeName
+            })
+          })
+          this.setData({
+            tabList
           })
         },
         fail: (err) => {
@@ -279,12 +350,12 @@ Component({
           })
           let dataList = data.list || []
           let list = []
-          dataList.forEach((item)=>{
+          dataList.forEach((item) => {
             let discount = ''
-            let rate =  util.calculator.div(this.data.discount, 10)
-            if(item.price){
+            let rate = util.calculator.div(this.data.discount, 1)
+            if (item.price) {
               let priceList = item.price.split('-')
-              discount = util.calculator.mul(priceList[0], rate) + "-" +util.calculator.mul(priceList[1], rate)
+              discount = util.calculator.mul(priceList[0], rate) + "-" + util.calculator.mul(priceList[1], rate)
             }
             list.push({
               productId: item.productId,
@@ -318,6 +389,13 @@ Component({
       let item = app.getEventDataset(e).item
       wx.navigateTo({
         url: '/pages/search/index?typeSecondId=' + item.typeId + '&typeFirstId=' + item.parentId,
+      })
+    },
+    titleToSeach(e) {
+      let typeSecondId = app.getEventDataset(e).secondId;
+      let typeFirstId = app.getEventDataset(e).firstId;
+      wx.navigateTo({
+        url: '/pages/search/index?typeSecondId=' + typeSecondId + '&typeFirstId=' + typeFirstId,
       })
     }
   }

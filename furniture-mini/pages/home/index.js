@@ -234,8 +234,7 @@ Page({
         openid: app.globalData.token
       },
       success: ((data) => {
-        let discountNum = data.discountNum
-        // let discountNum = 9
+        let discountNum = data.discountNum || 1
         this.setData({ discountNum })
       }),
       fail: ((err) => {

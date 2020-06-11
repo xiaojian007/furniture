@@ -85,6 +85,6 @@
   left: 50%;
   margin-left: -168rpx;
   bottom: 160rpx;
-  background: url('https://qiniu-image.qtshe.com/20190506save-btn.png') center center;
+  background: url('https://www.txhajj.com/photo/save-btn.png') center center;
   background-size: 100% 100%;
 }

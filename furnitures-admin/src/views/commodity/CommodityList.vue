@@ -463,7 +463,7 @@
 			},
 			// 添加产品类别
 			handleAddTree(data, node) {
-				console.log(data.id);
+                console.log(data.id);
 				this.$refs.editCommdityType.add("0", node);
 			},
 			// 修改产品类别
@@ -472,7 +472,7 @@
 					this.$message.warning("根目录无法修改！");
 					return;
 				}
-				console.log(data.id);
+                console.log(data.id);
 				this.$refs.editCommdityType.add("1", node);
 			},
 			// 删除产品类别
@@ -578,7 +578,8 @@
 					let productTreeItem = {
 						parentId: 0,
 						typeLevel: 1,
-						id: item.typeId,
+                        id: item.typeId,
+                        sortNum: item.sortNum,
 						label: item.typeName
                     };
 					let productTreeChild = [];
@@ -586,10 +587,11 @@
 						productTreeChild.push({
 							parentId: item.typeId,
 							id: itemChild.typeId,
-							typeLevel: 2,
+                            typeLevel: 2,
+                            sortNum: itemChild.sortNum,
 							label: itemChild.typeName
 						});
-					});
+                    });
 					productTreeItem["children"] = productTreeChild;
 					productTreeList.push(productTreeItem);
 				});

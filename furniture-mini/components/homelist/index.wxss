@@ -231,7 +231,7 @@
   width: 100%;
 }
 
-.recommend-img .recommend-2 {
+.recommend-img .recommend-1:nth-child(3n-1) {
   margin: 0 10rpx;
 }
 

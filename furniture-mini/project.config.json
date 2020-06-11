@@ -4,9 +4,10 @@
 		"ignore": []
 	},
 	"setting": {
-		"urlCheck": false,
+		"urlCheck": true,
 		"es6": true,
 		"postcss": true,
+		"preloadBackgroundData": false,
 		"minified": true,
 		"newFeature": true,
 		"coverView": true,
@@ -134,10 +135,10 @@
 					"scene": null
 				},
 				{
-					"id": -1,
+					"id": 11,
 					"name": "pages/goods/index",
 					"pathName": "pages/goods/index",
-					"query": "",
+					"query": "userId=1&productId=32",
 					"scene": null
 				},
 				{
@@ -235,6 +236,14 @@
 					"id": -1,
 					"name": "pages/commission/myWallet",
 					"pathName": "pages/commission/myWallet",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/home/index",
+					"pathName": "pages/home/index",
+					"query": "userId=60",
 					"scene": null
 				}
 			]

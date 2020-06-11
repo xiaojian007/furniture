@@ -10,7 +10,8 @@
 /* eslint-disable no-undef */
 const baseURL = {
     // dev: "http://192.168.1.103:8080/", //测试环境
-    dev: "http://47.101.209.229:8080/", //测试环境
+    dev: "https://www.txhajj.com/", //测试环境
+	// dev: "http://47.101.209.229:8080/", //测试环境
 	formal: "http://47.101.209.229:8080/" //正式环境
 }[process.env.VUE_APP_API_MODE];
 

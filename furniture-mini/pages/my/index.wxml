@@ -3,7 +3,7 @@
 	<view class="user">
 		<view class="user-header">
 			<!-- 已登录 -->
-			<view wx:if="{{ isLogin }}" class="user-header-cont" >
+			<view wx:if="{{ isLogin }}" class="user-header-cont {{isFirstProxy<1 ?'': 'not-first-proxy'}}">
 				<view class="user-header-avatar">
 					<open-data class="" lang="zh_CN" type="userAvatarUrl"></open-data>
 				</view>
@@ -15,29 +15,30 @@
 				</block>
 			</view>
 			<!-- 未登录 -->
-			<view wx:else class="user-header-cont {{!isLogin || isFirstProxy==1 ?'not-first-proxy': ''}}" catchtap="showModal" data-target="DialogModal1">
+			<view wx:else class="user-header-cont {{!isLogin || isFirstProxy<1 ?'not-first-proxy': ''}}" catchtap="showModal" data-target="DialogModal1">
 				<view class="user-header-avatar">
 					<image src="/image/default-avatar.jpg"></image>
 				</view>
 				<view class="user-header-cont-name">点击登录</view>
 			</view>
-			<view class="my-come">
-				<view class="my-bottom in-come" bindtap="myWallet">
-					<view class="number">3.00</view>
-					<view class="title">我的钱包</view>
+			<block wx:if="{{isLogin}}">
+				<view class="my-come" wx:if="{{isFirstProxy<1}}">
+					<view class="my-bottom in-come" bindtap="myWallet">
+						<view class="number">{{ongoingAmount}}</view>
+						<view class="title">我的钱包</view>
+					</view>
+					<view class="my-bottom wallet" bindtap="myWallet">
+						<view class="number">{{totalAmount - ongoingAmount - grandAmount}}</view>
+						<view class="title">可提收益</view>
+					</view>
+					<view class="my-bottom grand-come" bindtap="myWallet">
+						<view class="number">{{totalAmount}}</view>
+						<view class="title">累计收益</view>
+					</view>
 				</view>
-				<view class="my-bottom wallet" bindtap="myWallet">
-					<view class="number">2.00</view>
-					<view class="title">可提收益</view>
-				</view>
-				<view class="my-bottom grand-come" bindtap="myWallet">
-					<view class="number">1.00</view>
-					<view class="title">累计收益</view>
-				</view>
-			</view>
-
+			</block>
 			<view bindtap="toVip" class="interests">
-			{{!isLogin || isFirstProxy==1 ?'注册会员': '会员权益'}}
+				{{!isLogin || isFirstProxy==1 ?'注册会员': '会员权益'}}
 			</view>
 		</view>
 	</view>
@@ -61,7 +62,7 @@
 					<button formType="submit" class="btn-normal">
 						<text class="order-navbar__icon iconfont form-all"></text>
 						<text class="order-navbar__name">待付款</text>
-						<text class="order-badge" wx:if="{{orderCount.payment > 0}}">{{orderCount.payment}}</text>
+						<text class="order-badge" wx:if="{{countNoPay > 0}}">{{countNoPay}}</text>
 					</button>
 				</form>
 			</view>
@@ -70,7 +71,7 @@
 					<button formType="submit" class="btn-normal">
 						<text class="order-navbar__icon iconfont daifukuan"></text>
 						<text class="order-navbar__name">待发货</text>
-						<text class="order-badge" wx:if="{{orderCount.delivery > 0}}">{{orderCount.delivery}}</text>
+						<!-- <text class="order-badge" wx:if="{{orderCount.delivery > 0}}">{{orderCount.delivery}}</text> -->
 					</button>
 				</form>
 			</view>
@@ -79,7 +80,7 @@
 					<button formType="submit" class="btn-normal">
 						<text class="order-navbar__icon iconfont daishouhuo"></text>
 						<text class="order-navbar__name">待收货</text>
-						<text class="order-badge" wx:if="{{orderCount.received > 0}}">{{orderCount.received}}</text>
+						<!-- <text class="order-badge" wx:if="{{orderCount.received > 0}}">{{orderCount.received}}</text> -->
 					</button>
 				</form>
 			</view>
@@ -104,15 +105,15 @@
 		</view>
 		<view class="weui-flex">
 			<view class="weui-flex__item add" bindtap="toMyFan" data-type="today">
-				<view class="number">100</view>
+				<view class="number">{{todayCount}}</view>
 				<view class="title">今日新增</view>
 			</view>
 			<view class="weui-flex__item add" bindtap="toMyFan" data-type="month">
-				<view class="number">100</view>
+				<view class="number">{{monthCount}}</view>
 				<view class="title">本月新增</view>
 			</view>
 			<view class="weui-flex__item add" bindtap="toMyFan" data-type="all">
-				<view class="number">100</view>
+				<view class="number">{{allCount}}</view>
 				<view class="title">全部粉丝</view>
 			</view>
 		</view>
@@ -145,4 +146,4 @@
 </view>
 
 
-<loginModal is-show="{{modalName=='DialogModal1'}}" bind:cancel="hideModal"  bind:confirm="successBack"></loginModal>
+<loginModal is-show="{{modalName=='DialogModal1'}}" bind:cancel="hideModal" bind:confirm="successBack"></loginModal>

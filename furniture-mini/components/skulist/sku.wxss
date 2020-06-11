@@ -70,11 +70,15 @@
   font-size: 28rpx;
   color: #000;
   font-weight: bold;
-  padding: 18rpx 0;
+  padding: 18rpx 0 8rpx;
+}
+.sku-list .sku-item-list {
+  flex-wrap: wrap;
 }
 .sku-list .sku-item-list .item-name{
   font-size: 20rpx;
   padding: 10rpx 26rpx;
+  margin-top: 10rpx;
   background: #f4f4f4;
   color: #000;
   margin-right: 30rpx;

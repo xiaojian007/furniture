@@ -136,6 +136,9 @@ Page({
         this.setData({
           loading: false
         })
+        wx.navigateBack({
+          delta: 1,
+        })
         wx.showToast({
           title: err.message || app.globalData.msgUnknown,
           icon: 'none'
@@ -181,7 +184,7 @@ Page({
         pageNum: 1,
         pageSize: 10
       }
-    }  else if (newSortType === 'sales') {
+    } else if (newSortType === 'sales') {
       that.params = {
         name: that.params.name,
         typeSecondId: that.params.typeSecondId,

@@ -32,7 +32,7 @@
 						<view wx:if="{{item.orderStatus==5}}" class="cancel">已失效</view>
 					</view>
 					<view class="order-product-item" wx:key="productId" data-id="{{item.orderId}}" bindtap="toOrderDetail">
-						<view class="product" wx:for="{{item.orderItemList}}" wx:for-item="product">
+						<view class="product" wx:for="{{item.orderItemList}}" wx:key="productIndex" wx:for-item="product">
 							<image class="img" catchtap="toProductDetail" data-id="{{product.productId}}" src="{{product.smallImage}}"></image>
 							<view class="info">
 								<text class="title">{{product.productName}}</text>
@@ -51,7 +51,7 @@
 						<view class="order-time">{{item.orderTime}}</view>
 						<view class="btns">
 							<button data-value="{{item}}" wx:if="{{item.orderStatus==1 | item.orderStatus==2 | item.orderStatus==3}}" size="small" class="btn btn-cancel" open-type="contact">联系客服</button>
-							<button data-value="{{item.orderId}}" wx:if="{{item.orderStatus==0}}" size="small" class="btn btn-cancel" bindtap="cancelOrder">取消订单</button>
+							<button data-value="{{item.orderNo}}" wx:if="{{item.orderStatus==0}}" size="small" class="btn btn-cancel" bindtap="cancelOrder">取消订单</button>
 							<button data-value="{{item}}" wx:if="{{item.orderStatus==0}}" size="small" class="btn" bindtap="payOrder">去付款</button>
 							<button data-value="{{item.orderId}}" wx:if="{{item.orderStatus==2}}" size="small" class="btn" bindtap="confirmReceive">确认收货</button>
 							<!-- <button data-value="{{item}}" wx:if="{{item.orderStatus==3 | item.orderStatus==4}}" size="small" class="btn" bindtap="buyAgain">再次购买</button> -->

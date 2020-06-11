@@ -1,34 +1,5 @@
 <template>
 	<div class="list-panel" v-loading="loading">
-		<div class="list-search">
-			<el-form ref="form" :inline="true" :model="params" class="form-search">
-				<!-- <el-form-item size="small">
-					<ComDateRange
-						ref="input-0"
-						:mode="1"
-						:clearable="true"
-						class="date-width"
-						@change="changeDateRangeOperate"
-					></ComDateRange>
-				</el-form-item> -->
-				<!-- <div class="input-search">
-					<el-form-item size="small" label=" ">
-						<el-input
-							v-model.trim="params.searchKey"
-							class="search-key"
-							clearable
-							placeholder="请输入标题"
-							@keyup.enter.native="enterSearch"
-						></el-input>
-					</el-form-item>
-					<el-form-item size="small">
-						<el-button type="warning" @click="search" :loading="querying"
-							>查询</el-button
-						>
-					</el-form-item>
-				</div> -->
-			</el-form>
-		</div>
 		<div class="list-result">
 			<div class="list-buttons">
 				<el-button

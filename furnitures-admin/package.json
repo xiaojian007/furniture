@@ -1,6 +1,6 @@
 {
     "name": "furniture",
-    "version": "20.6.0058",
+    "version": "20.6.234311",
     "private": true,
     "scripts": {
         "serve": "vue-cli-service serve",

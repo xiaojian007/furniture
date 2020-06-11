@@ -1,34 +1,5 @@
 <template>
 	<div class="list-panel" v-loading="loading">
-		<div class="list-search">
-			<el-form ref="form" :inline="true" :model="params" class="form-search">
-				<!-- <el-form-item size="small">
-					<ComDateRange
-						ref="input-0"
-						:mode="1"
-						:clearable="true"
-						class="date-width"
-						@change="changeDateRangeOperate"
-					></ComDateRange>
-				</el-form-item> -->
-				<div class="input-search">
-					<el-form-item size="small" label=" ">
-						<el-input
-							v-model.trim="params.searchKey"
-							class="search-key"
-							clearable
-							placeholder="请输入标题"
-							@keyup.enter.native="enterSearch"
-						></el-input>
-					</el-form-item>
-					<el-form-item size="small">
-						<el-button type="warning" @click="search" :loading="querying"
-							>查询</el-button
-						>
-					</el-form-item>
-				</div>
-			</el-form>
-		</div>
 		<div class="list-result">
 			<div class="list-buttons">
 				<el-button
@@ -67,26 +38,21 @@
 						>
 							<template slot-scope="scope">
 								<template v-if="field.prop === 'operation'">
-									<el-button
-										type="text"
-										@click="$refs.edit.load(scope.row.articleId)"
-									>
+									<el-button type="text" @click="$refs.edit.load(scope.row)">
 										修改
 									</el-button>
-									<el-button type="text" @click="deleteInfo(scope.row.articleId)">
+                                    <el-button type="text" @click="deleteInfo(scope.row.dictId)">
 										删除
 									</el-button>
 								</template>
-									<template v-else-if="field.prop === 'articleStatus'">
-										<el-switch
-											:value="scope.row.articleStatus == 1"
-											@change="
-												(val, id) =>
-													changeArticleStatus(val, scope.row.articleId)
-											"
-										>
-										</el-switch>
-									</template>
+								<template v-else-if="field.prop === 'dictValueExtra1'">
+									<el-image
+										style="width: 100px; height: 100px"
+										:src="scope.row.dictValueExtra1"
+										:preview-src-list="[scope.row.dictValueExtra1]"
+									>
+									</el-image>
+								</template>
 								<template v-else-if="field.prop === 'updateTime'">
 									<div v-html="formatDateOutput(scope.row[field.prop])"></div>
 								</template>
@@ -121,12 +87,8 @@
 
 <script>
 	import listMixin from "@mixins/list.mixin";
-	import EditInfo from "./components/DialogEditInfo";
-	import {
-		addAndUpdateArticle,
-		deteleArticle,
-		getArticleList
-	} from "@api/information/information";
+	import EditInfo from "./components/DialogEditRecommend";
+	import { deteleDict, getDictList } from "@api/marketing/index";
 
 	export default {
 		mixins: [listMixin],
@@ -144,25 +106,18 @@
 				fields: [
 					{
 						show: true,
-						prop: "articleId",
+						prop: "dictValueExtra1",
 						align: "center",
-						label: "标题",
-						width: 80
-					},
+						label: "精选栏目",
+						width: 130
+                    },
 					{
 						show: true,
-						prop: "articleTitle",
+						prop: "dictValue",
 						align: "center",
-						label: "标题",
+						label: "数据字典Value",
 						width: 130
-                    },
-                    {
-						show: true,
-						prop: "articleStatus",
-						align: "center",
-						label: "发布状态",
-						width: 130
-                    },
+					},
 
 					{
 						show: true,
@@ -214,38 +169,11 @@
 					this.params.endTime = dateRanges[1];
 				}
 				this.query();
-			},
-			query() {
-				let that = this;
-				that.querying = true;
-				that.loading = true;
-				let paramsData = {
-					pageNum: that.params.pageNum,
-					pageSize: that.params.pageSize,
-					startTime: that.params.startTime,
-					endTime: that.params.endTime,
-					articleTitle: that.params.searchKey
-				};
-				getArticleList(paramsData)
-					.then(data => {
-						if (data.succeed) {
-							that.list = data.body.list || [];
-							that.page.totalCount = data.body.total;
-						} else {
-							that.$message.warning(data.body.message || that.MSG_UNKNOWN, that);
-						}
-					})
-					.catch(err => {
-						that.$message.warning(err.body.message || that.MSG_UNKNOWN, that);
-					})
-					.finally(() => {
-						that.querying = false;
-						that.loading = false;
-					});
-			},
+            },
+
 			deleteInfo(id) {
 				let that = this;
-				that.$confirm("确认删除改该文章吗？", "提示", {
+				that.$confirm("确认删除改该精选图片吗？", "提示", {
 					confirmButtonText: "确认",
 					cancelButtonText: "取消",
 					customClass: "custom-confirm custom-confirm-danger", // 图标样式
@@ -255,7 +183,7 @@
 					showClose: false // 是否显示关闭按钮
 				}).then(() => {
 					that.querying = true;
-					deteleArticle({ articleId: id })
+					deteleDict({ dictId: id })
 						.then(data => {
 							if (data.succeed) {
 								that.$message.success("删除成功", that);
@@ -271,51 +199,32 @@
 							that.querying = false;
 						});
 				});
-            },
-
-			/**
-			 * 是否发布
-			 * @method changeArticleStatus
-			 * @param {Bolean} value 打开还是关闭
-			 * @param {Number} id 点击的列表数据id
-			 *
-			 */
-			changeArticleStatus(value, id) {
-				console.log(id);
+			},
+			query() {
 				let that = this;
-				that.$confirm(value ? "是否确认发布？" : "是否取消发布？", "", {
-					confirmButtonText: "确定",
-					cancelButtonText: "取消",
-					showClose: false,
-					closeOnPressEscape: false,
-					closeOnClickModal: false,
-					customClass: "message-custom",
-					confirmButtonClass: "message-confirm",
-					cancelButtonClass: "message-cancel"
-				}).then(() => {
-					let params = {
-						articleId: id,
-						articleStatus: value ? 1 : 0
-					};
-					addAndUpdateArticle(params)
-						.then(data => {
-							if (data.succeed) {
-								that.$message({
-									type: "success",
-									message: value ? "已发布！" : "已取消发布！"
-								});
-								that.query();
-							} else {
-								that.$message.warning(data.body.message || that.MSG_UNKNOWN, that);
-							}
-						})
-						.catch(err => {
-							that.$message.warning(err.body.message || that.MSG_UNKNOWN, that);
-						})
-						.finally(() => {
-							that.querying = false;
-						});
-				}).catch(()=>{});
+				that.querying = true;
+				that.loading = true;
+				let paramsData = {
+					pageNum: that.params.pageNum,
+					pageSize: that.params.pageSize,
+					dictCode: "recommend"
+				};
+				getDictList(paramsData)
+					.then(data => {
+						if (data.succeed) {
+                            that.list = data.body.list || [];
+							that.page.totalCount = data.body.total;
+						} else {
+							that.$message.warning(data.body.message || that.MSG_UNKNOWN, that);
+						}
+					})
+					.catch(err => {
+						that.$message.warning(err.body.message || that.MSG_UNKNOWN, that);
+					})
+					.finally(() => {
+						that.querying = false;
+						that.loading = false;
+					});
 			}
 		}
 	};

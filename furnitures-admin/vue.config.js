@@ -37,7 +37,7 @@ if (env === "production") {
 }
 
 module.exports = {
-	publicPath: process.env.VUE_APP_API_MODE === "dev" ? "/txhan/" : "/",
+	publicPath: process.env.VUE_APP_API_MODE === "dev" ? "/txhaian/" : "/txhaian/",
 	productionSourceMap: false, // 生产环境是否生成 sourceMap 文件
 	chainWebpack: config => {
 		config.resolve.alias.set("@", path.resolve(__dirname, "src"));

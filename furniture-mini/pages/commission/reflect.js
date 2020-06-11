@@ -12,13 +12,15 @@ Page({
     bankName: '',
     mobile: '',
     name: '',
+    availableMoney: '' // 可提收益
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-
+    let availableMoney = options.money
+    this.setData({ availableMoney })
   },
 
   /**
@@ -60,7 +62,11 @@ Page({
       return false;
     }
     if (Number(values.amount) < 5) {
-    this.data.error = '提现金额必须大于5';
+      this.data.error = '提现金额必须大于5';
+      return false;
+    }
+    if (Number(values.amount) > Number(this.data.availableMoney || 0)) {
+      this.data.error = '提现金额必须小于可提金额';
       return false;
     }
     if (values.name === '') {

@@ -7,7 +7,7 @@
 	<scroll-view class="fans-list">
 		<view class="fans-item" wx:for="{{list}}" wx:key='index'>
 			<view class="fans-img">
-				<image mode="aspectFill" src="{{item.childUserImage || 'http://47.101.209.229/photo/1590413719258.png'}}"></image>
+				<image mode="aspectFill" src="{{item.childUserImage || 'https://www.txhajj.com/photo/arImg.png'}}"></image>
 			</view>
 			<view class="fans-name">
 				<view>{{item.subscribeNickName}}</view>

@@ -6,12 +6,16 @@ Page({
    * 页面的初始数据
    */
   data: {
+    todayCount: 0, //今日粉丝数
+    monthCount: 0, //本月粉丝数
+    allCount: 0, // 全部粉丝数
+    totalAmount: 0, // 总佣金
+    ongoingAmount: 0, // 待发放金额
+    grandAmount: 0, // 已提现佣金
+    countNoPay: 0, // 未支付数量
     isLogin: false, // 是否授权登录
     isFirstProxy: 1, // 二级代理
     moblie: '',
-    orderCount: {
-      payment: 9
-    },
     modalName: '' // 登录弹出
   },
 
@@ -34,6 +38,7 @@ Page({
           isFirstProxy: app.globalData.userInfo.discountNum,
           moblie: app.globalData.userInfo.moblie || ''
         })
+        that.query()
       })
     }, false)
   },
@@ -48,6 +53,37 @@ Page({
     });
   },
 
+  query() {
+    let that = this;
+    let params = {
+      userId: app.globalData.userInfo.userId
+    }
+    app.request({
+      url: 'userdiscount/center-count',
+      data: params,
+      method: 'POST',
+      success(res) {
+        wx.hideLoading()
+        that.setData({
+          todayCount: res.todayCount || 0,
+          monthCount: res.monthCount || 0,
+          allCount: res.allCount || 0,
+          totalAmount: res.totalAmount || 0,
+          ongoingAmount: res.ongoingAmount || 0,
+          grandAmount: res.grandAmount || 0,
+          countNoPay: res.countNoPay || 0
+        })
+      },
+      fail(err) {
+        wx.hideLoading()
+        console.log('个人中心获取失败:', err)
+        wx.showToast({
+          title: err.message || '系统繁忙',
+          icon: 'none'
+        })
+      }
+    }, false)
+  },
   /**
    * 订单导航跳转
    */
@@ -76,7 +112,12 @@ Page({
   toMyFan(e) {
     let that = this;
     if (that.data.isLogin) {
-      let type = app.getEventDataset(e).type
+      let type = 3
+      if (app.getEventDataset(e).type === 'today') {
+        type = 1;
+      } else if ((app.getEventDataset(e).type === 'month')) {
+        type = 2;
+      }
       // 转跳指定的页面
       wx.navigateTo({
         url: '/pages/my/fans?type=' + type
@@ -150,7 +191,7 @@ Page({
     let that = this;
     if (that.data.isLogin) {
       // 转跳指定的页面
-      if(that.data.isFirstProxy == 1) {
+      if (that.data.isFirstProxy == 1) {
         wx.navigateTo({
           url: '/pages/reservation/index',
         })
@@ -159,7 +200,7 @@ Page({
           url: '/pages/share/index',
         })
       }
-      
+
     } else {
       that.setData({
         modalName: 'DialogModal1'

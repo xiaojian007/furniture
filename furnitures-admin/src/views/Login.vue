@@ -47,8 +47,8 @@
 		data() {
 			return {
 				form: {
-					account: "17621962518",
-					password: "123456"
+					account: "",
+					password: ""
 				},
 				submitting: false,
 				rules: {

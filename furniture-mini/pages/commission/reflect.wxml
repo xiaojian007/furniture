@@ -5,7 +5,7 @@
 			<span>¥</span>
 			<input name="amount" placeholder="请输入提现金额" type="number" value="{{amount}}"></input>
 		</view>
-		<view class="bottom">可当前可提金额¥0(<span>5</span>元起提，仅支持微信提现)</view>
+		<view class="bottom">可当前可提金额¥{{availableMoney}}(<span>5</span>元起提，仅支持微信提现)</view>
 	</view>
 	<view class="address-cont-title b-f b-b">
 		<view class="list address-box dis-flex b-b">

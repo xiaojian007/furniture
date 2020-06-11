@@ -74,7 +74,7 @@
 			logout() {
 				setTimeout(() => {
 					this.setInfo({});
-					window.location.replace("/" + window.location.search);
+					window.location.replace("/txhaian/" + window.location.search);
 				}, 100);
 			}
 		}

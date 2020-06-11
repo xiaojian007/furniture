@@ -139,15 +139,14 @@ Page({
    */
   cancelOrder: function (e) {
     let that = this;
-    let orderId = app.getEventDataset(e).value;
+    let orderNo = app.getEventDataset(e).value;
     wx.showModal({
       title: "提示",
       content: "确认取消订单？",
       success: function (o) {
         if (o.confirm) {
           let params = {
-            orderId: orderId,
-            orderStatus: 4
+            orderNo: orderNo
           }
           wx.showLoading({
             title: '取消中',
@@ -162,7 +161,7 @@ Page({
             },
             fail: (err) => {
               wx.hideLoading()
-              this.setData({
+              that.setData({
                 loading: false
               })
               wx.showToast({

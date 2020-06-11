@@ -21,6 +21,9 @@
 			<el-form-item label="类别名称：" size="small" prop="typeName">
 				<el-input v-model="form.typeName" placeholder="请输入类别名称"></el-input>
 			</el-form-item>
+            <el-form-item label="类别顺序：" size="small" prop="sortNum">
+				<el-input v-model="form.sortNum" type="number" maxlength="5" placeholder="按数字排序"></el-input>
+			</el-form-item>
 			<el-form-item label="类别图片：" size="small">
 				<ComUploadSinglePicture
 					:styleBox="true"
@@ -61,7 +64,8 @@
 				isNoCarouselPic: true, // 是否需要添加轮播图
 				form: {
 					typeId: "", //类别id
-					parentId: "", // 父级
+                    parentId: "", // 父级
+                    sortNum: 0, // 排序
 					typeLevel: 0, // 分类级别
 					typeName: "", //类别名称
 					resourceIdList: [] //权限id
@@ -71,6 +75,13 @@
 				},
 				defaultKeys: [],
 				rules: {
+                    sortNum: [
+                        {
+							required: true,
+							message: "不能为空",
+							trigger: "blur"
+						}
+                    ],
 					typeName: [
 						{
 							required: true,
@@ -100,7 +111,8 @@
 				if (id > 0) {
 					this.title = "修改类型";
 					this.form.parentId = data.data.parentId;
-					this.form.typeId = data.data.id;
+                    this.form.typeId = data.data.id;
+                    this.form.sortNum = data.data.sortNum;
 					this.form.typeLevel = data.data.typeLevel;
 					this.query(); // 获取类别信息
 				} else {
@@ -118,7 +130,8 @@
 						let formData = {
                             bannerImage: that.form.bannerImage ? that.form.bannerImage.join(',') : '',
                             typeImage: that.form.typeImage,
-							parentId: that.form.parentId,
+                            parentId: that.form.parentId,
+                            sortNum: Number(that.form.sortNum),
 							showHome: 0, // 首页是否展示 0:否 1:是
 							typeLevel: that.form.typeLevel,
 							typeName: that.form.typeName
@@ -133,7 +146,7 @@
 									console.log(data);
 									that.visible = false;
 									that.$message.success(
-										that.form.skutypeIdId > 0 ? "修改成功" : "添加成功",
+										that.form.typeId > 0 ? "修改成功" : "添加成功",
 										that
 									);
 									that.$emit("success");

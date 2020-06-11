@@ -97,11 +97,11 @@ Component({
         imgDraw: {
           width: '750rpx',
           height: '1324rpx',
-          background: 'http://cloud.pack.ininin.com/1ce12d663a9ce4ae1b6eb2bd614f8a44',
+          background: 'https://www.txhajj.com/photo/share_bg.jpeg',
           views: [
             {
               type: 'image',
-              url: detail.smallImage ? detail.smallImage : 'https://qiniu-image.qtshe.com/1560248372315_467.jpg',
+              url: detail.smallImage ? detail.smallImage : 'https://www.txhajj.com/photo/food_img.jpg',
               css: {
                 top: '205rpx',
                 left: '125rpx',
@@ -113,7 +113,7 @@ Component({
             },
             {
               type: 'image',
-              url: app.globalData.userInfo.avatarUrl || 'https://qiniu-image.qtshe.com/default-avatar20170707.png',
+              url: app.globalData.userInfo.avatarUrl || 'https://www.txhajj.com/photo/logo.jpeg',
               css: {
                 top: '1004rpx',
                 left: '125rpx',
@@ -158,12 +158,12 @@ Component({
             },
             {
               type: 'image',
-              url: url || 'https://cloud.pack.ininin.com/0e73483adb24bbec07070ffaa6f741a0', // 二维码
+              url: url || 'https://www.txhajj.com/photo/qr_code.jpg', // 二维码
               css: {
-                top: '1010rpx',
+                top: '980rpx',
                 right: '67rpx',
-                width: '120rpx',
-                height: '120rpx'
+                width: '160rpx',
+                height: '160rpx'
               }
             }
           ]
@@ -176,11 +176,11 @@ Component({
         imgDraw: {
           width: '750rpx',
           height: '1324rpx',
-          background: 'http://cloud.pack.ininin.com/1ce12d663a9ce4ae1b6eb2bd614f8a44',
+          background: 'https://www.txhajj.com/photo/share_bg.jpeg',
           views: [
             {
               type: 'image',
-              url: detail.articleImage ? detail.articleImage : 'https://qiniu-image.qtshe.com/1560248372315_467.jpg',
+              url: detail.articleImage ? detail.articleImage : 'https://www.txhajj.com/photo/food_img.jpg',
               css: {
                 top: '205rpx',
                 left: '125rpx',
@@ -192,7 +192,7 @@ Component({
             },
             {
               type: 'image',
-              url: app.globalData.userInfo.avatarUrl || 'https://qiniu-image.qtshe.com/default-avatar20170707.png',
+              url: app.globalData.userInfo.avatarUrl || 'https://www.txhajj.com/photo/logo.jpeg',
               css: {
                 top: '1004rpx',
                 left: '125rpx',
@@ -226,7 +226,7 @@ Component({
             },
             {
               type: 'image',
-              url: url || 'https://cloud.pack.ininin.com/0e73483adb24bbec07070ffaa6f741a0', // 二维码
+              url: url || 'https://www.txhajj.com/photo/qr_code.jpg', // 二维码
               css: {
                 top: '860rpx',
                 left: '125rpx',

@@ -9,14 +9,14 @@ const { get, post } = generateModuleRequest("");
  */
 export const addAndUpdateDict = params => {
 	let url = "/dict/save";
-	if (params.dictCode > 0) {
+	if (params.dictId > 0) {
 		url = "/dict/update";
 	}
 	return post(url, params);
 };
 
 export const updateDict = params => {
-	return post('/dict/update', params);
+	return post("/dict/update", params);
 };
 
 /**

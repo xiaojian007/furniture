@@ -38,34 +38,36 @@
 				<!-- 专题推荐 -->
 				<view class="recommend">
 					<view class="recommend-title home-title">专题推荐</view>
-					<navigator hover-class="none" class="recommend-0">
+					<navigator url="/pages/my/about" hover-class="none" class="recommend-0">
 						<image src="../../image/recommend_0.png" mode="widthFix"></image>
 					</navigator>
 					<view class="recommend-img weui-flex">
-						<navigator hover-class="none" class="recommend-1 weui-flex__item">
-							<image src="../../image/recommend_1.png" mode="widthFix"></image>
-						</navigator>
-						<navigator hover-class="none" class="recommend-2 weui-flex__item">
+						<view wx:for="{{recommendList}}" wx:key="index" bindtap="titleToSeach" data-second-id="{{item.typeSecondId}}" data-first-id="{{item.typeFirstId}}" class="recommend-1 weui-flex__item">
+							<image src="{{item.image}}" mode="widthFix"></image>
+						</view>
+						<!-- <view bindtap="titleToSeach" class="recommend-2 weui-flex__item">
 							<image src="../../image/recommend_2.png" mode="widthFix"></image>
-						</navigator>
-						<navigator hover-class="none" class="recommend-1 weui-flex__item">
+						</view>
+						<view bindtap="titleToSeach" class="recommend-1 weui-flex__item">
 							<image src="../../image/recommend_3.png" mode="widthFix"></image>
-						</navigator>
+						</view> -->
 					</view>
 				</view>
 
 				<!-- 悦物 -->
 				<view class="yuewu">
 					<view class="home-title">悦物</view>
-					<navigator url="/pages/goods/index" class="yuewu-item {{index===0?'yuewu-item-0':''}}" hover-class="none" wx:for="{{productYuewu}}" wx:key="index">
-						<image class="yuewu-img" mode="widthFix" src="{{index===0?'../../image/home_p1.png':'../../image/home_p2.png'}}"></image>
-						<view class="yuewu-0" wx:if="{{index===0}}">
-							产品才是需要标准，幸福却是生活的自我定义
-						</view>
-						<view class="yuewu-name">{{item.name}}</view>
-						<view class="yuewu-line"></view>
-						<view class="yuewu-see">查看更多》</view>
-					</navigator>
+					<block wx:for="{{tabList}}" wx:key="index" wx:if="{{index<4}}">
+						<navigator url="/pages/search/index?typeFirstId={{item.id}}" class="yuewu-item {{index===0?'yuewu-item-0':''}}" hover-class="none">
+							<image class="yuewu-img" mode="widthFix" src="{{index===0?'../../image/home_p1.png':'../../image/home_p2.png'}}"></image>
+							<view class="yuewu-0" wx:if="{{index===0}}">
+								产品才是需要标准，幸福却是生活的自我定义
+							</view>
+							<view class="yuewu-name">{{item.name}}系列</view>
+							<view class="yuewu-line"></view>
+							<view class="yuewu-see">查看更多》</view>
+						</navigator>
+					</block>
 				</view>
 				<view class=" home-title">热销产品</view>
 				<!-- 商品列表 -->

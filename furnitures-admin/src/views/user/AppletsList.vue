@@ -2,7 +2,7 @@
 	<div class="list-panel" v-loading="loading">
 		<div class="list-search">
 			<el-form ref="form" :inline="true" :model="params" class="form-search">
-				<el-form-item size="small">
+				<!-- <el-form-item size="small">
 					<ComDateRange
 						ref="input-0"
 						:mode="1"
@@ -10,7 +10,7 @@
 						class="date-width"
 						@change="changeDateRangeOperate"
 					></ComDateRange>
-				</el-form-item>
+				</el-form-item> -->
 				<el-form-item label="拓展状态" size="small">
 					<el-select
 						v-model="params.extendedState"
