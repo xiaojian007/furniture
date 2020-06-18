@@ -76,3 +76,7 @@
 	<view class="l">实付: ￥{{actualPrice}}</view>
 	<view class="r {{address.addressId ? '' : 'disabled'}}" hover-class="{{address.addressId ? 'active' : ''}}" bindtap="submitOrder">去付款</view>
 </view>
+
+
+	<!-- 快捷导航 -->
+	<shortcut></shortcut>

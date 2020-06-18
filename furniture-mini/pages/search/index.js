@@ -36,14 +36,16 @@ Page({
     this.params.typeSecondId = typeSecondId
 
     let that = this;
-    // 设置商品列表高度
-    that.setListHeight();
-    // 记录option
-    that.setData({ option, typeSecondId: typeSecondId }, function () {
-      // 获取商品列表
-      that.getGoodsList(false, true);
-      that.getTypeDetail(typeFirstId)
-    });
+    app.loginCheck(this, () => {
+      // 设置商品列表高度
+      that.setListHeight();
+      // 记录option
+      that.setData({ option, typeSecondId: typeSecondId }, function () {
+        // 获取商品列表
+        that.getGoodsList(false, true);
+        that.getTypeDetail(typeFirstId)
+      });
+    }, false)
 
   },
   searchInput(e) {

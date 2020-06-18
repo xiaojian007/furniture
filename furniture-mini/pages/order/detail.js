@@ -18,8 +18,10 @@ Page({
     this.orderId = options.orderId;
   },
 
-  onShow: function() {
-    this.getOrderDetail(this.orderId);
+  onShow: function () {
+    app.loginCheck(this, () => {
+      this.getOrderDetail(this.orderId);
+    }, false)
   },
   /**
    * 获取订单详情
@@ -32,7 +34,7 @@ Page({
     app.request({
       url: 'order/detail',
       method: 'POST',
-      data: {orderId: orderId},
+      data: { orderId: orderId },
       success: (data) => {
         let receiveAddress = data.receiveAddress || {}
         that.setData({
@@ -66,9 +68,9 @@ Page({
     })
   },
 
-   /**
-   * 取消订单
-   */
+  /**
+  * 取消订单
+  */
   cancelOrder: function (e) {
     let that = this;
     let orderId = app.getEventDataset(e).value;
@@ -109,9 +111,9 @@ Page({
     });
   },
 
- /**
-   * 发起付款
-   */
+  /**
+    * 发起付款
+    */
   payOrder(e) {
     let orderItem = app.getEventDataset(e).value
     this.generateOrder(orderItem.totalRealAmount, orderItem.orderId, orderItem.orderNo)
@@ -187,7 +189,7 @@ Page({
         })
       },
       complete: (res) => {
-       }
+      }
     })
   },
   // 支付完成后修改订单状态

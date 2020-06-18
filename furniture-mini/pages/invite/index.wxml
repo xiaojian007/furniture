@@ -7,3 +7,6 @@
     <text>汀·西海岸微商城——{{name}}</text>
   </view>
 </view>
+
+	<!-- 快捷导航 -->
+	<shortcut></shortcut>

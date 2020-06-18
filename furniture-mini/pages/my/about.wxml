@@ -10,3 +10,7 @@
 		<view class="source">来源：汀西海岸微商城</view>
 	</view> -->
 </view>
+
+
+	<!-- 快捷导航 -->
+	<shortcut></shortcut>

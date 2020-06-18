@@ -15,12 +15,13 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    this.query()
-    this.setData({
-      avatarUrl: app.globalData.userInfo.avatarUrl,
-      name: app.globalData.userInfo.nickName
-
-    })
+    app.loginCheck(this, () => {
+      this.query()
+      this.setData({
+        avatarUrl: app.globalData.userInfo.avatarUrl,
+        name: app.globalData.userInfo.nickName
+      })
+    }, false)
   },
 
   /**
@@ -64,7 +65,7 @@ Page({
   onReachBottom: function () {
 
   },
-  query(){
+  query() {
     let params = {
       userId: app.globalData.userInfo.userId,
       path: '/pages/home/index'

@@ -29,13 +29,15 @@ Page({
     this.params.name = option.name || ''
 
     let that = this;
-    // 设置商品列表高度
-    that.setListHeight();
-    // 记录option
-    that.setData({ option, searchKey: option.name }, function () {
-      // 获取商品列表
-      that.getGoodsList(false, true);
-    });
+    app.loginCheck(this, () => {
+      // 设置商品列表高度
+      that.setListHeight();
+      // 记录option
+      that.setData({ option, searchKey: option.name }, function () {
+        // 获取商品列表
+        that.getGoodsList(false, true);
+      });
+    }, false)
 
   },
   searchInput(e) {

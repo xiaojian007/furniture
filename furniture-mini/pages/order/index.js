@@ -46,8 +46,10 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    // 获取订单列表
-    this.getOrderList(false, true);
+    app.loginCheck(this, () => {
+      // 获取订单列表
+      this.getOrderList(false, true);
+    }, false)
   },
   /**
  * 页面相关事件处理函数--监听用户下拉动作
@@ -91,18 +93,19 @@ Page({
     }
     let params = {
       userId: app.globalData.userInfo.userId,
-      pageNum: this.params.pageNum,
-      pageSize: this.params.pageSize,
-      orderStatus: this.params.orderStatus
+      pageNum: that.params.pageNum,
+      pageSize: that.params.pageSize,
+      orderStatus: that.params.orderStatus
     }
     app.request({
       method: 'GET',
       url: 'order/page',
       data: params,
       success: (data) => {
+        debugger
         let orderList = data.list || []
         wx.hideLoading()
-        this.setData({
+        that.setData({
           loading: false,
           orderList: nextPage ? [...that.data.orderList, ...orderList] : orderList,
           total: data.total || 0
@@ -110,7 +113,7 @@ Page({
       },
       fail: (err) => {
         wx.hideLoading()
-        this.setData({
+        that.setData({
           loading: false
         })
         wx.showToast({
@@ -238,6 +241,7 @@ Page({
     })
   },
   payMoney(param, orderNo) {
+    let that = this
     // 调起支付
     wx.requestPayment({
       timeStamp: param.timeStamp,
@@ -246,6 +250,7 @@ Page({
       signType: param.signType,
       paySign: param.paySign,
       success: (res) => {
+        console.log(res)
         that.payOK(orderNo);
       },
       fail: (res) => {
@@ -255,14 +260,13 @@ Page({
         })
       },
       complete: (res) => {
-       }
+      }
     })
   },
   // 支付完成后修改订单状态
   payOK(orderNo) {
     let that = this;
     let params = {
-      orderId: orderId,
       orderNo: orderNo
     }
     wx.showLoading({
@@ -274,12 +278,14 @@ Page({
       data: params,
       success: (data) => {
         wx.hideLoading()
-        console.log('datadatadatadatadata',params,data)
+        console.log('datadatadatadatadata', params, data)
         wx.showToast({
           title: '支付成功！',
           icon: 'success'
         })
-        that.getOrderList(false)
+        setTimeout(() => {
+          that.getOrderList(false)
+        }, 400)
       },
       fail: (err) => {
         wx.hideLoading()

@@ -26,69 +26,72 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    if (options.from == "product") {
-      // 直接购买
-      let product = wx.getStorageSync("checkoutProduct");
-      let sku = wx.getStorageSync("checkoutProductSku");
-      this.setData({
-        productList: [{
-          id: product.id,
-          checked: true,
-          picUrl: product.picUrl,
-          title: product.title,
-          spec: sku.specTextNoCount,
-          count: sku.count,
-          maxNum: sku.quota,
-          price: product.price
-        }],
-        totalPrice: product.price * sku.count
-      })
-      // 判断运费
-      if (product.price >= 88) {
+    app.loginCheck(this, () => {
+      if (options.from == "product") {
+        // 直接购买
+        let product = wx.getStorageSync("checkoutProduct");
+        let sku = wx.getStorageSync("checkoutProductSku");
         this.setData({
-          expressPrice: 0
+          productList: [{
+            id: product.id,
+            checked: true,
+            picUrl: product.picUrl,
+            title: product.title,
+            spec: sku.specTextNoCount,
+            count: sku.count,
+            maxNum: sku.quota,
+            price: product.price
+          }],
+          totalPrice: product.price * sku.count
+        })
+        // 判断运费
+        if (product.price >= 88) {
+          this.setData({
+            expressPrice: 0
+          })
+        } else {
+          this.setData({
+            expressPrice: 10
+          })
+        }
+        // 实际价格总计
+        let actualPrice = this.data.totalPrice + this.data.expressPrice - this.data.coupon.discount
+        this.setData({
+          actualPrice: actualPrice
         })
       } else {
-        this.setData({
-          expressPrice: 10
+        // 购物车结算
+        let cartList = wx.getStorageSync("cartList");
+        let totalPrice = options.totalPrice;
+        let allTotal = 0;
+        cartList.forEach(item => {
+          allTotal += Number(item.num)
         })
+        this.setData({
+          productList: cartList,
+          actualPrice: Number(totalPrice),
+          allTotal,
+          expressPrice: 0  // 运费 为0
+        })
+        this.getAddressList()
+        // 判断运费
+        // if (wx.getStorageSync("isExpressFree") == "true") {
+        //   this.setData({
+        //     expressPrice: 0
+        //   })
+        // } else {
+        //   this.setData({
+        //     expressPrice: 10
+        //   })
+        // }
+        // 实际价格总计
+        // let actualPrice = this.data.totalPrice + this.data.expressPrice - this.data.coupon.discount
+        // this.setData({
+        //   actualPrice: actualPrice
+        // })
       }
-      // 实际价格总计
-      let actualPrice = this.data.totalPrice + this.data.expressPrice - this.data.coupon.discount
-      this.setData({
-        actualPrice: actualPrice
-      })
-    } else {
-      // 购物车结算
-      let cartList = wx.getStorageSync("cartList");
-      let totalPrice = options.totalPrice;
-      let allTotal = 0;
-      cartList.forEach(item=>{
-        allTotal += Number(item.num)
-      })
-      this.setData({
-        productList: cartList,
-        actualPrice: Number(totalPrice),
-        allTotal,
-        expressPrice: 0  // 运费 为0
-      })
-      this.getAddressList()
-      // 判断运费
-      // if (wx.getStorageSync("isExpressFree") == "true") {
-      //   this.setData({
-      //     expressPrice: 0
-      //   })
-      // } else {
-      //   this.setData({
-      //     expressPrice: 10
-      //   })
-      // }
-      // 实际价格总计
-      // let actualPrice = this.data.totalPrice + this.data.expressPrice - this.data.coupon.discount
-      // this.setData({
-      //   actualPrice: actualPrice
-      // })
-    }
+    }, false)
+
   },
 
   /**
@@ -208,7 +211,6 @@ Page({
   // 去付款
   submitOrder: function () {
     let that = this
-   
     let actualPrice = that.data.actualPrice;
     let addressId = that.data.address.addressId;
     if (!addressId) {
@@ -236,13 +238,14 @@ Page({
       success: (data) => {
         wx.hideLoading()
         that.orderNo = data || ''
+        let orderNo = data || ''
         wx.showModal({
           title: '提示',
           content: '下单成功，请点击确认进行支付',
           showCancel: true,
           success: function (res) {
             if (res.confirm) {
-              that.generateOrder(params.totalPrice)
+              that.generateOrder(params.totalPrice, orderNo)
             } else {
               wx.showToast({
                 title: '请前往我的订单进行支付',
@@ -272,11 +275,11 @@ Page({
     })
   },
   // 生成商户订单
-  generateOrder(totalPrice) {
+  generateOrder(totalPrice, orderNo) {
     let that = this
     let params = {
       totalFee: totalPrice,
-      orderNo: that.orderNo,
+      orderNo: orderNo,
       openId: app.globalData.userInfo.openId
     }
     app.request({
@@ -300,7 +303,7 @@ Page({
             signType: signType,
             nonceStr: nonceStr
           }
-          that.payMoney(param)
+          that.payMoney(param, orderNo)
         } else {
           wx.showToast({
             title: '支付失败，请稍后重试！',
@@ -322,7 +325,8 @@ Page({
       }
     })
   },
-  payMoney(param) {
+  payMoney(param, orderNo) {
+    let that = this;
     // 调起支付
     wx.requestPayment({
       timeStamp: param.timeStamp,
@@ -330,17 +334,49 @@ Page({
       package: param.package,
       signType: param.signType,
       paySign: param.paySign,
-      success: (res) => { 
-        wx.navigateTo({
-          url: './pay-result?status=' + 1,
-        })
+      success: (res) => {
+        console.log(res)
+        that.payOK(orderNo);
       },
       fail: (res) => {
         wx.navigateTo({
           url: './pay-result?status=' + 0,
         })
-       },
+      },
       complete: (res) => { }
+    })
+  },
+
+  // 支付完成后修改订单状态
+  payOK(orderNo) {
+    let that = this;
+    let params = {
+      orderNo: orderNo
+    }
+    app.request({
+      url: 'order/payCallBack',
+      method: 'POST',
+      data: params,
+      success: (data) => {
+        setTimeout(() => {
+          wx.navigateTo({
+            url: './pay-result?status=' + 1,
+          })
+        }, 1000)
+      },
+      fail: (err) => {
+        wx.showToast({
+          title: err.message || app.globalData.msgUnknown,
+          icon: 'none',
+          duration: 1000
+        })
+        setTimeout(() => {
+          wx.navigateTo({
+            url: './pay-result?status=' + 0,
+          })
+        }, 1000)
+
+      }
     })
   }
 })

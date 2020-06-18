@@ -3,3 +3,7 @@
   <view class="name">汀 · 西海岸微商城-{{name}}</view>
   <view>注册时间：{{time}}</view>
 </view>
+
+
+	<!-- 快捷导航 -->
+	<shortcut></shortcut>

@@ -94,9 +94,9 @@
 					},
 					{
 						show: true,
-						prop: "logHttpIp",
+						prop: "logMethodName",
 						align: "center",
-						label: "请求ip",
+						label: "请求名称",
 						width: 100
 					},
 					{
@@ -123,7 +123,13 @@
 						prop: "logMethodPath",
 						align: "center",
 						label: "请求路径"
-					}
+                    },
+					{
+						show: true,
+						prop: "logHttpIp",
+						align: "center",
+						label: "请求IP"
+                    }
 				]
 			};
 		},

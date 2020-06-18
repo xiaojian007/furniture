@@ -1,3 +1,4 @@
+let app = getApp();
 // pages/pay-result/pay-result.js
 Page({
 
@@ -12,11 +13,14 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    if (options.status) {
-      this.setData({
-        status: options.status
-      })
-    }
+    app.loginCheck(this, () => {
+      if (options.status) {
+        this.setData({
+          status: options.status
+        })
+      }
+    }, false)
+
   },
 
   /**

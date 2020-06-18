@@ -48,8 +48,11 @@ Page({
 
   onShow() {
     let that = this;
-    // 获取商品信息
-    that.getGoodsDetail(that.productId);
+
+    app.loginCheck(this, () => {
+      // 获取商品信息
+      that.getGoodsDetail(that.productId);
+    }, false)
   },
 
   /**

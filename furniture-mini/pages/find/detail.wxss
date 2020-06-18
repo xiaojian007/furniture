@@ -19,7 +19,7 @@ page {
   height: 75rpx;
   width: 75rpx;
   position: fixed;
-  bottom: 50rpx;
+  bottom: 150rpx;
   right: 30rpx;
   border: 0;
   border-radius: 50%;

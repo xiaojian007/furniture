@@ -3,7 +3,7 @@
 	<view class="fans-top">
 		<view class="fans-title">收益钱包</view>
 		<view class="fans-number">可提总金额</view>
-		<view class="fans-money"><span>¥</span>{{totalAmount-ongoingAmount}}</view>
+		<view class="fans-money"><span>¥</span>{{totalAmount-ongoingAmount-grandAmount}}</view>
 		<navigator url="/pages/commission/reflect?money={{totalAmount-ongoingAmount}}" class="fans-btn">提现</navigator>
 	</view>
 	<view class="my-come">

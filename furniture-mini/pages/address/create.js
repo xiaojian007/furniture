@@ -27,8 +27,11 @@ Page({
       this.setData({
         addressId: options.addressId
       })
-      // 获取当前地址信息
-      this.getAddressDetail(options.addressId);
+
+      app.loginCheck(this, () => {
+        // 获取当前地址信息
+        this.getAddressDetail(options.addressId);
+      }, false)
     }
   },
   /**

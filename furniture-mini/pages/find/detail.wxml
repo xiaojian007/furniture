@@ -18,3 +18,5 @@
 <!-- 登录授权 -->
 <loginModal is-show="{{modalName=='DialogModal1'}}" bind:cancel="hideModal"  bind:confirm="successBack"></loginModal>
  
+<!-- 快捷导航 -->
+<shortcut></shortcut>

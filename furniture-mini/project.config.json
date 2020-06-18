@@ -138,11 +138,11 @@
 					"id": 11,
 					"name": "pages/goods/index",
 					"pathName": "pages/goods/index",
-					"query": "userId=1&productId=32",
+					"query": "productId=32&userId=3",
 					"scene": null
 				},
 				{
-					"id": -1,
+					"id": 12,
 					"name": "pages/goods/index",
 					"pathName": "pages/goods/index",
 					"query": "",

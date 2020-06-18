@@ -77,7 +77,7 @@ Page({
   getList: function () {
     let that = this
     app.request({
-      url: 'userdiscount/discount-detail',
+      url: 'userdiscount/center-count',
       data: {
         userId: app.globalData.userInfo.userId
       },

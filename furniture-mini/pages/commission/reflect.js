@@ -61,10 +61,10 @@ Page({
       this.data.error = '提现金额不能为空';
       return false;
     }
-    if (Number(values.amount) < 5) {
-      this.data.error = '提现金额必须大于5';
-      return false;
-    }
+    // if (Number(values.amount) < 5) {
+    //   this.data.error = '提现金额必须大于5';
+    //   return false;
+    // }
     if (Number(values.amount) > Number(this.data.availableMoney || 0)) {
       this.data.error = '提现金额必须小于可提金额';
       return false;

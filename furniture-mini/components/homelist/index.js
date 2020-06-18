@@ -131,7 +131,8 @@ Component({
           let list = []
           dataList.forEach((item) => {
             let discount = ''
-            let rate = util.calculator.div(this.data.discount, 10)
+            // let rate = util.calculator.div(this.data.discount, 10)
+            let rate = util.calculator.sub(1, this.data.discount)
             if (item.price) {
               let priceList = item.price.split('-')
               discount = util.calculator.mul(priceList[0], rate) + "-" + util.calculator.mul(priceList[1], rate)
@@ -352,7 +353,8 @@ Component({
           let list = []
           dataList.forEach((item) => {
             let discount = ''
-            let rate = util.calculator.div(this.data.discount, 1)
+            let rate = util.calculator.sub(1, this.data.discount)
+            // let rate = util.calculator.div(this.data.discount, 10)
             if (item.price) {
               let priceList = item.price.split('-')
               discount = util.calculator.mul(priceList[0], rate) + "-" + util.calculator.mul(priceList[1], rate)

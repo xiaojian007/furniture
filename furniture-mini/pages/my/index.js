@@ -35,9 +35,9 @@ Page({
       app.authSettingCheck((boolean) => {
         that.setData({
           isLogin: boolean,
-          isFirstProxy: app.globalData.userInfo.discountNum,
           moblie: app.globalData.userInfo.moblie || ''
         })
+        that.getUser()
         that.query()
       })
     }, false)
@@ -211,6 +211,24 @@ Page({
   myWallet() {
     wx.navigateTo({
       url: '/pages/commission/myWallet',
+    })
+  },
+
+  getUser() {
+    app.request({
+      url: 'wechat/saveUserInfo',
+      method: 'POST',
+      data: {
+        userId: app.globalData.userInfo.userId,
+        openid: app.globalData.token
+      },
+      success: ((data) => {
+        let isFirstProxy = data.discountNum || 1
+        this.setData({ isFirstProxy })
+      }),
+      fail: ((err) => {
+        console.log('获取用户折扣失败', err)
+      })
     })
   }
 })

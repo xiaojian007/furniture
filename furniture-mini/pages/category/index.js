@@ -22,10 +22,13 @@ Page({
 
   onLoad: function () {
     let that = this;
-    // 设置分类列表高度
-    that.setListHeight();
-    // 获取分类列表
-    that.getCategoryList();
+
+    app.loginCheck(this, () => {
+      // 设置分类列表高度
+      that.setListHeight();
+      // 获取分类列表
+      that.getCategoryList();
+    }, false)
   },
 
   /**
@@ -117,7 +120,7 @@ Page({
       url: '/pages/search/index?typeSecondId=' + typeId + '&typeFirstId=' + typeFirstId,
     })
   },
-  
+
   /**
    * 搜索
    */
